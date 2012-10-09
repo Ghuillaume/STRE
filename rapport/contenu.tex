@@ -1,0 +1,178 @@
+%﻿1) Spécification de l’environnement 
+%        2) Specification du logiciel : Generation Controlée
+%                2.1 Fonctionnalité
+%                2.2 Decompo fonctionnelle
+%        3) Conception fonctionnelle
+%        4) Definition de la réalisation 
+%        5) Réalisation 
+%        6) Tests
+
+\chapter{Spécification de l’environnement}
+Lorsque le programme est lancé, l’utilisateur doit choisir le mode de génération. Il rentre les données nécessaires au bon déroulement du mode. Le programme crée un fichier qui contient le résultat de la génération de tâches.
+
+
+\chapter{Spécification du logiciel}
+
+\section{Explication du choix du langage}
+Nous avons opté pour le langage C++ pour réaliser ce projet car celui-ci possède un certain nombre d'avantages :
+\begin{itemize}
+\item Il s'agit d'un langage orienté objet très utilisé dans le monde et de nombreux outils libres sont dispibles pour l'utiliser (comme GCC pour la compilation par exemple). De plus, la documentation correspondante est très facilement accessible dans la littérature ou sur le web.
+\item Les langages C/C++ sont très utilisés dans le monde de la programmation système (par exemple le noyau Linux) ou de l'embarqué (comme le système d'exploitation Trampoline par exemple). En effet, ceux-ci étant bas niveau, il permet de gérer de manière assez précise la mémoire (pointeurs, allocations, etc.).
+\end{itemize}
+
+\section{Fonctionnalité}
+        
+\subsection{Choix du mode}
+Dans ce premier module, on choisit le mode d’utilisation du logiciel en fonction de ce que souhaite l’utilisateur. Pour cela, il peut soit renseigner sous forme d’arguments les différentes données, soit en sélectionnant dans le menu ses préférences. \\
+
+Parmi les choix qui lui sont offerts, on retrouve les cas présentés dans le sujet du projet (génération aléatoire ou contrôlée et tâches périodiques ou non) mais aussi la possibilité de renseigner un fichier contenant déjà toutes les informations sur les tâches. Dans le premier cas, l’utilisateur devra renseigner ensuite le nombre de tâches concernées tandis que dans l’autre cas, le fichier ne sera pas interprété et ce programme s’arrêtera.
+
+
+\subsection{Génération aléatoire de tâches}
+        TODO
+
+\subsection{Génération contrôlée de tâches}
+	Le deuxième type de génération fait appel à l'utilisateur pour rensigner chacune des valeurs de chaque tâche. De cette manière, l'utilisateur va pouvoir tester plus facilement des cas spécifiques et donc observer de manière plus précise le fonctionnement de l'ordonnanceur par la suite. \\
+	Lors de la génération, pour toutes les tâches périodiques il devra renseigner les Ci, Pi et Di, c'est-à-dire respectivement les durées d'exécution maximales, les périodes d'activation et le délai critique). Dans le cas où il y a aussi des tâches apériodiques, il devra renseigner aussi ri (la date de réveil) et Ci.
+
+\subsection{Écriture dans un fichier}
+	Ce module a pour fonction d’écrire dans un fichier les données contenues dans un flux (= stream)  et calculées à partir des deux modules précédents de génération. L’intérêt de séparer ces fonctions est double : il est plus pratique de factoriser le code à travers une seule fonction d’écriture appelée par les différentes générations et cela facilite la maintenance.
+
+
+\section{Décomposition fonctionnelle}
+Une classe par type de génération 
+
+
+\chapter{Conception fonctionnelle}
+
+\section{Choix du mode}
+    \paragraph{pré-condition :} Le programme vient d’être lancé.
+    \paragraph{post-condition :} Un choix valide a été effectué.
+    \paragraph{Objectif :} Permettre de choisir entre la génération aléatoire et la génération controlée.
+    \paragraph{Algo :}
+\begin{verbatim} 
+Entrée : Int choix
+Sortie :  -
+
+Si (choix == 1 ) Alors
+   Lancer la génération controlée
+Sinon
+   Si (choix == 2) Alors
+      Lancer la génération aléatoire 
+   Sinon
+      Si (choix == 3) Alors
+         Quitter le programme
+      Sinon
+         Afficher erreur de choix 
+      FinSi
+   FinSi
+FinSi
+\end{verbatim} 
+
+\newpage
+\section{Génération Aléatoire}
+\paragraph{pré-condition :} La génération aléatoire a été choisie.
+\paragraph{post-condition :} Toutes les valeurs caractéristiques des tâches ont été générées en accord avec le paramétrage de l’utilisateur.
+
+
+\paragraph{Objectif :} Générer aléatoirement les caractéristiques (Ci,Pi,Di) d’un nombre de tâches (determiné par l’utilisateur) en accord avec un facteur d’utilisation du processeur (déterminé lui aussi par l’utilisateur).
+Ex : pour trois taches et facteur = 75\% \\ 
+
+
+        Tirage aléatoire de trois nombres ( 35, 25, 15) dont la somme vaut 75. \\
+        Ces nombres représentent le rapport Ci/Pi dans la formule  \\
+        Il faut ensuite donner une valeur à Ci et Pi. Pour cela, on trouve le pgcd du nombre et de 100. Pour C1/P1 = 35, on obtient 5.  on affecte à C1 $\leftarrow$ 35/5 et à P1 $\leftarrow$ 100/5 , on obtient donc C1 = 7 et P1 = 20. On considère, dans ce programme que Pi = Di. \\
+        
+        On obtient donc dans cette exemple :  \\
+        T1(7,20,20) \\
+        T2(1,4,4) \\
+        T3(3,20,20) \\
+
+        Toutes les données sont stockées dans 3 tableaux (un pour les Ci, un pour Pi, un pour Di). 
+
+\paragraph{Algo :}
+\begin{verbatim}
+Entrée: Int nbTaches, Int factUtProcesseur
+Sortie : 3 Tableaux d’Int (pour les valeurs de Ci, Pi, Di). 
+indice du tableau = numéro de la tâche - 1..
+
+TabCi[ nbTaches ], TabPi[ nbTaches ], TabDi[ nbTaches ]
+nbTachesRestantes = nbTaches - 1
+nbMax = factUtProcessus 
+
+/*
+On calcule la valeur maximale que peut prendre le nombre tiré aléatoirement :
+maximum = Up - somme des Ci/Pi précédents - nombre de taches restantes
+Ensuite, on tire au hasard une valeur allant de 1 à cette valeur maximale.
+Exemple : maxT1 = 75 - 0 - 2
+        randT1 = 32 (valeur calculée avec le pseudo-hasard)
+        maxT2 = 75 - 32 - 1
+        randT2 = 18
+        maxT3 = 75 - (32 + 18) - 0
+        randT3 = 25
+Pour résumer, on obtient ici les Ci/Pi : 32, 18 et 25
+*/
+
+
+Pour i allant de 0 à (nbTaches - 1)
+   nbMaxLimite = nbMax - nbTachesRestantes
+   // le nombre aléatoire correspond à (Ci/Pi)
+   nbAleatoire = nombre Aleatoire entre 1 et ce nombre maximum
+
+
+   // On calcule et stocke la valeur des Ci, Pi et Di dans 3 tableaux distincts
+   tabCi[i] = nb\_genere / pgcd(nb\_genere,100)
+   tabPi[i] =100 / pgcd(nb\_genere,100)
+   tabCi[i] = 100 / pgcd(nb\_genere,100)
+            
+   /* On abaisse ensuite la limite pour le prochain tirage aléatoire afin de ne jamais dépasser la valeur de Up. */
+   limite\_maj = limite\_maj - nb\_genere
+Fin du pour
+
+// Pour la dernière tâche, on ne génère pas de valeur. On prend ce qu’il reste.
+nb\_genere = limite\_maj
+tabCi[ nbTaches - 1 ] = nb\_genere / pgcd(nb\_genere,100)
+tabPi[ nbTaches - 1 ] =100 / pgcd(nb\_genere,100)
+tabCi[ nbTaches - 1 ] = 100 / pgcd(nb\_genere,100)
+\end{verbatim}
+
+\section{Generation Controlée}  
+\paragraph{pré-condition :} La génération controlée a été choisie.
+\paragraph{post-condition :} Toutes les valeurs caractéristiques des tâches ont été générées en accord avec le paramétrage de l’utilisateur.
+\paragraph{Objectif :} Permettre à l’utilisateur de générer des tâches périodiques ou apériodiques en renseignant les différentes caractéristiques de chacune des tâches (Ci, Pi, Di).
+\paragraph{Algo :} 
+\begin{verbatim}
+Entrée : Int nbTaches
+Sortie :  3 Tableaux d’Int (pour les valeurs de Ci, Pi, Di). 
+indice du tableau = numéro de la tâche - 1 .
+
+
+TabCi[ nbTaches ], TabPi[ nbTaches ], TabDi[ nbTaches ]
+        
+Pour i allant de 0 à (nbTaches - 1)
+    // on demande à l’utilisateur de renseigner les différentes valeurs ...
+    lire(Ci)
+    lire(Pi)
+    lire(Di)        
+    // … et on les insére dans les tableaux respectifs
+    tabCi[ i ] = Ci
+    tabPi[ i ] = Pi
+    tabDi[ i ] = Di
+fin pour
+\end{verbatim}
+
+\section{Ecriture du résultat obtenu}
+    \paragraph{pré-condition :} La génération (qu'elle soit contrôlée ou non) envoie un outputstream contenant les chaînes de caractère à écrire dans un fichier.
+    \paragraph{post-condition :} L'écriture s'est bien déroulée : le fichier contient bien la chaîne.
+    \paragraph{Objectif :} Enregistrer les données générées par le module précédent de manière pérenne dans un fichier.
+    \paragraph{Algo :}
+	TODO
+
+\chapter{Définition de la réalisation}
+	TODO
+
+\chapter{Réalisation}
+\section{Répartition des tâches}
+
+\chapter{Tests}
+

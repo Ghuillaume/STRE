@@ -1,0 +1,67 @@
+\documentclass[a4paper, 11pt, french]{report}
+\usepackage[utf8]{inputenc}										% package désignant l'encodage
+\usepackage[T1]{fontenc}	  									% je sais pas à quoi il sert
+\usepackage[francais]{babel}  									% indique qu'on écrit en français
+\usepackage{layout}												% Permet de gérer les marges
+\usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry}	% Permet de définir les marges
+\usepackage{graphicx}											% Insertion des images
+\usepackage{setspace}
+\usepackage{titlesec}
+\titleformat{\chapter}[hang]{\bf\huge}{\thechapter}{2pc}{} 
+\usepackage{fancyhdr}											% Pour gérer les en-tête / pied de page
+\usepackage{placeins}											% Pour utiliser \FloatBarrier qui annule les flottants
+\usepackage{pdfpages}											% Include du pdf (\includepdf[options]{doc})
+\usepackage{listings}	
+\usepackage{verbatim}										% Insérer du code/texte (\lstinputlisting{doc}, \lstset juste avant pour modifier le style)
+
+
+\graphicspath{{img/}}												% Définir l'emplacement des images
+
+\makeatletter
+
+\include{garde}
+
+\pagestyle{fancy}												% Permet de dire qu'on veut afficher les headers, on peut le mettre plus tard
+\fancyhf{}	 													% On dÃÂ©gage tout ce qui existe déjà
+\lhead[]{TITRE}		% Haut-gauche
+\rhead[]{\leftmark}												% Haut-droite
+\lfoot[]{NOM}										% Bas-gauche
+\cfoot[]{\textbf{\thepage}}										% Bas-centre
+\rfoot[]{FORMATION}										% Bas-droite
+\renewcommand{\headrulewidth}{0.2pt}							% Taille du trait du header & footer
+
+%\setlength{\baselineskip}{1.5em}								% Espace interligne
+%\setlength{\parskip}{0pt}										% Espace interparagraphe
+
+ 
+
+\begin{document}
+
+	\pagestyle{plain}
+	\pagenumbering{Roman}\setcounter{page}{1}					% Définir le style des numéros de page et initialisation du compteur
+	
+	\maketitle													% Création de la page de garde
+	 
+	\thispagestyle{empty}
+	\newpage
+	\strut      % Permet d'avoir une page blanche non numérotée
+	\newpage
+
+	% Abstract avec numérotation
+	%\include{Introduction}
+
+	\renewcommand{\contentsname}{Sommaire}  % Renomme la table des matières
+	\setcounter{tocdepth}{2} 								% Définir la profondeur de la table des matières
+	\addtocontents{toc}{%
+		\protect\setlength{\baselineskip}{1.5em}			% Définir le saut de ligne dans la TDM
+		\protect\setlength{\parskip}{0pt}					% Définir le saut de paragraphe dans la TDM
+	}
+	\tableofcontents\thispagestyle{plain}					% Table des matières
+	\pagenumbering{arabic} \setcounter{page}{5} 
+
+	\begin{onehalfspace}
+		%inclure le contenu
+		\include{contenu}
+	\end{onehalfspace}
+
+\end{document}
