@@ -23,11 +23,13 @@ class GenerateurAleatoire {
 		void generationAperiodique();
 		void ecritureFichier();
 		int pgcd(int x, int y);
+		int ppcm1(int x, int y);
 		
 		Tableau tabCiP_,tabPiP_,tabDiP_;
 		Tableau tabriA_,tabCiA_;
 		int nbTachesP_, nbTachesA_;
 		int utCPUP_, utCPUA_;
+		int hyperPeriode_;
 		
 };
 #endif
