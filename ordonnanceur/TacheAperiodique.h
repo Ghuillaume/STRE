@@ -6,9 +6,10 @@
 class TacheAperiodique : public Tache {
 
 public:
-	TacheAperiodique(int ri, int Ci);
+	TacheAperiodique();
 	~TacheAperiodique();
 	
+	void setValeurs(int ri, int Ci);
 	int getri();
 	int getCi();
 	

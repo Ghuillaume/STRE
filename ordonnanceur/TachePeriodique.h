@@ -3,12 +3,13 @@
 
 #include "Tache.h"
 
-class TachePeriodique : virtual public Tache {
+class TachePeriodique : public Tache {
 
 public:
-	TachePeriodique(int Ci, int Pi, int Di);
+	TachePeriodique();
 	~TachePeriodique();
 	
+	void setValeurs(int Ci, int Pi, int Di);
 	int getCi();
 	int getPi();
 	int getDi();

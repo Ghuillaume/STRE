@@ -4,11 +4,10 @@
 class Tache {
 
 public:
-	Tache();
-	Tache(int Ci);
-	virtual ~Tache();
+	Tache() { }
+	virtual ~Tache() { }
 	
-	virtual int getCi();
+	virtual int getCi() = 0;
 	
 protected:
 	int Ci_;

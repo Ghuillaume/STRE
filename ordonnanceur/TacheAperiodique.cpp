@@ -1,11 +1,17 @@
 #include "TacheAperiodique.h"
 
-TacheAperiodique::TacheAperiodique(int ri, int Ci) : Tache() {
+TacheAperiodique::TacheAperiodique() {
+
+}
+
+TacheAperiodique::~TacheAperiodique() {
+
+}
+
+void TacheAperiodique::setValeurs(int ri, int Ci) {
 	ri_ = ri;
 	Ci_ = Ci;
 }
-
-TacheAperiodique::~TacheAperiodique() { }
 
 int TacheAperiodique::getri() {
 	return ri_;

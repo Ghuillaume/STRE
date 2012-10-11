@@ -1,12 +1,14 @@
 #include "TachePeriodique.h"
 
-TachePeriodique::TachePeriodique(int Ci, int Pi, int Di) : Tache() {
+TachePeriodique::TachePeriodique() { }
+
+TachePeriodique::~TachePeriodique() { }
+	
+void TachePeriodique::setValeurs(int Ci, int Pi, int Di) {
 	Ci_ = Ci;
 	Pi_ = Pi;
 	Di_ = Di;
 }
-
-TachePeriodique::~TachePeriodique() { }
 	
 int TachePeriodique::getCi() {
 	return Ci_;
