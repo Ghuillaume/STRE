@@ -1,11 +1,13 @@
+#include <iostream>
+
 #include "TacheAperiodique.h"
 #include "TachePeriodique.h"
 
 using namespace std;
 
 int main(void) {
-	TacheAperiodique tacheAp = TacheAperiodique();
-	tacheAp.setValeurs(5, 3);
-	TachePeriodique tacheP = TachePeriodique();
-	tacheP.setValeurs(1, 2, 3); 
+	TacheAperiodique tacheAp = TacheAperiodique(5, 3);
+	cout << tacheAp.toString() << endl;
+	TachePeriodique tacheP = TachePeriodique(1, 2, 3);
+	cout << tacheP.toString() << endl;
 }
