@@ -1,0 +1,6 @@
+Makefile*
+*.h.gch
+*.o
+ordonnanceur
+*.pro
+
