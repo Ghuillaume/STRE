@@ -9,7 +9,7 @@
 
 using namespace std;
 
-typedef vector<Tache> TabTaches;
+typedef vector<Tache*> TabTaches;
 
 class ConteneurTache {
 public:
@@ -18,11 +18,9 @@ public:
 	
 	void addTachePeriodique(int Ci, int Pi, int Di);
 	void addTacheAperiodique(int ri, int Ci);
-	void deleteTache(TachePeriodique tache);
-	void deleteTache(TacheAperiodique tache);
 	
 private:
-	TabTaches tabTaches_;
+	TabTaches* tabTaches_;
 };
 
 #endif
