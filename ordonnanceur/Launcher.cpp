@@ -8,6 +8,6 @@ using namespace std;
 
 int main(void) {
 	ConteneurTache ct = ConteneurTache();
-	ct.addTacheAperiodique(5, 3);
-	ct.addTachePeriodique(1, 2, 3);
+	ct.ajouterTacheAperiodique(5, 3);
+	ct.ajouterTachePeriodique(1, 2, 3);
 }

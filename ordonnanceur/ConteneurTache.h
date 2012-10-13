@@ -16,8 +16,8 @@ public:
 	ConteneurTache();
 	~ConteneurTache();
 	
-	void addTachePeriodique(int Ci, int Pi, int Di);
-	void addTacheAperiodique(int ri, int Ci);
+	void ajouterTachePeriodique(int Ci, int Pi, int Di);
+	void ajouterTacheAperiodique(int ri, int Ci);
 	
 private:
 	TabTaches* tabTaches_;
