@@ -1,0 +1,16 @@
+#include "ConteneurTachePeriodique.h"
+
+ConteneurTachePeriodique::ConteneurTachePeriodique() {
+	tabTachePeriodique_ = TabTachePeriodique();
+}
+ConteneurTachePeriodique::~ConteneurTachePeriodique() {
+
+}
+
+void ConteneurTachePeriodique::ajouterTachePeriodique(TachePeriodique* tacheApe) {
+	tabTachePeriodique_.push_back(tacheApe);
+}
+
+TachePeriodique ConteneurTachePeriodique::recupererTache(int index) {
+	
+}
