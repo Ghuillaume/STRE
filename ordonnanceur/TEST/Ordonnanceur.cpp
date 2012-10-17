@@ -1,55 +1,96 @@
 #include "Ordonnanceur.h"
 
-Ordonnanceur::Ordonnanceur() {
-
+Ordonnanceur::Ordonnanceur(ConteneurTachePeriodique* conteneurPeriodique, ConteneurTacheAperiodique* conteneurAperiodique) : 
+	conteneurPeriodique_(conteneurPeriodique), conteneurAperiodique_(conteneurAperiodique)	
+{
+	
 }
 
 Ordonnanceur::~Ordonnanceur() {
 
 }
 
-void Ordonnanceur::OrdonnancementRM(ConteneurTachePeriodique* conteneur) {
-	vector<int> tabPrio(conteneur->getSize());
-	vector<int> tabOrdo(conteneur->getHyperPeriode());
-	cout << "TabPrio ";
-	for(int i = 0 ; i < conteneur->getSize() ; i++) {
-		tabPrio[i] = conteneur->getTache(i)->getCi();
-		cout << i << " " << tabPrio[i] << endl;
+void Ordonnanceur::OrdonnancementRM() {
+	
+	TableauPriorite tabPriorite = this->getOrdrePrio();
+	//Tableau qui represente l'ordonnancement 
+	// TabOrdo[i] = Tache qui s'execute a l'instant i
+	vector<TachePeriodique*> tabOrdo(conteneurPeriodique_->getHyperPeriode());
+	//Tableau qui contient le temps d'execution restant de chaque tache
+	// rangé par ordre de priorité
+	vector<int> tabTpsRestantExec(tabPriorite.size());
+	//initialisation du tableau du temps restant d'execution
+	for(int i = 0 ; i < tabTpsRestantExec.size() ; i++) {
+		tabTpsRestantExec[i] = tabPriorite[i]->getCi();
 	}
 	
-	for(int i = 0 ; i < conteneur->getHyperPeriode() ; i++) {
-		// Verification que la tache ne s'est pas reveillée
-		for(int t = 0 ; t < conteneur->getSize() ; t++) {
-			if ((i%(conteneur->getTache(t)->getPi())) == 0) {
-				//reveil
-				tabPrio[t] = conteneur->getTache(t)->getCi();
-			}
-		}
-		bool sortir = false;
-		int t = 0;
-		
-		while ((sortir==false) && (t<conteneur->getSize())) {
-			if (tabPrio[t] = 0) {
-				t++;
-			}
-			else {
-				sortir = true;
-			}
-		}
-		if (sortir == true) {
-			tabOrdo[i] = t + 1;
-			tabPrio[t] = tabPrio[t] - 1;
-		}
-	}
-	
+	//boucle d'ordonnancement
 	for(int i = 0 ; i < tabOrdo.size() ; i++) {
-		cout << "t=" << i << " : Tache" << tabOrdo[i] << endl;
-	}	
+		//vérification du reveil des taches 
+		for(int t = 0 ; t < tabTpsRestantExec.size() ; t++) {
+			if ( (i % (tabPriorite[t]->getPi())) == 0 ) {
+				tabTpsRestantExec[t] = tabPriorite[t]->getCi();
+			}
+		}
+		
+		bool tachePlacee = false;
+		int numTache = 0;
+		
+		while ( (!tachePlacee) && (numTache < tabTpsRestantExec.size()) ) {
+			
+			if (tabTpsRestantExec[numTache] == 0) {
+				numTache++;
+			}
+			else
+			{
+				tabOrdo[i] = tabPriorite[numTache];
+				tabTpsRestantExec[numTache] -= 1;
+				tachePlacee = true;
+			}
+		}
+		if (numTache >= tabTpsRestantExec.size()) {
+			// Temps Creux representer par une tache vide
+			tabOrdo[i] = new TachePeriodique();
+		}
+	}
+	afficherOrdonnancement(tabOrdo);
+}
+
+void Ordonnanceur::afficherOrdonnancement(vector<TachePeriodique*> tabOrdonnancement) {
+	for(int i = 0 ; i < tabOrdonnancement.size() ; i++) {
+		cout << "t=" << i << " : Tache" << tabOrdonnancement[i]->toString() << endl;
+	}
+}
+	
+TableauPriorite Ordonnanceur::getOrdrePrio() {
+	
+	TableauPriorite tabPrio = conteneurPeriodique_->getTabTache();
+	
+	
+    bool tab_en_ordre = false;
+    int taille = tabPrio.size();
+    cout << "taille tab prio : " << taille << endl;
+    while(!tab_en_ordre)
+    {
+        tab_en_ordre = true;
+        for(int i=0 ; i < taille - 1 ; i++)
+        {
+            if(tabPrio[i]->getPi() > tabPrio[i+1]->getPi())
+            {
+                swap(tabPrio[i],tabPrio[i+1]);
+                tab_en_ordre = false;
+            }
+        }
+        taille--;
+    }
+    return tabPrio;
 
 }
 
-void Ordonnanceur::OrdonnancementEDF(ConteneurTachePeriodique* conteneur) {
 
+
+void Ordonnanceur::OrdonnancementEDF() {
+/*
 	TabTachePeriodique vector = conteneur.getVector();
 
 	int elected, timeAllocated;
@@ -116,6 +157,8 @@ void Ordonnanceur::OrdonnancementEDF(ConteneurTachePeriodique* conteneur) {
 			}	
 		}
 	}
+*/
+
 }
 
 void Ordonnanceur::verifierOrdonnancabilite(ConteneurTachePeriodique* conteneur) {

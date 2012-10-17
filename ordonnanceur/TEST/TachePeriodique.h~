@@ -18,11 +18,14 @@ public:
 	int getCi();
 	int getPi();
 	int getDi();
+	int getNumTache();
 	string toString();
 	
 private:
 	int Pi_;
+	int Ci_;
 	int Di_;
+	int numTache_;
 };
 
 #endif
