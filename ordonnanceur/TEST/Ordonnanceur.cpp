@@ -154,8 +154,59 @@ void Ordonnanceur::OrdonnancementEDF() {
 				else
 					taches[i][0] = vector.at(i).getCi(); // réinitialisation du temps d'exécution restant
 					
+			}	
 		}
-			
 	}
 */
+
+}
+
+void Ordonnanceur::verifierOrdonnancabilite(ConteneurTachePeriodique* conteneur) {
+	double resultat = 0.0;
+	
+	verifierCondNecessaireRM(conteneur);
+	verifierCondSuffisanteRM(conteneur);
+}
+
+void Ordonnanceur::verifierCondNecessaireRM(ConteneurTachePeriodique* conteneur) {
+	int Pi = 0;
+	int Ci = 0;
+	double Up = calculerUp(conteneur);
+	
+	if (Up <= 1.0) {
+		cout << "Condition nécessaire pour RM : on ne peut rien conclure" << endl;
+	} else {
+		cout << "Pas de condition nécessaire pour RM : non-ordonnançable" << endl;
+	}
+}
+
+void Ordonnanceur::verifierCondSuffisanteRM(ConteneurTachePeriodique* conteneur) {
+	int Pi = 0;
+	int Ci = 0;
+	double Up = calculerUp(conteneur);
+	double UBoundRM = calculerUBound(conteneur->getSize());
+	
+	if (Up <= UBoundRM) {
+		cout << " Test suffisant : ce sera bien ordonnançable" << endl;
+	} else {
+		cout << "Test suffisant : on ne peut rien conclure" << endl;
+	}
+}
+
+double Ordonnanceur::calculerUp(ConteneurTachePeriodique* conteneur) {
+	int Pi = 0;
+	int Ci = 0;
+	double Up = 0.0;
+
+	for (int i = 0; i++; i < conteneur->getSize()) {
+		Pi = conteneur->getTache(i)->getPi();
+		Ci = conteneur->getTache(i)->getCi();
+		Up += Pi/Ci;
+	}
+	return Up;
+}
+
+double Ordonnanceur::calculerUBound(double n) {
+	double puissance = pow(2.0, (1.0 / n));
+	return n * (puissance - 1);
 }
