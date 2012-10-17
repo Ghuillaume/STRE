@@ -20,6 +20,6 @@ TabTacheAperiodique ConteneurTacheAperiodique::getTabTache() {
 }
 
 int ConteneurTacheAperiodique::getSize() {
-	return tabTacheAperiodidue_.size();
+	return tabTacheAperiodique_.size();
 }
 

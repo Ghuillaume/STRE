@@ -1,6 +1,6 @@
 CXX = g++
 
-Ordonnanceur: main.o ConteneurTacheAperiodique.o TacheAperiodique.o ConteneurTachePeriodique.o TachePeriodique.o Parseur.o
+Ordonnanceur: main.o ConteneurTacheAperiodique.o TacheAperiodique.o ConteneurTachePeriodique.o TachePeriodique.o Parseur.o Ordonnanceur.o
 	$(CXX) -o Ordonnanceur $^
 	
 ConteneurTacheAperiodique.o: ConteneurTacheAperiodique.h ConteneurTacheAperiodique.cpp TacheAperiodique.h 
@@ -18,4 +18,5 @@ TachePeriodique.o: TachePeriodique.h TachePeriodique.cpp Tache.h
 Parseur.o: Parseur.cpp Parseur.h ConteneurTacheAperiodique.h ConteneurTachePeriodique.h
 	$(CXX) -c Parseur.cpp -o Parseur.o
 	
-
+Ordonnanceur.o: Ordonnanceur.h Ordonnanceur.cpp ConteneurTachePeriodique.h
+	$(CXX) -c Ordonnanceur.cpp -o Ordonnanceur.o

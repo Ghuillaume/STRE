@@ -18,5 +18,5 @@ TachePeriodique.o: TachePeriodique.h TachePeriodique.cpp Tache.h
 Parseur.o: Parseur.cpp Parseur.h ConteneurTacheAperiodique.h ConteneurTachePeriodique.h
 	$(CXX) -c Parseur.cpp -o Parseur.o
 	
-Ordonnanceur.o: Ordonnanceur.h Ordonnanceur.cpp ConteneurTachePeriodique.h
+Ordonnanceur.o: Ordonnanceur.h Ordonnanceur.cpp ConteneurTachePeriodique.h ConteneurTacheAperiodique.h
 	$(CXX) -c Ordonnanceur.cpp -o Ordonnanceur.o

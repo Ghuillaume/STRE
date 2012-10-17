@@ -12,6 +12,8 @@ class Tache {
 	
 	virtual string toString() = 0;
 	
+	
+	
 };
 
 #endif

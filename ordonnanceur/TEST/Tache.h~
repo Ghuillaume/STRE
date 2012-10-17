@@ -7,10 +7,11 @@ using namespace std;
 
 class Tache {
 
-public:
+	public:
 	virtual ~Tache() { }
 	
 	virtual string toString() = 0;
+	
 	
 };
 
