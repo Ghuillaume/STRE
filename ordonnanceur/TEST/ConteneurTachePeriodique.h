@@ -12,11 +12,18 @@ class ConteneurTachePeriodique {
 		ConteneurTachePeriodique();
 		~ConteneurTachePeriodique();
 		void ajouterTachePeriodique(TachePeriodique* tachePe);
-		TachePeriodique recupererTache(int index);
+		TachePeriodique* getTache(int index);
+		int getSize();
+		int getHyperPeriode();
 		
 		
 	private:
 		TabTachePeriodique tabTachePeriodique_;
+		int hyperPeriode_;
+		
+		int ppcm1(int x, int y);
+		void calculHyperPeriode();
+		
 };
 #endif
 

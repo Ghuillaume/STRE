@@ -20,7 +20,7 @@ void Ordonnanceur::OrdonnancementRM(ConteneurTachePeriodique* conteneur) {
 	for(int i = 0 ; i < conteneur->getHyperPeriode() ; i++) {
 		// Verification que la tache ne s'est pas reveillée
 		for(int t = 0 ; t < conteneur->getSize() ; t++) {
-			if ((i%(conteneur->getTache(t)->getPi())) == 0) {
+			if (i%conteneur->getTache(t)->getPi() == 0) {
 				//reveil
 				tabPrio[t] = conteneur->getTache(t)->getCi();
 			}

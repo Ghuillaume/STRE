@@ -1,6 +1,6 @@
 #ifndef ORDONNANCEUR_H
 #define ORDONNANCEUR_H
-#include <iostream>
+
 #include "ConteneurTachePeriodique.h"
 
 using namespace std;
