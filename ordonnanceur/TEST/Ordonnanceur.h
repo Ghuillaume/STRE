@@ -21,6 +21,7 @@ class Ordonnanceur {
 		
 		static void verifierCondNecessaireRM(ConteneurTachePeriodique* conteneur);
 		static void verifierCondSuffisanteRM(ConteneurTachePeriodique* conteneur);
+		static void verifierConditionEDF(ConteneurTachePeriodique* conteneur);
 		static double calculerUp(ConteneurTachePeriodique* conteneur);
 		static double calculerUBound(double n);
 };

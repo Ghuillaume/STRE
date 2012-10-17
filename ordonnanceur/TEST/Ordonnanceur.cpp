@@ -123,6 +123,7 @@ void Ordonnanceur::verifierOrdonnancabilite(ConteneurTachePeriodique* conteneur)
 	
 	verifierCondNecessaireRM(conteneur);
 	verifierCondSuffisanteRM(conteneur);
+	verifierConditionEDF(conteneur);
 }
 
 void Ordonnanceur::verifierCondNecessaireRM(ConteneurTachePeriodique* conteneur) {
@@ -130,10 +131,11 @@ void Ordonnanceur::verifierCondNecessaireRM(ConteneurTachePeriodique* conteneur)
 	int Ci = 0;
 	double Up = calculerUp(conteneur);
 	
+	cout << "Test de condition nécessaire pour RM : ";
 	if (Up <= 1.0) {
-		cout << "Condition nécessaire pour RM : on ne peut rien conclure" << endl;
+		cout << "on ne peut rien conclure" << endl;
 	} else {
-		cout << "Pas de condition nécessaire pour RM : non-ordonnançable" << endl;
+		cout << "non-ordonnançable" << endl;
 	}
 }
 
@@ -143,10 +145,47 @@ void Ordonnanceur::verifierCondSuffisanteRM(ConteneurTachePeriodique* conteneur)
 	double Up = calculerUp(conteneur);
 	double UBoundRM = calculerUBound(conteneur->getSize());
 	
+	cout << " Test de condition suffisante pour RM : ";
 	if (Up <= UBoundRM) {
-		cout << " Test suffisant : ce sera bien ordonnançable" << endl;
+		cout << "ordonnançable" << endl;
 	} else {
-		cout << "Test suffisant : on ne peut rien conclure" << endl;
+		cout << "on ne peut rien conclure" << endl;
+	}
+}
+
+
+void Ordonnanceur::verifierConditionEDF(ConteneurTachePeriodique* conteneur) {
+	bool egaliteDiPi = true;
+	bool superioriteDiPi = true;
+	int Pi = 0;
+	int Di = 0;
+	double Up = calculerUp(conteneur);
+
+	for (int i = 0; i++; i < conteneur->getSize()) {
+		Pi = conteneur->getTache(i)->getPi();
+		Di = conteneur->getTache(i)->getDi();
+		
+		egaliteDiPi &= (Pi == Di);
+		superioriteDiPi &= (Pi < Di);
+	}
+	
+	if (egaliteDiPi) {
+		cout << "Test de condition nécessaire et suffisante pour EDF : ";
+		
+		if (Up <= 1.0) {
+			cout << "ordonnaçable" << endl;
+		} else {
+			cout << "non-ordonnançable" << endl;
+		}
+	}
+	else if (superioriteDiPi) {
+		cout << "Test de condition suffisante pour EDF : ";
+		
+		if (Up <= 1.0) {
+			cout << "ordonnaçable" << endl;
+		} else {
+			cout << "on ne peut rien conclure" << endl;
+		}
 	}
 }
 
@@ -155,6 +194,7 @@ double Ordonnanceur::calculerUp(ConteneurTachePeriodique* conteneur) {
 	int Ci = 0;
 	double Up = 0.0;
 
+	// Somme de 1 à n des Ci/Pi
 	for (int i = 0; i++; i < conteneur->getSize()) {
 		Pi = conteneur->getTache(i)->getPi();
 		Ci = conteneur->getTache(i)->getCi();
