@@ -12,6 +12,10 @@ void ConteneurTachePeriodique::ajouterTachePeriodique(TachePeriodique* tachePe) 
 	this->calculHyperPeriode();
 }
 
+TabTachePeriodique ConteneurTachePeriodique::getTabTache() {
+	return tabTachePeriodique_;
+}
+
 TachePeriodique* ConteneurTachePeriodique::getTache(int index) {
 	return tabTachePeriodique_.at(index);	
 }

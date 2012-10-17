@@ -12,6 +12,9 @@ class ConteneurTacheAperiodique {
 		ConteneurTacheAperiodique();
 		~ConteneurTacheAperiodique();
 		void ajouterTacheAperiodique(TacheAperiodique* tacheApe);
+		TacheAperiodique* getTache(int index);
+		TabTacheAperiodique* getTabTache();
+		int getSize();
 		
 		
 	private:

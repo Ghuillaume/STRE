@@ -11,6 +11,15 @@ void ConteneurTacheAperiodique::ajouterTacheAperiodique(TacheAperiodique* tacheA
 	tabTacheAperiodique_.push_back(tacheApe);
 }
 
-TacheAperiodique ConteneurTacheAperiodique::recupererTache(int index) {
-	
+TacheAperiodique* ConteneurTacheAperiodique::getTache(int index) {
+	return tabTacheAperiodique_.at(index);
 }
+
+TabTacheAperiodique ConteneurTacheAperiodique::getTabTache() {
+	return tabTacheAperiodique_;
+}
+
+int ConteneurTacheAperiodique::getSize() {
+	return tabTacheAperiodidue_.size();
+}
+

@@ -38,7 +38,7 @@ int ConteneurTachePeriodique::ppcm1(int x,int y)
 
 void ConteneurTachePeriodique::calculHyperPeriode() {
 	int ppcm = tabTachePeriodique_[0]->getPi();
-	for (int i = 0 ; i < tabTachePeriodique_.size() - 1 ; i++) {
+	for (int i = 0 ; i < tabTachePeriodique_.size() ; i++) {
 		ppcm = ppcm1(ppcm,tabTachePeriodique_[i]->getPi());
 	}
 	this->hyperPeriode_ = ppcm;
