@@ -2,25 +2,29 @@
 #define ORDONNANCEUR_H
 
 #include <iostream>
+#include <string>
 #include <vector>
 #include <cmath>
 
 #include "ConteneurTachePeriodique.h"
 #include "ConteneurTacheAperiodique.h"
 
-typedef vector<TachePeriodique*> TableauPriorite;
+typedef vector<TachePeriodique*> TableauPrioritePeriodique;
+typedef vector<TacheAperiodique*> TableauPrioriteAperiodique;
 using namespace std;
 
 class Ordonnanceur {
 	public: 
 		Ordonnanceur(ConteneurTachePeriodique* conteneurPeriodique, ConteneurTacheAperiodique* conteneurAperiodique);
 		~Ordonnanceur();
-		void OrdonnancementRM();
+		int OrdonnancementRM();
+		int OrdonnancementRM_BG();
 		void OrdonnancementEDF();
 		
 	private:
 		void afficherOrdonnancement(vector<TachePeriodique*> tabOrdonnancement);
-		TableauPriorite getOrdrePrio();
+		TableauPrioritePeriodique getOrdrePrioPeriodique();
+		TableauPrioriteAperiodique getOrdrePrioAperiodique();
 		ConteneurTachePeriodique* conteneurPeriodique_;
 		ConteneurTacheAperiodique* conteneurAperiodique_;
 		void verifierOrdonnancabilite(ConteneurTachePeriodique* conteneur);
