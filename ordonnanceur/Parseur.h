@@ -5,20 +5,22 @@
 #include <fstream>
 #include <iostream>
 
-#include "ConteneurTache.h"
+#include "ConteneurTacheAperiodique.h"
+#include "ConteneurTachePeriodique.h"
 
 using namespace std;
 
 class Parseur {
 public:
-	Parseur(string nomFichier, ConteneurTache* conteneur);
+	Parseur(string nomFichier, ConteneurTacheAperiodique* conteneurApe, ConteneurTachePeriodique* conteneurPe);
 	~Parseur();
 	
 	void lireFichier();
 	
 private:
 	string nomFichier_;
-	ConteneurTache* conteneur_;
+	ConteneurTacheAperiodique* conteneurApe_;
+	ConteneurTachePeriodique* conteneurPe_;
 	
 	static void ajouterTachePeriodique(int Ci, int Pi, int Di);
 	static void ajouterTacheAperiodique(int ri, int Ci);

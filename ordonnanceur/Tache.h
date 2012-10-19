@@ -7,15 +7,13 @@ using namespace std;
 
 class Tache {
 
-public:
-	Tache() { }
+	public:
 	virtual ~Tache() { }
 	
-	virtual int getCi() = 0;
 	virtual string toString() = 0;
 	
-protected:
-	int Ci_;
+	
+	
 };
 
 #endif

@@ -1,8 +1,7 @@
 #include "Parseur.h"
 
-Parseur::Parseur(string nomFichier, ConteneurTache* conteneur) :
-				nomFichier_(nomFichier), conteneur_(conteneur) {
-	
+Parseur::Parseur(string nomFichier, ConteneurTacheAperiodique* conteneurApe, ConteneurTachePeriodique* conteneurPe) :nomFichier_(nomFichier), conteneurApe_(conteneurApe), conteneurPe_(conteneurPe) {
+
 }
 
 Parseur::~Parseur() {
@@ -41,5 +40,15 @@ void Parseur::ajouterTacheAperiodique(int ri, int Ci) {
 
 bool Parseur::verifierSyntaxe(string line) {
 	//TODO: Vérifier que la syntaxe est bonne via une regex
+	if (line[0] == 'T') {
+		cout << "c'est un T" << endl;
+	}
+	else if (line[0] == 'R') {
+		cout << "ou pas " << endl;
+	}
+	else {
+		cout << "fichier mal formé" << endl;
+	}
+	 
 	return true;
 }
