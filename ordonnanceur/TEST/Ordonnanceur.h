@@ -22,6 +22,8 @@ class Ordonnanceur {
 		void OrdonnancementEDF();
 		
 	private:
+		ConteneurTachePeriodique* conteneur_;
+		
 		void afficherOrdonnancement(vector<TachePeriodique*> tabOrdonnancement);
 		TableauPrioritePeriodique getOrdrePrioPeriodique();
 		TableauPrioriteAperiodique getOrdrePrioAperiodique();
@@ -29,13 +31,11 @@ class Ordonnanceur {
 		ConteneurTacheAperiodique* conteneurAperiodique_;
 		void verifierOrdonnancabilite(ConteneurTachePeriodique* conteneur);
 		
-	private:
-		ConteneurTachePeriodique* conteneur_;
-		
 		static void verifierCondNecessaireRM(ConteneurTachePeriodique* conteneur);
 		static void verifierCondSuffisanteRM(ConteneurTachePeriodique* conteneur);
 		static void verifierConditionEDF(ConteneurTachePeriodique* conteneur);
-		static double calculerUp(ConteneurTachePeriodique* conteneur);
+		static double calculerU(ConteneurTachePeriodique* conteneur);
+		static double calculerU2(ConteneurTachePeriodique* conteneur);
 		static double calculerUBound(double n);
 };
 #endif
