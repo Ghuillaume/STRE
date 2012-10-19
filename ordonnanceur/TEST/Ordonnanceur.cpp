@@ -230,21 +230,31 @@ TableauPrioriteAperiodique Ordonnanceur::getOrdrePrioAperiodique() {
 
 }
 
-void Ordonnanceur::OrdonnancementEDF() {
+int Ordonnanceur::OrdonnancementEDF(int serveur) {
 
-	TabTachePeriodique taches = this->conteneurPeriodique_->getTabTache();
-	int nbTaches = taches.size();
+	TabTachePeriodique tachesP = this->conteneurPeriodique_->getTabTache();
+	int nbTachesP = tachesP.size();
+	TabTacheAperiodique tachesA = this->conteneurAperiodique_->getTabTache();
+	int nbTachesA = tachesA.size();
+	int nbTaches = nbTachesP + nbTachesA;
 
-	// Initialisation d'une matrice 
-	// [i]	temps d'exec restant		prochaine deadline
+	// Initialisation d'une matrice représentant le contexte d'exécution
+	// [i]	temps d'exec restant		prochaine deadline		-> pour les tâches périodiques
+	// [i]	temps d'exec restant		date de réveil			-> pour les tâches apériodiques
 	int** context = new int* [ nbTaches ];
 	for (int i = 0 ; i < nbTaches ; i++)
 		context[i] = new int[ 2 ];
 		
-	// Parcours des tâches pour les mettre dans cette matrice
-	for(int i = 0 ; i < taches.size() ; i++) {
-		context[i][0] = taches.at(i)->getCi();
-		context[i][1] = taches.at(i)->getDi();	
+	// Parcours des tâches périodiques pour les mettre dans cette matrice
+	for(int i = 0 ; i < nbTachesP ; i++) {
+		context[i][0] = tachesP.at(i)->getCi();
+		context[i][1] = tachesP.at(i)->getDi();	
+	}
+	
+	// Parcours des tâches apériodiques pour les mettre dans la matrice
+	for(int i = nbTachesP ; i < nbTaches ; i++) {
+		context[i][0] = tachesA.at(i-nbTachesP)->getCi();
+		context[i][1] = tachesA.at(i-nbTachesP)->getri();
 	}
 	
 	
@@ -280,7 +290,7 @@ void Ordonnanceur::OrdonnancementEDF() {
 		}
 		
 		else {
-			for(int i = 0 ; i < nbTaches ; i++) {
+			for(int i = 0 ; i < nbTachesP ; i++) {
 				if(context[i][1] == t) {
 					need_to_poll = true;
 					break;
@@ -296,7 +306,7 @@ void Ordonnanceur::OrdonnancementEDF() {
 			// réinitialisation de la tâche élue
 			task_executed = -1;
 			
-			for(int i = 0 ; i < nbTaches ; i++) {
+			for(int i = 0 ; i < nbTachesP ; i++) {
 		
 				// On retient d'abord la première tâche qui n'a pas terminé son exécution
 				if(task_executed == -1 && context[i][0] != 0)
@@ -308,9 +318,33 @@ void Ordonnanceur::OrdonnancementEDF() {
 	
 			}
 		}
-	
+		
+		
+		// Si on est sur du BG et qu'on a un temps creux, on essaie d'élire une tâche apériodique
+		if(serveur == BG && task_executed == -1) {
+			
+			for(int i = nbTachesP ; i < nbTaches ; i++) {
+				
+				if(context[i][0] == 0) // Si la tâche a terminé son exécution, on passe à la suivante
+					continue;
+				else if(context[i][1] > t) // Si elle n'est pas encore réveillée, on passe à la suivante
+					break;
+				
+				else {
+					task_executed = i;
+				
+				}
+				
+			}
+		}
+		
+		
+		// Affichage
+		// TODO : remplacer par une écriture fichier ou par un enregistrement mémoire du résultat
 		if(task_executed == -1)
 			cout << "t=" << t << " : temps creux" << endl;
+		else if(task_executed >= nbTachesP)
+			cout << "t=" << t << " : R" << (task_executed+1)%nbTachesP << endl;
 		else
 			cout << "t=" << t << " : T" << task_executed+1 << endl;
 
@@ -321,23 +355,25 @@ void Ordonnanceur::OrdonnancementEDF() {
 		if(task_executed != -1)
 			context[task_executed][0]--;
 			
-		for(int i = 0 ; i < nbTaches ; i++) {
+		for(int i = 0 ; i < nbTachesP ; i++) {
 		
 			// Si la deadline de la tache a été passée, on charge en mémoire la deadline suivante
 			if(context[i][1] < t) {
-				context[i][1] += taches.at(i)->getDi();
+				context[i][1] += tachesP.at(i)->getDi();
 				
 				// Si, alors que la deadline a été passée, et que Ci n'est pas égal à zéro, alors le système n'est pas ordonnançable
 				if(context[i][0] > 0) {
 					cout << "ERREUR FATALE : la tâche T" << i << " n'a pas pu terminer son exécution. Arrêt du système" << endl;
-					return;
+					return 1;
 				}
 				else
-					context[i][0] = taches.at(i)->getCi(); // réinitialisation du temps d'exécution restant
+					context[i][0] = tachesP.at(i)->getCi(); // réinitialisation du temps d'exécution restant
 			} 
 		}
 		
 	}
+	
+	return 0;
 
 }
 
@@ -429,7 +465,7 @@ double Ordonnanceur::calculerU(ConteneurTachePeriodique* conteneur) {
 }
 
 double Ordonnanceur::calculerU2(ConteneurTachePeriodique* conteneur) {
-	int Pi = 0;
+	int Di = 0;
 	int Ci = 0;
 	double Up = 0.0;
 

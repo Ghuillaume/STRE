@@ -1,3 +1,5 @@
+#include "common.h"
+
 #include "Parseur.h"
 
 #include "TacheAperiodique.h"
@@ -38,6 +40,6 @@ int main(int argc, char** argv) {
 	contAper->ajouterTacheAperiodique(tacheB);
 	
 	Ordonnanceur* ordo = new Ordonnanceur(contPer,contAper);
-	ordo->OrdonnancementEDF();
+	ordo->OrdonnancementEDF(BG);
 
 }

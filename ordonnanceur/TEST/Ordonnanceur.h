@@ -6,6 +6,8 @@
 #include <vector>
 #include <cmath>
 
+#include "common.h"
+
 #include "ConteneurTachePeriodique.h"
 #include "ConteneurTacheAperiodique.h"
 
@@ -19,7 +21,7 @@ class Ordonnanceur {
 		~Ordonnanceur();
 		int OrdonnancementRM();
 		int OrdonnancementRM_BG();
-		void OrdonnancementEDF();
+		int OrdonnancementEDF(int serveur);
 		
 	private:
 		ConteneurTachePeriodique* conteneur_;
