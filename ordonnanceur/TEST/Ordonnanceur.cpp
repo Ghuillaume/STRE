@@ -231,74 +231,113 @@ TableauPrioriteAperiodique Ordonnanceur::getOrdrePrioAperiodique() {
 }
 
 void Ordonnanceur::OrdonnancementEDF() {
-/*
-	TabTachePeriodique vector = conteneur.getVector();
 
-	int elected, timeAllocated;
-
-	int nbTaches = conteneur.size();
+	TabTachePeriodique taches = this->conteneurPeriodique_->getTabTache();
+	int nbTaches = taches.size();
 
 	// Initialisation d'une matrice 
-	// [i]	temps d'exec restant		prochaine deadline		Pi		Ci
-	taches = new int* [ nbTaches ];
+	// [i]	temps d'exec restant		prochaine deadline
+	int** context = new int* [ nbTaches ];
 	for (int i = 0 ; i < nbTaches ; i++)
-		taches[i] = new int[ 2 ];
+		context[i] = new int[ 2 ];
 		
 	// Parcours des tâches pour les mettre dans cette matrice
-	for(int i = 0 ; i < vector.size() ; i++) {
-		taches[i][0] = vector.at(i).getCi();
-		taches[i][1] = vector.at(i).getDi();	
+	for(int i = 0 ; i < taches.size() ; i++) {
+		context[i][0] = taches.at(i)->getCi();
+		context[i][1] = taches.at(i)->getDi();	
 	}
 	
-	// Initialisation du temps courant
-	unsigned int t_cur = 0;
 	
 	
 	//
 	// Début de l'algorithme EDF
 	//
 	
-	while( t_cur < conteneur.getHyperPeriode() ) {
+	// Initialisation du temps courant et du numéro de la tâche en cours d'éxécution
+	unsigned int t = 0;
+	unsigned int task_executed; // -1 signifie qu'aucune tâche ne s'exécute
+	bool need_to_poll;
 	
-		// Recherche de la tache dont la prochaine deadline est la plus proche
-		elected = 0;
-		for(int i = 1 ; i < nbTaches ; i++) {
+	while( t < conteneurPeriodique_->getHyperPeriode() ) {
 		
-			// Si la tâche i a encore du temps d'execution, et si sa deadline est plus proche que celle de la tache i-1, alors on la retient
-			if(taches[i][0] != 0 && (taches[i][1] < taches[i-1][1]) )
-				elected = i;
+		// Affichage du contexte pour debuggage
+		/*cout << "\t\tN\tExec\tDeadline" << endl;
+		for(int i = 0 ; i < nbTaches ; i++)
+			cout << "\t\tT" << i+1 << "\t" << context[i][0] << "\t" << context[i][1] << endl;*/
 	
+	
+		// On vérifie si l'ordonnanceur doit élire une tâche (seulement si une tache se réveille ou se termine)
+		// Une tache se réveille si t=0 (toutes les tâches se réveillent à t=0 dans le tp) ou si on est sur sa deadline
+		// On sait qu'une tache se termine si son temps d'exec restant = 0
+		need_to_poll = false;
+		
+		if(t == 0)
+			need_to_poll = true;
+			
+		else if(task_executed != -1) {
+			if(context[task_executed][0] == 0)
+				need_to_poll = true;
 		}
-		// A ce stade, c'est la tâche n°t qui est prioritaire
-	
-		// Calcul du temps d'exec alloué (min entre le temps d'exécution restant, le temps restant avant la deadline,  et le prochain réveil de tâche)
-		int timeAllocated = taches[t][0];
-		if( (taches[elected][1] - t_cur) < timeAllocated)
-			timeAllocated = (taches[elected][1] - t_cur);
 		
+		else {
+			for(int i = 0 ; i < nbTaches ; i++) {
+				if(context[i][1] == t) {
+					need_to_poll = true;
+					break;
+				}
+			}
+		}
+		
+				
+		
+		// Recherche de la tache dont la prochaine deadline est la plus proche
+		if(need_to_poll) {
+		
+			// réinitialisation de la tâche élue
+			task_executed = -1;
+			
+			for(int i = 0 ; i < nbTaches ; i++) {
+		
+				// On retient d'abord la première tâche qui n'a pas terminé son exécution
+				if(task_executed == -1 && context[i][0] != 0)
+					task_executed = i;
+		
+				// Ensuite, on cherche une tâche dont la deadline est plus proche (et dont l'exécution n'est pas terminée)
+				if( context[i][0] != 0 && (context[i][1] < context[task_executed][1]) )
+					task_executed = i;
 	
-		t_cur += timeAllocated;	
+			}
+		}
 	
-	
-		// le temps courant a changé, il faut modifier les valeurs de la matrice (il se peut qu'il y ait de nouvelles deadlines)
+		if(task_executed == -1)
+			cout << "t=" << t << " : temps creux" << endl;
+		else
+			cout << "t=" << t << " : T" << task_executed+1 << endl;
+
+		
+		// Mise à jour du contexte
+		t++;
+		
+		if(task_executed != -1)
+			context[task_executed][0]--;
+			
 		for(int i = 0 ; i < nbTaches ; i++) {
 		
 			// Si la deadline de la tache a été passée, on charge en mémoire la deadline suivante
-			if(taches[i][1] < t_cur) {
-				taches[i][1] += vector.at(i).getDi();
-			
+			if(context[i][1] < t) {
+				context[i][1] += taches.at(i)->getDi();
+				
 				// Si, alors que la deadline a été passée, et que Ci n'est pas égal à zéro, alors le système n'est pas ordonnançable
-				if(taches[i][0] > 0) {
-					cout << "ERREUR FATALE :  la tâche T" << i << " n'a pas pu terminer son exécution. Arrêt du système" << endl;
-					return -1;
+				if(context[i][0] > 0) {
+					cout << "ERREUR FATALE : la tâche T" << i << " n'a pas pu terminer son exécution. Arrêt du système" << endl;
+					return;
 				}
 				else
-					taches[i][0] = vector.at(i).getCi(); // réinitialisation du temps d'exécution restant
-					
-			}	
+					context[i][0] = taches.at(i)->getCi(); // réinitialisation du temps d'exécution restant
+			} 
 		}
+		
 	}
-*/
 
 }
 

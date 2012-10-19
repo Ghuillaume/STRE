@@ -38,6 +38,6 @@ int main(int argc, char** argv) {
 	contAper->ajouterTacheAperiodique(tacheB);
 	
 	Ordonnanceur* ordo = new Ordonnanceur(contPer,contAper);
-	ordo->OrdonnancementRM();
+	ordo->OrdonnancementEDF();
 
 }
