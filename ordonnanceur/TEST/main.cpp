@@ -15,9 +15,9 @@ int main(int argc, char** argv) {
 	parse->lireFichier();
 	
 	// ajout Tache dans ConteneurPeriodique 
-	TachePeriodique* tacheP2 = new TachePeriodique(2,8,8,2);
+	TachePeriodique* tacheP2 = new TachePeriodique(2,6,6,2);
 	TachePeriodique* tacheP1 = new TachePeriodique(2,6,6,1);
-	TachePeriodique* tacheP3 = new TachePeriodique(2,12,12,3);
+	TachePeriodique* tacheP3 = new TachePeriodique(2,6,6,3);
 	contPer->ajouterTachePeriodique(tacheP1);
 	contPer->ajouterTachePeriodique(tacheP2);
 	cout << "hyperperiode" << contPer->getHyperPeriode() << endl;

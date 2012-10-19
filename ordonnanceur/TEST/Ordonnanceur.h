@@ -16,6 +16,7 @@ class Ordonnanceur {
 		Ordonnanceur(ConteneurTachePeriodique* conteneurPeriodique, ConteneurTacheAperiodique* conteneurAperiodique);
 		~Ordonnanceur();
 		void OrdonnancementRM();
+		void OrdonnancementRM_BG();
 		void OrdonnancementEDF();
 		
 	private:

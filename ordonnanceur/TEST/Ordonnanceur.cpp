@@ -51,9 +51,21 @@ void Ordonnanceur::OrdonnancementRM() {
 		if (numTache >= tabTpsRestantExec.size()) {
 			// Temps Creux representer par une tache vide
 			tabOrdo[i] = new TachePeriodique();
+			
+			
+			//si BG : 
+			for(int tA = 0 ; tA < conteneurAperiodique_.getize() ; tA++) {
+				int Ri = conteneurAperiodique_->getTache(tA)->getri();
+				if (i != 0) {
+					if (Ri % i) {
+						
 		}
 	}
 	afficherOrdonnancement(tabOrdo);
+}
+
+void Ordonnanceur::OrdonnancementRM_BG() {
+		
 }
 
 void Ordonnanceur::afficherOrdonnancement(vector<TachePeriodique*> tabOrdonnancement) {
