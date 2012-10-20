@@ -19,9 +19,9 @@ class Ordonnanceur {
 	public: 
 		Ordonnanceur(ConteneurTachePeriodique* conteneurPeriodique, ConteneurTacheAperiodique* conteneurAperiodique);
 		~Ordonnanceur();
-		int OrdonnancementRM();
-		int OrdonnancementRM_BG();
-		int OrdonnancementEDF(int serveur);
+		int RM();
+		int RM_BG();
+		int EDF(int serveur);
 		
 	private:
 		ConteneurTachePeriodique* conteneur_;

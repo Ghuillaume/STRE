@@ -10,7 +10,7 @@ Ordonnanceur::~Ordonnanceur() {
 
 }
 
-int Ordonnanceur::OrdonnancementRM() {
+int Ordonnanceur::RM() {
 	
 	TableauPrioritePeriodique tabPrioritePeriodique = this->getOrdrePrioPeriodique();
 	//Tableau qui represente l'ordonnancement 
@@ -67,7 +67,7 @@ int Ordonnanceur::OrdonnancementRM() {
 	return 0;
 }
 
-int Ordonnanceur::OrdonnancementRM_BG() {
+int Ordonnanceur::RM_BG() {
 	
 	/* TODO 
 	Depassement de capacite 
@@ -172,65 +172,8 @@ int Ordonnanceur::OrdonnancementRM_BG() {
 	return 0;
 
 }
-	
 
-void Ordonnanceur::afficherOrdonnancement(vector<TachePeriodique*> tabOrdonnancement) {
-	for(int i = 0 ; i < tabOrdonnancement.size() ; i++) {
-		cout << "t=" << i << " : Tache" << tabOrdonnancement[i]->getNumTache() << endl;
-	}
-}
-	
-TableauPrioritePeriodique Ordonnanceur::getOrdrePrioPeriodique() {
-	
-	TableauPrioritePeriodique tabPrioPeriodique = conteneurPeriodique_->getTabTache();
-	
-	
-    bool tab_en_ordre = false;
-    int taille = tabPrioPeriodique.size();
-    cout << "taille tab prio Periodique : " << taille << endl;
-    while(!tab_en_ordre)
-    {
-        tab_en_ordre = true;
-        for(int i=0 ; i < taille - 1 ; i++)
-        {
-            if(tabPrioPeriodique[i]->getPi() > tabPrioPeriodique[i+1]->getPi())
-            {
-                swap(tabPrioPeriodique[i],tabPrioPeriodique[i+1]);
-                tab_en_ordre = false;
-            }
-        }
-        taille--;
-    }
-    return tabPrioPeriodique;
-
-}
-
-TableauPrioriteAperiodique Ordonnanceur::getOrdrePrioAperiodique() {
-	
-	TableauPrioriteAperiodique tabPrioAperiodique = conteneurAperiodique_->getTabTache();
-	
-	
-    bool tab_en_ordre = false;
-    int taille = tabPrioAperiodique.size();
-    cout << "taille tab prio Aperiodique : " << taille << endl;
-    while(!tab_en_ordre)
-    {
-        tab_en_ordre = true;
-        for(int i=0 ; i < taille - 1 ; i++)
-        {
-            if(tabPrioAperiodique[i]->getri() > tabPrioAperiodique[i+1]->getri())
-            {
-                swap(tabPrioAperiodique[i],tabPrioAperiodique[i+1]);
-                tab_en_ordre = false;
-            }
-        }
-        taille--;
-    }
-    return tabPrioAperiodique;
-
-}
-
-int Ordonnanceur::OrdonnancementEDF(int serveur) {
+int Ordonnanceur::EDF(int serveur) {
 
 	TabTachePeriodique tachesP = this->conteneurPeriodique_->getTabTache();
 	int nbTachesP = tachesP.size();
@@ -377,6 +320,63 @@ int Ordonnanceur::OrdonnancementEDF(int serveur) {
 
 }
 
+	
+
+void Ordonnanceur::afficherOrdonnancement(vector<TachePeriodique*> tabOrdonnancement) {
+	for(int i = 0 ; i < tabOrdonnancement.size() ; i++) {
+		cout << "t=" << i << " : Tache" << tabOrdonnancement[i]->getNumTache() << endl;
+	}
+}
+	
+TableauPrioritePeriodique Ordonnanceur::getOrdrePrioPeriodique() {
+	
+	TableauPrioritePeriodique tabPrioPeriodique = conteneurPeriodique_->getTabTache();
+	
+	
+    bool tab_en_ordre = false;
+    int taille = tabPrioPeriodique.size();
+    cout << "taille tab prio Periodique : " << taille << endl;
+    while(!tab_en_ordre)
+    {
+        tab_en_ordre = true;
+        for(int i=0 ; i < taille - 1 ; i++)
+        {
+            if(tabPrioPeriodique[i]->getPi() > tabPrioPeriodique[i+1]->getPi())
+            {
+                swap(tabPrioPeriodique[i],tabPrioPeriodique[i+1]);
+                tab_en_ordre = false;
+            }
+        }
+        taille--;
+    }
+    return tabPrioPeriodique;
+
+}
+
+TableauPrioriteAperiodique Ordonnanceur::getOrdrePrioAperiodique() {
+	
+	TableauPrioriteAperiodique tabPrioAperiodique = conteneurAperiodique_->getTabTache();
+	
+	
+    bool tab_en_ordre = false;
+    int taille = tabPrioAperiodique.size();
+    cout << "taille tab prio Aperiodique : " << taille << endl;
+    while(!tab_en_ordre)
+    {
+        tab_en_ordre = true;
+        for(int i=0 ; i < taille - 1 ; i++)
+        {
+            if(tabPrioAperiodique[i]->getri() > tabPrioAperiodique[i+1]->getri())
+            {
+                swap(tabPrioAperiodique[i],tabPrioAperiodique[i+1]);
+                tab_en_ordre = false;
+            }
+        }
+        taille--;
+    }
+    return tabPrioAperiodique;
+
+}
 void Ordonnanceur::verifierOrdonnancabilite(ConteneurTachePeriodique* conteneur) {
 	double resultat = 0.0;
 	
