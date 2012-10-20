@@ -1,0 +1,52 @@
++--------------------------------------------+
+|De l'intérêt d'avoir un conteneur de tâches.|
++--------------------------------------------+
+
+	Dans ce fichier, je vais essayer de répondre de manière la plus exhaustive possible sur l'intérêt d'un conteneur de tâches pour stocker des vecteurs de pointeurs de tâches.
+
+
+1) La nécessité d'une interface
+-------------------------------
+
+	Premièrement, il est intéressant de limiter la visibilité de ce genre d'attribut pour empêcher de faire n'importe quoi avec. Sans interface, on peut utiliser absolument toutes les méthodes de vecteurs sur ceux-ci même si elles n'ont aucune légitimité comme le pull ou la destruction d'index.
+	De plus, il est plus facile d'utiliser des méthodes spécifiques à une classe conteneur puisque celle-ci permet de tester la validité des tâches avant leur insertion, et ce de manière automatique.
+
+
+2) La destruction dynamique et automatique d'objets
+---------------------------------------------------
+
+	Une des grande fonctionnalité du C++, c'est la possibilité de gérer finement la mémoire en l'allouant et en  la libérant quand on le souhaite. Cependant, il est possible lors de la destruction d'objets d'entraîner aisément la destruction des objets attributs qui composent la classe. L'intérêt de ceci, c'est l'automatisation de la destruction des vecteurs ainsi que des tâches qui les composent juste en rajoutant une ligne dans le destructeur.
+	Évidemment, il est possible de les détruire à partir de l'ordonnanceur mais n'est-ce pas plus simple de n'utiliser qu'une seule ligne "delete conteneur;" au lieu de plusieurs ?
+	
+
+3) La passage simplifié de paramètres dans les méthodes
+-------------------------------------------------------
+
+	Le principe du conteneur, c'est un peu comme les objets-contexte dans les applis professionnelles : on le passe aux classes qui en ont besoin c'est bien plus simple pour transférer de l'information que de multiplier les pointeurs en paramètre.
+	Il suffit de créer dans le main ce conteneur puis d'envoyer un pointeur à chaque classe qui en aura besoin. Rien de bien compliqué et ça facilite la vie de tout le monde.
+
+
+4) L'amélioration de la modularité du projet 
+--------------------------------------------
+
+	(Cette partie fait le lien avec la matière "Concepts et outils de developpement")
+	
+	Dans le cas où l'application doit évoluer, il est plus simple de séparer les composants pour faciliter la lecture de code, son amélioration et la correction de bugs. 
+	Dans les bonnes pratique de l'écriture de code, il vaut mieux éviter les classes fourre-tout où on stocke des attributs et méthodes très différents, surtout si celles-ci ont une taille de plusieurs centaines de lignes.
+
+
+5) Une structure validée depuis 2 semaines
+------------------------------------------
+
+	Je veux bien croire que tout d'un coup l'architecture du programme ne convienne plus mais dans ce cas-là, on discute avec tout le groupe avant de remettre en question des décisions prises il y a plus de 2 semaines.
+	Un changement soudain dans la structure de l'appli, ça impacte tout le monde. Si jamais un tel changement doit avoir lieu, tout le programme doit être modifié directement, pas seulement la partie qui arrange la personne qui fait le changement.
+	De plus, avant tout changement, il serait bon d'informer les gens qui s'occupent des parties impactées que ça va probablement les empêcher de continuer et que toute une partie du code est à revoir.
+	
+	
+Conclusion
+----------
+
+	Si jamais j'ai tort, n'hésitez surtout pas à me le démontrer, c'est comme ça qu'on progresse. Pour le moment, je suis plutôt d'accord avec moi-même et ce qui est écrit plus haut.
+	Je finirai juste par dire que reprendre tout le code à propos des conditions d'ordonnançabilité pour l'adapter à ce qui a été nouvellement modifié me brise un peu les noix donc j'attendrai qu'on soit bien au clair sur notre manière de procéder avant de m'y attaquer.
+
+	JP.
