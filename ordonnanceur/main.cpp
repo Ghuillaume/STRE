@@ -1,10 +1,10 @@
 #include "common.h"
 
-#include "Parseur.h"
+#include "Parseur.hpp"
 
-#include "TacheAperiodique.h"
-#include "TachePeriodique.h"
-#include "Ordonnanceur.h"
+#include "TacheAperiodique.hpp"
+#include "TachePeriodique.hpp"
+#include "Ordonnanceur.hpp"
 
 #include <iostream>
 using namespace std;

@@ -1,6 +1,6 @@
-#include "Parseur.h"
+#include "Parseur.hpp"
 
-Parseur::Parseur(string nomFichier, ConteneurTacheAperiodique* conteneurApe, ConteneurTachePeriodique* conteneurPe) :nomFichier_(nomFichier), conteneurApe_(conteneurApe), conteneurPe_(conteneurPe) {
+Parseur::Parseur() {
 
 }
 
@@ -8,16 +8,18 @@ Parseur::~Parseur() {
 	
 }
 	
-void Parseur::lireFichier() {
+void Parseur::lireFichier(string nomFichier, Conteneur c) {
 	string line;
-	ifstream streamFichier(nomFichier_.c_str(), ifstream::in);
+	ifstream streamFichier(nomFichier.c_str(), ifstream::in);
 	
 	if (streamFichier.is_open()) {
 		while (streamFichier.good())
 		{
 			getline(streamFichier, line);
 			if (verifierSyntaxe(line)) {
-				//TODO: Récupérer les paramètres et appeler la bonne méthode statique
+				//TODO: Récupérer les paramètres
+				//TODO: créer les taches via c->addT?()
+				
 			} else {
 				cout << "Syntaxe non valide : ";
 			}
@@ -26,19 +28,11 @@ void Parseur::lireFichier() {
     streamFichier.close();
 	} else {
 		cout << "Erreur : impossibilité d'ouvrir le fichier '"
-				<< nomFichier_ << "'." << endl; 
+				<< nomFichier << "'." << endl; 
 	}
 }
 
-void Parseur::ajouterTachePeriodique(int Ci, int Pi, int Di) {
-	
-}
-
-void Parseur::ajouterTacheAperiodique(int ri, int Ci) {
-	
-}
-
-bool Parseur::verifierSyntaxe(string line) {
+bool Parseur::verifierSyntaxe(string &line) {
 	//TODO: Vérifier que la syntaxe est bonne via une regex
 	if (line[0] == 'T') {
 		cout << "c'est un T" << endl;

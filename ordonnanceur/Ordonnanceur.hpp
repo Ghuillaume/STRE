@@ -8,8 +8,8 @@
 
 #include "common.h"
 
-#include "ConteneurTachePeriodique.h"
-#include "ConteneurTacheAperiodique.h"
+#include "ConteneurTachePeriodique.hpp"
+#include "ConteneurTacheAperiodique.hpp"
 
 typedef vector<TachePeriodique*> TableauPrioritePeriodique;
 typedef vector<TacheAperiodique*> TableauPrioriteAperiodique;

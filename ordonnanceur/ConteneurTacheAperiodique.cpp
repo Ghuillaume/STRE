@@ -1,4 +1,4 @@
-#include "ConteneurTacheAperiodique.h"
+#include "ConteneurTacheAperiodique.hpp"
 
 ConteneurTacheAperiodique::ConteneurTacheAperiodique() {
 	tabTacheAperiodique_ = TabTacheAperiodique();

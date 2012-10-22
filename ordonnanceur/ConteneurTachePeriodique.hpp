@@ -2,7 +2,7 @@
 #define CONTENEUR_TACHE_PERIODIQUE_H
 
 #include <vector>
-#include "TachePeriodique.h"
+#include "TachePeriodique.hpp"
 
 typedef vector<TachePeriodique*> TabTachePeriodique;
 

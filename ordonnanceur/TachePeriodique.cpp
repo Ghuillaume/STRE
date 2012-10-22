@@ -1,4 +1,4 @@
-#include "TachePeriodique.h"
+#include "TachePeriodique.hpp"
 
 TachePeriodique::TachePeriodique() {
 	num_ = -1;
