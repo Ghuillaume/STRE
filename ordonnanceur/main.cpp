@@ -29,16 +29,16 @@ int main(int argc, char** argv) {
 		ConteneurTacheAperiodique* contAper = new ConteneurTacheAperiodique();
 
 		// ajout Tache Periodique 
-		TachePeriodique* tacheP2 = new TachePeriodique(2,8,8,2);
-		TachePeriodique* tacheP1 = new TachePeriodique(2,6,6,1);
-		TachePeriodique* tacheP3 = new TachePeriodique(2,12,12,3);
+		TachePeriodique* tacheP2 = new TachePeriodique(2,2,8,8);
+		TachePeriodique* tacheP1 = new TachePeriodique(1,2,6,6);
+		TachePeriodique* tacheP3 = new TachePeriodique(3,2,12,12);
 		contPer->ajouterTachePeriodique(tacheP1);
 		contPer->ajouterTachePeriodique(tacheP2);
 		contPer->ajouterTachePeriodique(tacheP3);
 	
 		// ajout Tache Aperiodique
-		TacheAperiodique* tacheA = new TacheAperiodique(1,3,1);
-		TacheAperiodique* tacheB = new TacheAperiodique(22,3,2);
+		TacheAperiodique* tacheA = new TacheAperiodique(1,1,3);
+		TacheAperiodique* tacheB = new TacheAperiodique(2,22,3);
 		contAper->ajouterTacheAperiodique(tacheA);
 		contAper->ajouterTacheAperiodique(tacheB);
 		
@@ -54,10 +54,11 @@ int main(int argc, char** argv) {
 		cout << "\t\t************************************************" << endl << endl;
 		cout << "\t0. Sortir" << endl;
 		cout << "\t1. Analyser l'ordonnançabilité du système" << endl;
-		cout << "\t2. Simuler l'ordonnancement sous RM-BG" << endl;
-		cout << "\t3. Simuler l'ordonnancement sous RM-TBS" << endl;
-		cout << "\t4. Simuler l'ordonnancement sous EDF-BG" << endl;
-		cout << "\t5. Simuler l'ordonnancement sous EDF-TBS" << endl;
+		cout << "\t2. Simuler l'ordonnancement sous RM (sans tâches apériodiques)" << endl;
+		cout << "\t3. Simuler l'ordonnancement sous RM-BG" << endl;
+		cout << "\t4. Simuler l'ordonnancement sous EDF (sans tâches apériodiques)" << endl;
+		cout << "\t5. Simuler l'ordonnancement sous EDF-BG" << endl;
+		cout << "\t6. Simuler l'ordonnancement sous EDF-TBS" << endl;
 		cout << endl << "Selection : ";
 	
 		cin >> action;
@@ -73,18 +74,22 @@ int main(int argc, char** argv) {
 				break;
 				
 			case '2':
-				ordo->RM_BG();
+				ordo->RM();
 				break;
 			
 			case '3':
-				// TODO RM-TBS
+				ordo->RM_BG();
 				break;
 				
 			case '4':
-				ordo->EDF(BG);
+				ordo->EDF(NO_SERV);
 				break;
 				
 			case '5':
+				ordo->EDF(BG);
+				break;
+				
+			case '6':
 				// TODO pas de traitement si l'argument vaut TBS
 				ordo->EDF(TBS);
 				break;

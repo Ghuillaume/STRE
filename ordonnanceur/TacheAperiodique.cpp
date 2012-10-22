@@ -1,13 +1,13 @@
 #include "TacheAperiodique.h"
 
 TacheAperiodique::TacheAperiodique() {
-	numTache_ = -1;
+	num_ = -1;
 	ri_ = 0;
 	Ci_ = 0;
 }
 
-TacheAperiodique::TacheAperiodique(int ri, int Ci, int numTache) {
-	numTache_ = numTache;
+TacheAperiodique::TacheAperiodique(int num, int ri, int Ci) {
+	num_ = num;
 	ri_ = ri;
 	Ci_ = Ci;
 }
@@ -24,13 +24,9 @@ int TacheAperiodique::getCi() {
 	return Ci_;
 }
 
-int TacheAperiodique::getNumTache() {
-	return numTache_;
-}
-
 string TacheAperiodique::toString() {
 	stringstream s_ri, s_Ci, s_numTache;
-	s_numTache << numTache_;
+	s_numTache << num_;
     s_ri << ri_;
     s_Ci << Ci_;
     

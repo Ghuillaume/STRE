@@ -12,20 +12,18 @@ class TachePeriodique : public Tache {
 
 public:
 	TachePeriodique();
-	TachePeriodique(int Ci, int Pi, int Di, int numTache);
+	TachePeriodique(int num, int Ci, int Pi, int Di);
 	~TachePeriodique();
 	
 	int getCi();
 	int getPi();
 	int getDi();
-	int getNumTache();
 	string toString();
 	
 private:
 	int Pi_;
 	int Ci_;
 	int Di_;
-	int numTache_;
 };
 
 #endif

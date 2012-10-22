@@ -33,7 +33,7 @@ int Ordonnanceur::RM() {
 					if ( tabTpsRestantExec[t] != 0 ) {
 						//depassement d'echeance
 						cout << "Depassement d'echeance" << endl;
-						cout << "Pour la Tache : " << tabPrioritePeriodique[t]->getNumTache() << endl;
+						cout << "Pour la Tache : " << tabPrioritePeriodique[t]->getNum() << endl;
 						return 1;
 					}
 					else {
@@ -102,7 +102,7 @@ int Ordonnanceur::RM_BG() {
 					if ( tabTpsRestantExecPeriodique[t] != 0 ) {
 						//depassement d'echeance
 						cout << "Depassement d'echeance" << endl;
-						cout << "Pour la Tache : " << tabPrioritePeriodique[t]->getNumTache() << endl;
+						cout << "Pour la Tache : " << tabPrioritePeriodique[t]->getNum() << endl;
 						return 1;
 					}
 					else {
@@ -118,7 +118,7 @@ int Ordonnanceur::RM_BG() {
 				if ( tabTpsRestantExecAperiodique[t] != 0 ) {
 					//depassement d'echeance
 					cout << "Depassement d'echeance" << endl;
-					cout << "Pour la Tache : " << tabPrioriteAperiodique[t]->getNumTache()<< endl;
+					cout << "Pour la Tache : " << tabPrioriteAperiodique[t]->getNum()<< endl;
 					return 1;
 				}
 				else {
@@ -137,7 +137,7 @@ int Ordonnanceur::RM_BG() {
 			}
 			else
 			{
-				tabOrdo[i] = tabPrioritePeriodique[numTachePeriodique]->getNumTache();
+				tabOrdo[i] = tabPrioritePeriodique[numTachePeriodique]->getNum();
 				tabTpsRestantExecPeriodique[numTachePeriodique] -= 1;
 				cout << "t=" << i << " : Tache T" << tabOrdo[i] << endl;
 				tachePeriodiquePlacee = true;
@@ -154,7 +154,7 @@ int Ordonnanceur::RM_BG() {
 				}
 				else
 				{
-					tabOrdo[i] = tabPrioriteAperiodique[numTacheAperiodique]->getNumTache();
+					tabOrdo[i] = tabPrioriteAperiodique[numTacheAperiodique]->getNum();
 					tabTpsRestantExecAperiodique[numTacheAperiodique] -= 1;
 					cout << "t=" << i << " : Tache R" << tabOrdo[i] << endl;
 					tacheAperiodiquePlacee = true;
@@ -163,7 +163,7 @@ int Ordonnanceur::RM_BG() {
 			if (numTacheAperiodique >= tabTpsRestantExecAperiodique.size()) {
 				//Temps Creux
 				TachePeriodique* TempsCreux = new TachePeriodique();
-				tabOrdo[i] = TempsCreux->getNumTache();
+				tabOrdo[i] = TempsCreux->getNum();
 				cout << "t=" << i << " : Temps Creux" << endl;
 			}
 		}
@@ -324,7 +324,7 @@ int Ordonnanceur::EDF(int serveur) {
 
 void Ordonnanceur::afficherOrdonnancement(vector<TachePeriodique*> tabOrdonnancement) {
 	for(int i = 0 ; i < tabOrdonnancement.size() ; i++) {
-		cout << "t=" << i << " : Tache" << tabOrdonnancement[i]->getNumTache() << endl;
+		cout << "t=" << i << " : Tache" << tabOrdonnancement[i]->getNum() << endl;
 	}
 }
 	

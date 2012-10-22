@@ -8,11 +8,13 @@ using namespace std;
 class Tache {
 
 	public:
-	virtual ~Tache() { }
+		virtual ~Tache() {};
 	
-	virtual string toString() = 0;
+		virtual string toString() = 0;
+		int getNum() { return num_; }
 	
-	
+	protected:
+		int num_;
 	
 };
 
