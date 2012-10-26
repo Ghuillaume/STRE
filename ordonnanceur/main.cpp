@@ -2,9 +2,10 @@
 
 #include "Parseur.hpp"
 
+#include "Conteneur.hpp"
 #include "TacheAperiodique.hpp"
 #include "TachePeriodique.hpp"
-#include "Ordonnanceur.hpp"
+//#include "Ordonnanceur.hpp"
 
 #include <iostream>
 using namespace std;
@@ -24,26 +25,27 @@ int main(int argc, char** argv) {
 	parse->lireFichier();
 	*/
 	
+	Parseur* parse = new Parseur();
 	// A la place, on ajoute manuellement pour l'instant
-		ConteneurTachePeriodique* contPer = new ConteneurTachePeriodique();
-		ConteneurTacheAperiodique* contAper = new ConteneurTacheAperiodique();
-
+		Conteneur* conteneur = new Conteneur();
+		parse->lireFichier("fichierTestAlea.txt",conteneur);
+	/*
 		// ajout Tache Periodique 
 		TachePeriodique* tacheP2 = new TachePeriodique(2,2,8,8);
 		TachePeriodique* tacheP1 = new TachePeriodique(1,2,6,6);
 		TachePeriodique* tacheP3 = new TachePeriodique(3,2,12,12);
-		contPer->ajouterTachePeriodique(tacheP1);
-		contPer->ajouterTachePeriodique(tacheP2);
-		contPer->ajouterTachePeriodique(tacheP3);
+		conteneur->addTacheP(tacheP1);
+		conteneur->addTacheP(tacheP2);
+		conteneur->addTacheP(tacheP3);
 	
 		// ajout Tache Aperiodique
 		TacheAperiodique* tacheA = new TacheAperiodique(1,1,3);
 		TacheAperiodique* tacheB = new TacheAperiodique(2,22,3);
-		contAper->ajouterTacheAperiodique(tacheA);
-		contAper->ajouterTacheAperiodique(tacheB);
+		conteneur->addTacheA(tacheA);
+		conteneur->addTacheA(tacheB);
+	/	
 		
-		
-	Ordonnanceur* ordo = new Ordonnanceur(contPer,contAper);
+	/*Ordonnanceur* ordo = new Ordonnanceur(conteneur);
 	
 	char action;
 	bool sortir = false;
@@ -96,5 +98,5 @@ int main(int argc, char** argv) {
 		}
 	
 	}
-
+*/
 }

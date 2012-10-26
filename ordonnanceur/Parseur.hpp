@@ -4,6 +4,7 @@
 #include <string>
 #include <fstream>
 #include <iostream>
+#include <regex>
 
 #include "Conteneur.hpp"
 
@@ -14,7 +15,7 @@ class Parseur {
 		Parseur();
 		~Parseur();
 	
-		void lireFichier(string nomFichier, Conteneur c);
+		void lireFichier(string nomFichier, Conteneur* c);
 	
 	private:
 		static bool verifierSyntaxe(string &line);

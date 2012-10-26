@@ -1,8 +1,6 @@
 #include "Ordonnanceur.hpp"
 
-Ordonnanceur::Ordonnanceur(ConteneurTachePeriodique* conteneurPeriodique, ConteneurTacheAperiodique* conteneurAperiodique) : 
-	conteneurPeriodique_(conteneurPeriodique), conteneurAperiodique_(conteneurAperiodique)	
-{
+Ordonnanceur::Ordonnanceur(Controleur* controleur) : controleur_(controleur){
 	
 }
 

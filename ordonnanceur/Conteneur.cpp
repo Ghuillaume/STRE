@@ -1,28 +1,50 @@
 #include "Conteneur.hpp"
 
 Conteneur::Conteneur() {
-	ListeTP_ = new ListeTachesPeriodiques();
-	ListeTA_ = new ListeTachesAperiodiques();
+	listeTP_ = new ListeTachesPeriodiques();
+	listeTA_ = new ListeTachesAperiodiques();
 }
 
 Conteneur::~Conteneur() {
-	for(int i = 0 ; i < ListeTP_->size() ; i++)
+	/*for(int i = 0 ; i < listeTP_->size() ; i++)
 		delete listeTP_[i];
-	listeTP_.erase(listeTP_.begin(),listeTP_.end());
+	listeTP_.erase(listeTP_.begin(),listeTP_.end());*/
 }
 
 void Conteneur::addTacheP(int num, int Ci, int Pi, int Di) {
-	ListeTP_->push_back(new TachePeriodique(num,Ci,Pi,Di));
+	listeTP_->push_back(new TachePeriodique(num,Ci,Pi,Di));
 }
 
 void Conteneur::addTacheA(int num, int ri, int Ci) {
-	ListeTA_->push_back(new TacheAperiodique(num,ri,Ci));
+	listeTA_->push_back(new TacheAperiodique(num,ri,Ci));
 }
 		
 ListeTachesPeriodiques* Conteneur::getVectorPeriodique() {
-	return ListeTP_;
+	return listeTP_;
 }
 
 ListeTachesAperiodiques* Conteneur::getVectorAperiodique() {
-	return ListeTA_;
+	return listeTA_;
 }
+
+int Conteneur::getHyperPeriode() {
+	int hyperPeriode = listeTP_->at(0)->getPi();
+	for (int i = 0 ; i < listeTP_->size() - 1 ; i++) {
+		hyperPeriode = ppcmPerso(hyperPeriode,listeTP_->at(i+1)->getPi());
+	}
+	return hyperPeriode;
+}
+
+
+int Conteneur::ppcmPerso(int x,int y)
+{
+	int A=x;
+	int B=y;
+	while (A!=B)
+	{
+		while (A>B) B=B+y;
+		while (A<B) A=A+x;
+	}
+	return A;
+} 
+

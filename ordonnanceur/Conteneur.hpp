@@ -15,10 +15,14 @@ class Conteneur {
 		ListeTachesPeriodiques* getVectorPeriodique();
 		ListeTachesAperiodiques* getVectorAperiodique();
 		
+		int getHyperPeriode();
+		
 	private:
 		ListeTachesPeriodiques* listeTP_;
 		ListeTachesAperiodiques* listeTA_;
-
+		
+		
+		int ppcmPerso(int x, int y);
 
 };
 
