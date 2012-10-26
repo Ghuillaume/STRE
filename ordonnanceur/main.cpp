@@ -5,7 +5,7 @@
 #include "Conteneur.hpp"
 #include "TacheAperiodique.hpp"
 #include "TachePeriodique.hpp"
-//#include "Ordonnanceur.hpp"
+#include "Ordonnanceur.hpp"
 
 #include <iostream>
 using namespace std;
@@ -20,33 +20,26 @@ int main(int argc, char** argv) {
 	*/
 	
 	// TODO : parser le fichier reçu en entrée (ligne de commande)
-	/*	
-	Parseur* parse = new Parseur(argv[0],contAper,contPer);
-	parse->lireFichier();
-	*/
-	
-	Parseur* parse = new Parseur();
-	// A la place, on ajoute manuellement pour l'instant
+
 		Conteneur* conteneur = new Conteneur();
-		parse->lireFichier("fichierTestAlea.txt",conteneur);
-	/*
+
 		// ajout Tache Periodique 
-		TachePeriodique* tacheP2 = new TachePeriodique(2,2,8,8);
-		TachePeriodique* tacheP1 = new TachePeriodique(1,2,6,6);
-		TachePeriodique* tacheP3 = new TachePeriodique(3,2,12,12);
-		conteneur->addTacheP(tacheP1);
-		conteneur->addTacheP(tacheP2);
-		conteneur->addTacheP(tacheP3);
+		conteneur->addTacheP(2,2,8,8);
+		conteneur->addTacheP(1,2,6,6);
+		conteneur->addTacheP(3,2,12,12);
 	
 		// ajout Tache Aperiodique
-		TacheAperiodique* tacheA = new TacheAperiodique(1,1,3);
-		TacheAperiodique* tacheB = new TacheAperiodique(2,22,3);
-		conteneur->addTacheA(tacheA);
-		conteneur->addTacheA(tacheB);
-	/	
+		conteneur->addTacheA(1,1,3);
+		conteneur->addTacheA(2,22,3);
+
 		
-	/*Ordonnanceur* ordo = new Ordonnanceur(conteneur);
+	Ordonnanceur* ordo = new Ordonnanceur(conteneur);
+	ordo->verifierCondNecessaireRM();
+	ordo->verifierCondSuffisanteRM();
+	ordo->verifierConditionEDF();
+	ordo->RM();
 	
+	/*
 	char action;
 	bool sortir = false;
 	while(!sortir) {

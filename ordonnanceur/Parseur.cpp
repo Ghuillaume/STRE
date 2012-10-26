@@ -33,7 +33,7 @@ void Parseur::lireFichier(string nomFichier, Conteneur* c) {
 }
 
 bool Parseur::verifierSyntaxe(string &line) {
-			smatch sm;
+			/*smatch sm;
 			try {
 				regex exprPeriodique("\^T(\d*)(.*)");
 				if (regex_match(line,sm,exprPeriodique)) {
@@ -76,6 +76,6 @@ bool Parseur::verifierSyntaxe(string &line) {
 				
 			}
 			
-			
+*/
 			return true; 
 }

@@ -14,27 +14,26 @@ using namespace std;
 
 class Ordonnanceur {
 	public: 
-		Ordonnanceur(Controleur* controleur_);
+		Ordonnanceur(Conteneur* conteneur_);
 		~Ordonnanceur();
 		int RM();
 		int RM_BG();
 		int EDF(int serveur);
 		
+		void verifierCondNecessaireRM();
+		void verifierCondSuffisanteRM();
+		void verifierConditionEDF();
+		
 	private:
-		Conteneur* controleur_;
+		Conteneur* conteneur_;
 		
-		void afficherOrdonnancement(vector<TachePeriodique*> tabOrdonnancement);
-		TableauPrioritePeriodique getOrdrePrioPeriodique();
-		TableauPrioriteAperiodique getOrdrePrioAperiodique();
+		void afficherOrdonnancement(ListeTachesPeriodiques tabOrdonnancement);
+		ListeTachesPeriodiques* getOrdrePrioPeriodique();
+		ListeTachesAperiodiques* getOrdrePrioAperiodique();
 		
-		void verifierOrdonnancabilite();
-		
-		static void verifierCondNecessaireRM();
-		static void verifierCondSuffisanteRM();
-		static void verifierConditionEDF();
-		static double calculerU();
-		static double calculerU2();
-		static double calculerUBound(double n);
+		 double calculerU();
+		 double calculerU2();
+		 double calculerUBound();
 };
 #endif
 

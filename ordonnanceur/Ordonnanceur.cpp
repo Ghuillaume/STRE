@@ -1,6 +1,6 @@
 #include "Ordonnanceur.hpp"
 
-Ordonnanceur::Ordonnanceur(Controleur* controleur) : controleur_(controleur){
+Ordonnanceur::Ordonnanceur(Conteneur* conteneur) : conteneur_(conteneur){
 	
 }
 
@@ -10,32 +10,34 @@ Ordonnanceur::~Ordonnanceur() {
 
 int Ordonnanceur::RM() {
 	
-	TableauPrioritePeriodique tabPrioritePeriodique = this->getOrdrePrioPeriodique();
-	//Tableau qui represente l'ordonnancement 
-	// TabOrdo[i] = Tache qui s'execute a l'instant i
-	vector<TachePeriodique*> tabOrdo(conteneurPeriodique_->getHyperPeriode());
+	//Tableau qui contient les taches Periodiques rangées par Ordre de priorité
+	ListeTachesPeriodiques* tabPrioritePeriodique = this->getOrdrePrioPeriodique();
+	
+	//Tableau qui représente l'ordonnancement
+	ListeTachesPeriodiques tabOrdo(conteneur_->getHyperPeriode());
+		
 	//Tableau qui contient le temps d'execution restant de chaque tache
 	// rangé par ordre de priorité
-	vector<int> tabTpsRestantExec(tabPrioritePeriodique.size());
+	vector<int> tabTpsRestantExec(tabPrioritePeriodique->size());
 	//initialisation du tableau du temps restant d'execution
 	for(int i = 0 ; i < tabTpsRestantExec.size() ; i++) {
-		tabTpsRestantExec[i] = tabPrioritePeriodique[i]->getCi();
+		tabTpsRestantExec[i] = tabPrioritePeriodique->at(i)->getCi();
 	}
 	
 	//boucle d'ordonnancement
-	for(int i = 0 ; i < tabOrdo.size() + 1 ; i++) {
+	for(int i = 0 ; i < tabOrdo.size() ; i++) {
 		//vérification du reveil des taches 
 		for(int t = 0 ; t < tabTpsRestantExec.size() ; t++) {
-			if ( (i % (tabPrioritePeriodique[t]->getPi())) == 0 ) {
+			if ( (i % (tabPrioritePeriodique->at(t)->getPi())) == 0 ) {
 				if (i != 0) {
 					if ( tabTpsRestantExec[t] != 0 ) {
 						//depassement d'echeance
 						cout << "Depassement d'echeance" << endl;
-						cout << "Pour la Tache : " << tabPrioritePeriodique[t]->getNum() << endl;
+						cout << "Pour la Tache : " << tabPrioritePeriodique->at(t)->getNum() << endl;
 						return 1;
 					}
 					else {
-						tabTpsRestantExec[t] = tabPrioritePeriodique[t]->getCi();
+						tabTpsRestantExec[t] = tabPrioritePeriodique->at(t)->getCi();
 					}
 				}
 			}
@@ -51,7 +53,7 @@ int Ordonnanceur::RM() {
 			}
 			else
 			{
-				tabOrdo[i] = tabPrioritePeriodique[numTache];
+				tabOrdo[i] = tabPrioritePeriodique->at(numTache);
 				tabTpsRestantExec[numTache] -= 1;
 				tachePlacee = true;
 			}
@@ -72,7 +74,7 @@ int Ordonnanceur::RM_BG() {
 	*/
 	
 	
-	
+/*	
 	TableauPrioritePeriodique tabPrioritePeriodique = this->getOrdrePrioPeriodique();
 	TableauPrioriteAperiodique tabPrioriteAperiodique = this->getOrdrePrioAperiodique();
 	//Tableau qui represente l'ordonnancement 
@@ -168,11 +170,11 @@ int Ordonnanceur::RM_BG() {
 	}
 	//afficherOrdonnancement(tabOrdo);
 	return 0;
-
+*/
 }
 
 int Ordonnanceur::EDF(int serveur) {
-
+/*
 	TabTachePeriodique tachesP = this->conteneurPeriodique_->getTabTache();
 	int nbTachesP = tachesP.size();
 	TabTacheAperiodique tachesA = this->conteneurAperiodique_->getTabTache();
@@ -210,13 +212,13 @@ int Ordonnanceur::EDF(int serveur) {
 	bool need_to_poll;
 	
 	while( t < conteneurPeriodique_->getHyperPeriode() ) {
-		
+*/		
 		// Affichage du contexte pour debuggage
 		/*cout << "\t\tN\tExec\tDeadline" << endl;
 		for(int i = 0 ; i < nbTaches ; i++)
 			cout << "\t\tT" << i+1 << "\t" << context[i][0] << "\t" << context[i][1] << endl;*/
 	
-	
+/*	
 		// On vérifie si l'ordonnanceur doit élire une tâche (seulement si une tache se réveille ou se termine)
 		// Une tache se réveille si t=0 (toutes les tâches se réveillent à t=0 dans le tp) ou si on est sur sa deadline
 		// On sait qu'une tache se termine si son temps d'exec restant = 0
@@ -315,33 +317,32 @@ int Ordonnanceur::EDF(int serveur) {
 	}
 	
 	return 0;
-
+*/
 }
 
 	
 
-void Ordonnanceur::afficherOrdonnancement(vector<TachePeriodique*> tabOrdonnancement) {
+void Ordonnanceur::afficherOrdonnancement(ListeTachesPeriodiques tabOrdonnancement) {
 	for(int i = 0 ; i < tabOrdonnancement.size() ; i++) {
 		cout << "t=" << i << " : Tache" << tabOrdonnancement[i]->getNum() << endl;
 	}
 }
 	
-TableauPrioritePeriodique Ordonnanceur::getOrdrePrioPeriodique() {
+ListeTachesPeriodiques* Ordonnanceur::getOrdrePrioPeriodique() {
 	
-	TableauPrioritePeriodique tabPrioPeriodique = conteneurPeriodique_->getTabTache();
-	
+	ListeTachesPeriodiques* tabPrioPeriodique = conteneur_->getVectorPeriodique();
 	
     bool tab_en_ordre = false;
-    int taille = tabPrioPeriodique.size();
+    int taille = tabPrioPeriodique->size();
     cout << "taille tab prio Periodique : " << taille << endl;
     while(!tab_en_ordre)
     {
         tab_en_ordre = true;
         for(int i=0 ; i < taille - 1 ; i++)
         {
-            if(tabPrioPeriodique[i]->getPi() > tabPrioPeriodique[i+1]->getPi())
+            if(tabPrioPeriodique->at(i)->getPi() > tabPrioPeriodique->at(i+1)->getPi())
             {
-                swap(tabPrioPeriodique[i],tabPrioPeriodique[i+1]);
+                swap(tabPrioPeriodique->at(i),tabPrioPeriodique->at(i+1));
                 tab_en_ordre = false;
             }
         }
@@ -351,20 +352,20 @@ TableauPrioritePeriodique Ordonnanceur::getOrdrePrioPeriodique() {
 
 }
 
-TableauPrioriteAperiodique Ordonnanceur::getOrdrePrioAperiodique() {
+ListeTachesAperiodiques* Ordonnanceur::getOrdrePrioAperiodique() {
 	
-	TableauPrioriteAperiodique tabPrioAperiodique = conteneurAperiodique_->getTabTache();
+	ListeTachesAperiodiques* tabPrioAperiodique = conteneur_->getVectorAperiodique();
 	
 	
     bool tab_en_ordre = false;
-    int taille = tabPrioAperiodique.size();
+    int taille = tabPrioAperiodique->size();
     cout << "taille tab prio Aperiodique : " << taille << endl;
     while(!tab_en_ordre)
     {
         tab_en_ordre = true;
         for(int i=0 ; i < taille - 1 ; i++)
         {
-            if(tabPrioAperiodique[i]->getri() > tabPrioAperiodique[i+1]->getri())
+            if(tabPrioAperiodique->at(i)->getri() > tabPrioAperiodique->at(i+1)->getri())
             {
                 swap(tabPrioAperiodique[i],tabPrioAperiodique[i+1]);
                 tab_en_ordre = false;
@@ -375,18 +376,12 @@ TableauPrioriteAperiodique Ordonnanceur::getOrdrePrioAperiodique() {
     return tabPrioAperiodique;
 
 }
-void Ordonnanceur::verifierOrdonnancabilite(ConteneurTachePeriodique* conteneur) {
-	double resultat = 0.0;
-	
-	verifierCondNecessaireRM(conteneur);
-	verifierCondSuffisanteRM(conteneur);
-	verifierConditionEDF(conteneur);
-}
 
-void Ordonnanceur::verifierCondNecessaireRM(ConteneurTachePeriodique* conteneur) {
+
+void Ordonnanceur::verifierCondNecessaireRM() {
 	int Pi = 0;
 	int Ci = 0;
-	double Up = calculerU(conteneur);
+	double Up = calculerU();
 	
 	cout << "Test de condition nécessaire pour RM : ";
 	if (Up <= 1.0) {
@@ -396,11 +391,12 @@ void Ordonnanceur::verifierCondNecessaireRM(ConteneurTachePeriodique* conteneur)
 	}
 }
 
-void Ordonnanceur::verifierCondSuffisanteRM(ConteneurTachePeriodique* conteneur) {
+void Ordonnanceur::verifierCondSuffisanteRM() {
 	int Pi = 0;
 	int Ci = 0;
-	double Up = calculerU(conteneur);
-	double UBoundRM = calculerUBound(conteneur->getSize());
+	double Up = calculerU();
+	
+	double UBoundRM = calculerUBound();
 	
 	cout << " Test de condition suffisante pour RM : ";
 	if (Up <= UBoundRM) {
@@ -411,16 +407,17 @@ void Ordonnanceur::verifierCondSuffisanteRM(ConteneurTachePeriodique* conteneur)
 }
 
 
-void Ordonnanceur::verifierConditionEDF(ConteneurTachePeriodique* conteneur) {
+void Ordonnanceur::verifierConditionEDF() {
 	bool egaliteDiPi = true;
 	bool superioritePiDi = true;
 	int Pi = 0;
 	int Di = 0;
 	double U = 0.0;
+	ListeTachesPeriodiques* liste = conteneur_->getVectorPeriodique();
 
-	for (int i = 0; i++; i < conteneur->getSize()) {
-		Pi = conteneur->getTache(i)->getPi();
-		Di = conteneur->getTache(i)->getDi();
+	for (int i = 0; i++; i < liste->size()) {
+		Pi = liste->at(i)->getPi();
+		Di = liste->at(i)->getDi();
 		
 		egaliteDiPi &= (Pi == Di);
 		superioritePiDi &= (Pi > Di);
@@ -428,17 +425,17 @@ void Ordonnanceur::verifierConditionEDF(ConteneurTachePeriodique* conteneur) {
 	
 	if (egaliteDiPi) {
 		cout << "Test de condition nécessaire et suffisante pour EDF : ";
-		U = calculerU(conteneur);
+		U = calculerU();
 		
 		if (U <= 1.0) {
-			cout << "ordonnaçable" << endl;
+			cout << "ordonnançable" << endl;
 		} else {
 			cout << "non-ordonnançable" << endl;
 		}
 	}
 	else if (superioritePiDi) {
 		cout << "Test de condition suffisante pour EDF : ";
-		U = calculerU2(conteneur);
+		U = calculerU2();
 		
 		if (U <= 1.0) {
 			cout << "ordonnaçable" << endl;
@@ -448,35 +445,38 @@ void Ordonnanceur::verifierConditionEDF(ConteneurTachePeriodique* conteneur) {
 	}
 }
 
-double Ordonnanceur::calculerU(ConteneurTachePeriodique* conteneur) {
+double Ordonnanceur::calculerU() {
 	int Pi = 0;
 	int Ci = 0;
 	double Up = 0.0;
+	ListeTachesPeriodiques* liste = conteneur_->getVectorPeriodique();
 
 	// Somme de 1 à n des Ci/Pi
-	for (int i = 0; i++; i < conteneur->getSize()) {
-		Ci = conteneur->getTache(i)->getCi();
-		Pi = conteneur->getTache(i)->getPi();
+	for (int i = 0; i++; i < liste->size()) {
+		Ci = liste->at(i)->getCi();
+		Pi = liste->at(i)->getPi();
 		Up += Ci/Pi;
 	}
 	return Up;
 }
 
-double Ordonnanceur::calculerU2(ConteneurTachePeriodique* conteneur) {
+double Ordonnanceur::calculerU2() {
 	int Di = 0;
 	int Ci = 0;
 	double Up = 0.0;
-
+	ListeTachesPeriodiques* liste = conteneur_->getVectorPeriodique();
+	
 	// Somme de 1 à n des Ci/Di
-	for (int i = 0; i++; i < conteneur->getSize()) {
-		Ci = conteneur->getTache(i)->getCi();
-		Di = conteneur->getTache(i)->getDi();
+	for (int i = 0; i++; i < liste->size()) {
+		Ci = liste->at(i)->getCi();
+		Di = liste->at(i)->getDi();
 		Up += Ci/Di;
 	}
 	return Up;
 }
 
-double Ordonnanceur::calculerUBound(double n) {
+double Ordonnanceur::calculerUBound() {
+	double n = (double) conteneur_->getVectorPeriodique()->size();
 	double puissance = pow(2.0, (1.0 / n));
 	return n * (puissance - 1);
 }
