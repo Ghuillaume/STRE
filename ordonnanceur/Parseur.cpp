@@ -33,49 +33,32 @@ void Parseur::lireFichier(string nomFichier, Conteneur* c) {
 }
 
 bool Parseur::verifierSyntaxe(string &line) {
-			smatch sm;
-			try {
-				regex exprPeriodique("\^T(\d*)(.*)");
-				if (regex_match(line,sm,exprPeriodique)) {
-					for (unsigned i=0; i<sm.size(); ++i) {
-	   					cout << "[" << sm[i] << "] ";
-	  				}
-					cout << "c'est une tache Periodique" << endl;
-				}
-				else {
-					cout << "raté" << endl;
-				}
-			}
-			catch (regex_error& e) {
-				if (e.code() == regex_constants::error_collate) {
-					cout << "erreur : error_collate" << endl;
-				}
-				else if (e.code() == regex_constants::error_ctype) {
-					cout << "erreur : error_ctype" << endl;
-				}
-				else if (e.code() == regex_constants::error_escape) {
-					cout << "erreur : error_escape" << endl;
-				}
-				else if (e.code() == regex_constants::error_backref) {
-					cout << "erreur : error_backref" << endl;
-				}
-				else if (e.code() == regex_constants::error_brack) {
-					cout << "erreur : error_brack" << endl;
-				}
-				else if (e.code() == regex_constants::error_paren) {
-					cout << "erreur :error_paren " << endl;
-				}
-				else if (e.code() == regex_constants::error_brace) {
-					cout << "erreur : error_brace" << endl;
-				}
-				else if (e.code() == regex_constants::error_badbrace) {
-					cout << "erreur : error_badbrace" << endl;
-				}	
-				else {
-				}		
+
+			// Si la longueur est nulle, c'est la dernière ligne, on ne la considère pas
+			if(line.length() < 1)
+				return true;
+			
+			cout << endl << "Verif line " << line << endl;
+
+			int err;
+			regex_t pregP;
+			regex_t pregAp;
+			const char *exprPeriodique = "^T[0-9]+: [0-9]+,[0-9]+,[0-9]+$";
+			const char *exprAperiodique = "^R[0-9]+: [0-9]+,[0-9]+$";
+			
+			// Compilation des regex
+			if(regcomp (&pregP, exprPeriodique, REG_NOSUB | REG_EXTENDED | REG_ICASE) == 0
+					&& regcomp (&pregAp, exprAperiodique, REG_NOSUB | REG_EXTENDED | REG_ICASE) == 0 ) {
+			
+				if (regexec (&pregP, line.c_str(), 0, NULL, 0) == 0)
+					return true;
+				else if (regexec (&pregAp, line.c_str(), 0, NULL, 0) == 0)
+					return true;
+				else
+					return false;
 				
 			}
-			
+   
 			
 			return true; 
 }
