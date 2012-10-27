@@ -23,6 +23,7 @@ class Ordonnanceur {
 		void verifierCondNecessaireRM();
 		void verifierCondSuffisanteRM();
 		void verifierConditionEDF();
+		void verifierConditionEDF_TBS(double Us);
 		
 	private:
 		Conteneur* conteneur_;

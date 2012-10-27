@@ -5,7 +5,7 @@ Ordonnanceur::Ordonnanceur(Conteneur* conteneur) : conteneur_(conteneur){
 }
 
 Ordonnanceur::~Ordonnanceur() {
-
+	// TODO : Faire un vrai destructeur parce que là, bonjour les fuites mémoires :D 
 }
 
 int Ordonnanceur::RM() {
@@ -442,6 +442,17 @@ void Ordonnanceur::verifierConditionEDF() {
 		} else {
 			cout << "on ne peut rien conclure" << endl;
 		}
+	}
+}
+
+void Ordonnanceur::verifierConditionEDF_TBS(double Us) {
+	double Up = calculerU();
+	
+	cout << "Test de condition nécessaire et suffisante pour EDF-TBS : ";
+	if (Up + Us <= 1.0) {
+		cout << "ordonnaçable" << endl;
+	} else {
+		cout << "non-ordonnançable" << endl;
 	}
 }
 
