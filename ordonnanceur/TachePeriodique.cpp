@@ -41,3 +41,19 @@ string TachePeriodique::toString() {
 				+ ", Di : " + s_Di.str();
 	return chaine;
 }
+
+string TachePeriodique::formatKTR() {
+	stringstream s_Ci, s_Pi, s_Di, s_numTache;
+	s_numTache << num_;
+    s_Ci << Ci_;
+    s_Pi << Pi_;
+    s_Di << Di_;
+
+	string chaine = "T" + s_numTache.str()   
+				+ "(" + s_Ci.str()
+				+ "," + s_Pi.str()
+				+ "," + s_Di.str() + ")";
+	return chaine;
+}
+	
+	

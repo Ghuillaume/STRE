@@ -19,6 +19,7 @@ public:
 	int getPi();
 	int getDi();
 	string toString();
+	string formatKTR();
 	
 private:
 	int Pi_;

@@ -1,6 +1,6 @@
 #include "Ordonnanceur.hpp"
 
-Ordonnanceur::Ordonnanceur(Conteneur* conteneur) : conteneur_(conteneur){
+Ordonnanceur::Ordonnanceur(Conteneur* conteneur, Traceur* traceur) : conteneur_(conteneur), traceur_(traceur) {
 	
 }
 
@@ -9,10 +9,14 @@ Ordonnanceur::~Ordonnanceur() {
 }
 
 int Ordonnanceur::RM() {
+	traceur_->entete(conteneur_->getHyperPeriode());
 	
 	//Tableau qui contient les taches Periodiques rangées par Ordre de priorité
 	ListeTachesPeriodiques* tabPrioritePeriodique = this->getOrdrePrioPeriodique();
 	
+	for(int i = 0 ; i < tabPrioritePeriodique->size() ; i++) {
+		traceur_->declarationTache(i, tabPrioritePeriodique->at(i)->formatKTR());
+	}
 	//Tableau qui représente l'ordonnancement
 	ListeTachesPeriodiques tabOrdo(conteneur_->getHyperPeriode());
 		
@@ -22,6 +26,7 @@ int Ordonnanceur::RM() {
 	//initialisation du tableau du temps restant d'execution
 	for(int i = 0 ; i < tabTpsRestantExec.size() ; i++) {
 		tabTpsRestantExec[i] = tabPrioritePeriodique->at(i)->getCi();
+		traceur_->reveil(0,i);
 	}
 	
 	//boucle d'ordonnancement

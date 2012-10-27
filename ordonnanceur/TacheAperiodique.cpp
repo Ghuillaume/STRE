@@ -35,3 +35,15 @@ string TacheAperiodique::toString() {
 				+ ", Ci : " + s_Ci.str();
 	return chaine;
 }
+
+string TacheAperiodique::formatKTR() {
+	stringstream s_ri, s_Ci, s_numTache;
+	s_numTache << num_;
+    s_ri << ri_;
+    s_Ci << Ci_;
+
+	string chaine = "R" + s_numTache.str()   
+				+ "(" + s_ri.str()
+				+ "," + s_Ci.str() + ")";
+	return chaine;
+}

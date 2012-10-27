@@ -18,6 +18,7 @@ public:
 	int getri();
 	int getCi();
 	string toString();
+	string formatKTR();
 	
 private:
 	int Ci_;

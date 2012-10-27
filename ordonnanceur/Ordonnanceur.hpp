@@ -7,14 +7,14 @@
 #include <cmath>
 
 #include "common.h"
-
+#include "Traceur.hpp"
 #include "Conteneur.hpp"
 
 using namespace std;
 
 class Ordonnanceur {
 	public: 
-		Ordonnanceur(Conteneur* conteneur_);
+		Ordonnanceur(Conteneur* conteneur, Traceur* traceur);
 		~Ordonnanceur();
 		int RM();
 		int RM_BG();
@@ -27,6 +27,7 @@ class Ordonnanceur {
 		
 	private:
 		Conteneur* conteneur_;
+		Traceur* traceur_;
 		
 		void afficherOrdonnancement(ListeTachesPeriodiques tabOrdonnancement);
 		ListeTachesPeriodiques* getOrdrePrioPeriodique();

@@ -1,6 +1,7 @@
 #include "common.h"
 
 #include "Parseur.hpp"
+#include "Traceur.hpp"
 
 #include "Conteneur.hpp"
 #include "TacheAperiodique.hpp"
@@ -32,12 +33,15 @@ int main(int argc, char** argv) {
 		conteneur->addTacheA(1,1,3);
 		conteneur->addTacheA(2,22,3);
 
-		
-	Ordonnanceur* ordo = new Ordonnanceur(conteneur);
+	Traceur* traceur = new Traceur();
+	
+	Ordonnanceur* ordo = new Ordonnanceur(conteneur,traceur);
 	ordo->verifierCondNecessaireRM();
 	ordo->verifierCondSuffisanteRM();
 	ordo->verifierConditionEDF();
 	ordo->RM();
+	
+	traceur->fermetureFichier();
 	
 	/*
 	char action;
