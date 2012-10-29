@@ -1,6 +1,6 @@
 CXX = g++
 
-Ordonnanceur: main.o Conteneur.o TacheAperiodique.o Conteneur.o TachePeriodique.o Parseur.o Ordonnanceur.o Traceur.o
+Ordonnanceur: main.o Conteneur.o TacheAperiodique.o Conteneur.o TachePeriodique.o Parseur.o Ordonnanceur.o Traceur.o common.o
 	$(CXX) -o Ordonnanceur $^
 	
 Conteneur: Conteneur.hpp Conteneur.cpp TachePeriodique.hpp TacheAperiodique.hpp common.h
@@ -20,6 +20,9 @@ Ordonnanceur.o: Ordonnanceur.hpp Ordonnanceur.cpp Traceur.hpp Conteneur.hpp comm
 
 Traceur.o: Traceur.hpp Traceur.cpp
 	$(CXX) -c Traceur.cpp -o Traceur.o
+	
+common.o: common.h
+	$(CXX) -c common.c -o common.o
 	
 	
 clean:

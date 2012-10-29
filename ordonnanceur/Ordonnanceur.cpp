@@ -78,8 +78,8 @@ int Ordonnanceur::RM_BG() {
 	Depassement de capacite 
 	*/
 	
-	
-/*	
+	/*
+
 	TableauPrioritePeriodique tabPrioritePeriodique = this->getOrdrePrioPeriodique();
 	TableauPrioriteAperiodique tabPrioriteAperiodique = this->getOrdrePrioAperiodique();
 	//Tableau qui represente l'ordonnancement 
@@ -179,10 +179,10 @@ int Ordonnanceur::RM_BG() {
 }
 
 int Ordonnanceur::EDF(int serveur) {
-/*
-	TabTachePeriodique tachesP = this->conteneurPeriodique_->getTabTache();
+
+	ListeTachesPeriodiques tachesP = *this->conteneur_->getVectorPeriodique();
 	int nbTachesP = tachesP.size();
-	TabTacheAperiodique tachesA = this->conteneurAperiodique_->getTabTache();
+	ListeTachesAperiodiques tachesA = *this->conteneur_->getVectorAperiodique();
 	int nbTachesA = tachesA.size();
 	int nbTaches = nbTachesP + nbTachesA;
 
@@ -216,14 +216,14 @@ int Ordonnanceur::EDF(int serveur) {
 	unsigned int task_executed; // -1 signifie qu'aucune tâche ne s'exécute
 	bool need_to_poll;
 	
-	while( t < conteneurPeriodique_->getHyperPeriode() ) {
-*/		
+	while( t < conteneur_->getHyperPeriode() ) {
+	
 		// Affichage du contexte pour debuggage
 		/*cout << "\t\tN\tExec\tDeadline" << endl;
 		for(int i = 0 ; i < nbTaches ; i++)
 			cout << "\t\tT" << i+1 << "\t" << context[i][0] << "\t" << context[i][1] << endl;*/
 	
-/*	
+
 		// On vérifie si l'ordonnanceur doit élire une tâche (seulement si une tache se réveille ou se termine)
 		// Une tache se réveille si t=0 (toutes les tâches se réveillent à t=0 dans le tp) ou si on est sur sa deadline
 		// On sait qu'une tache se termine si son temps d'exec restant = 0
@@ -322,7 +322,7 @@ int Ordonnanceur::EDF(int serveur) {
 	}
 	
 	return 0;
-*/
+
 }
 
 	

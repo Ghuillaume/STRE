@@ -16,7 +16,7 @@ class Ordonnanceur {
 	public: 
 		Ordonnanceur(Conteneur* conteneur, Traceur* traceur);
 		~Ordonnanceur();
-		int RM();
+		int RM(int serveur);
 		int RM_BG();
 		int EDF(int serveur);
 		

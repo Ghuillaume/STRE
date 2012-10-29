@@ -2,6 +2,7 @@
 #define _CONTENEUR_HPP_
 
 #include "common.h"
+#include <iostream>
 
 class Conteneur {
 
@@ -14,6 +15,8 @@ class Conteneur {
 		
 		ListeTachesPeriodiques* getVectorPeriodique();
 		ListeTachesAperiodiques* getVectorAperiodique();
+		
+		void toString();
 		
 		int getHyperPeriode();
 		

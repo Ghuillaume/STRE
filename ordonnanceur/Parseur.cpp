@@ -8,35 +8,54 @@ Parseur::~Parseur() {
 	
 }
 	
-void Parseur::lireFichier(string nomFichier, Conteneur* c) {
+void Parseur::lireFichier(char* nomFichier, Conteneur* c) {
 	string line;
-	ifstream streamFichier(nomFichier.c_str(), ifstream::in);
+	int numLine = 0;
+	ifstream streamFichier(nomFichier, ifstream::in);
+	
+	int delimiter;
+	ListOfString params;
+	
+	int numT = 0, Ci = 0, Pi = 0, Di = 0, Ri = 0;
 	
 	if (streamFichier.is_open()) {
 		while (streamFichier.good())
 		{
+			numLine++;
 			getline(streamFichier, line);
+			if(line.length() < 1) // Si la longueur est nulle, c'est la dernière ligne, on ne la considère pas
+				break;
+				
 			if (verifierSyntaxe(line)) {
-				//TODO: Récupérer les paramètres
-				//TODO: créer les taches via c->addT?()
+			
+				params = explode(line.substr(line.find(':')+1), ',' );
+				
+				numT = std::atoi(line.substr(1,line.find(':')-1).c_str());
+				// Ajout d'une tâche périodique au conteneur
+				if(*line.begin() == 'T') {
+					Ci = std::atoi(params[0].c_str());
+					Pi = std::atoi(params[1].c_str());
+					Di = std::atoi(params[2].c_str());
+					c->addTacheP(numT, Ci, Pi, Di);
+				}
+				// Ajout d'une tâche apériodique au conteneur
+				else if(*line.begin() == 'R') {
+					Ri = std::atoi(params[0].c_str());
+					Ci = std::atoi(params[1].c_str());
+					c->addTacheA(numT, Ri, Ci);
+				}
 				
 			} else {
-				cout << "Syntaxe non valide : ";
+				cout << "Erreur : Syntaxe non valide, ligne " << numLine << " ignorée" << endl;
 			}
-			cout << line << endl;
 		}
-    streamFichier.close();
+		streamFichier.close();
 	} else {
-		cout << "Erreur : impossibilité d'ouvrir le fichier '"
-				<< nomFichier << "'." << endl; 
+		cout << "Erreur : impossibilité d'ouvrir le fichier '" << nomFichier << endl; 
 	}
 }
 
 bool Parseur::verifierSyntaxe(string &line) {
-
-			// Si la longueur est nulle, c'est la dernière ligne, on ne la considère pas
-			if(line.length() < 1)
-				return true;
 			
 			cout << endl << "Verif line " << line << endl;
 
