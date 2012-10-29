@@ -29,8 +29,8 @@ class Ordonnanceur {
 		Traceur* traceur;
 		
 		void afficherOrdonnancement(ListeTachesPeriodiques tabOrdonnancement);
-		ListeTachesPeriodiques* ordonnerTachesPeriodiquesPi();
-		ListeTachesAperiodiques* ordonnerTachesAperiodiques();
+		ListeTachesPeriodiques ordonnerTachesPeriodiquesPi();
+		ListeTachesAperiodiques ordonnerTachesAperiodiques();
 		
 		 double calculerU();
 		 double calculerU2();
