@@ -24,16 +24,7 @@ int main(int argc, char** argv) {
 	Traceur* traceur = new Traceur();
 	Parseur* parser = new Parseur();
 	
-	//parser->lireFichier(argv[1], conteneur);
-
-// ajout Tache Periodique
-conteneur->addTacheP(2,2,8,8);
-conteneur->addTacheP(1,2,6,6);
-conteneur->addTacheP(3,2,12,12);
-
-// ajout Tache Aperiodique
-conteneur->addTacheA(1,1,3);
-conteneur->addTacheA(2,22,3);
+	parser->lireFichier(argv[1], conteneur);
 	
 	Ordonnanceur* ordo = new Ordonnanceur(conteneur,traceur);
 	
@@ -76,11 +67,11 @@ conteneur->addTacheA(2,22,3);
 				break;
 				
 			case '3':
-				ordo->RM();
+				ordo->RM(NO_SERV);
 				break;
 			
 			case '4':
-				ordo->RM_BG();
+				ordo->RM(BG);
 				break;
 				
 			case '5':

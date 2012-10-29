@@ -17,7 +17,6 @@ class Ordonnanceur {
 		Ordonnanceur(Conteneur* conteneur, Traceur* traceur);
 		~Ordonnanceur();
 		int RM(int serveur);
-		int RM_BG();
 		int EDF(int serveur);
 		
 		void verifierCondNecessaireRM();

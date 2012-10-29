@@ -56,8 +56,6 @@ void Parseur::lireFichier(char* nomFichier, Conteneur* c) {
 }
 
 bool Parseur::verifierSyntaxe(string &line) {
-			
-			cout << endl << "Verif line " << line << endl;
 
 			int err;
 			regex_t pregP;

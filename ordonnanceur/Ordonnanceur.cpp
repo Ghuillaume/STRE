@@ -8,77 +8,117 @@ Ordonnanceur::~Ordonnanceur() {
 	// TODO : Faire un vrai destructeur parce que là, bonjour les fuites mémoires :D 
 }
 
-int Ordonnanceur::RM() {
-	traceur_->entete(conteneur_->getHyperPeriode());
-	
+int Ordonnanceur::RM(int serveur) {
+
+	int hyperPeriode = conteneur_->getHyperPeriode();
+	traceur_->entete(hyperPeriode);
+
 	//Tableau qui contient les taches Periodiques rangées par Ordre de priorité
 	ListeTachesPeriodiques* tabPrioritePeriodique = this->getOrdrePrioPeriodique();
+	ListeTachesAperiodiques* tabPrioriteAperiodique = this->getOrdrePrioAperiodique();
 	
+	//Tableau qui contient le temps d'execution restant de chaque tache rangé par ordre de priorité
+	vector<int> tabTpsRestantExec(tabPrioritePeriodique->size() + tabPrioriteAperiodique->size());
+	for(int i = 0 ; i < tabPrioritePeriodique->size() ; i++)
+		tabTpsRestantExec[i] = tabPrioritePeriodique->at(i)->getCi();
+	for(int i = tabPrioritePeriodique->size() ; i < tabPrioriteAperiodique->size() + tabPrioritePeriodique->size() ; i++)
+		tabTpsRestantExec[i] = tabPrioriteAperiodique->at(i-tabPrioritePeriodique->size())->getCi();
+	
+	// Déclaration et réveil des tâches
 	for(int i = 0 ; i < tabPrioritePeriodique->size() ; i++) {
 		traceur_->declarationTache(i, tabPrioritePeriodique->at(i)->formatKTR());
-	}
-	//Tableau qui représente l'ordonnancement
-	ListeTachesPeriodiques tabOrdo(conteneur_->getHyperPeriode());
-		
-	//Tableau qui contient le temps d'execution restant de chaque tache
-	// rangé par ordre de priorité
-	vector<int> tabTpsRestantExec(tabPrioritePeriodique->size());
-	//initialisation du tableau du temps restant d'execution
-	for(int i = 0 ; i < tabTpsRestantExec.size() ; i++) {
-		tabTpsRestantExec[i] = tabPrioritePeriodique->at(i)->getCi();
 		traceur_->reveil(0,i);
 	}
 	
-	//boucle d'ordonnancement
-	for(int i = 0 ; i < tabOrdo.size() ; i++) {
-		//vérification du reveil des taches 
-		for(int t = 0 ; t < tabTpsRestantExec.size() ; t++) {
-			if ( (i % (tabPrioritePeriodique->at(t)->getPi())) == 0 ) {
-				if (i != 0) {
-					if ( tabTpsRestantExec[t] != 0 ) {
-						//depassement d'echeance
-						cout << "Depassement d'echeance" << endl;
-						cout << "Pour la Tache : " << tabPrioritePeriodique->at(t)->getNum() << endl;
-						return 1;
-					}
-					else {
-						tabTpsRestantExec[t] = tabPrioritePeriodique->at(t)->getCi();
-					}
+	//
+	// Début de l'algorithme RM
+	//
+	
+	// Initialisation du temps courant et du numéro de la tâche en cours d'éxécution
+	unsigned int t = 0;
+	unsigned int task_executed = -1; // -1 signifie qu'aucune tâche ne s'exécute
+	bool need_to_poll;
+
+	while(t < hyperPeriode) {	
+		// On vérifie si l'ordonnanceur doit choisir une tâche
+		// Seulement si une tâche se réveille ou se termine
+		need_to_poll = false;
+		
+		if(t == 0)
+			need_to_poll = true;
+			
+		else if(task_executed != -1) {
+			if(tabTpsRestantExec[task_executed] == 0)
+				need_to_poll = true;
+		}
+		
+		for(int i = 0 ; i < tabPrioritePeriodique->size() ; i++) {
+			if((t % tabPrioritePeriodique->at(i)->getDi()) == 0) // correspond au réveil d'une tâche périodique
+				need_to_poll = true;
+		}
+	
+	
+		// Election de la tâche la plus prioritaire
+		if(need_to_poll) {
+		
+			// réinitialisation de la tâche élue
+			task_executed = -1;
+
+			for(int i = 0 ; i < tabPrioritePeriodique->size() ; i++) {
+				// On retient la première tâche qui n'a pas terminé son exécution
+				if(task_executed == -1 && tabTpsRestantExec[i] != 0)
+					task_executed = i;
+			}
+		}
+		
+		// Si on est sur du BG et qu'on a un temps creux, on essaie d'élire une tâche apériodique
+		if(serveur == BG && task_executed == -1) {
+		
+			for(int i = 0 ; i < tabPrioriteAperiodique->size() ; i++) {
+			
+				// Si la tâche n'a pas terminé son exécution et si elle est réveillée, on la choisie
+				if( (tabTpsRestantExec[i+tabPrioritePeriodique->size()] > 0) && (tabPrioriteAperiodique->at(i)->getri() <= t) ) {
+					// On ajoute le nombre de taches périodiques pour différencier périodiques et apériodiques
+					task_executed = i + tabPrioritePeriodique->size();
+					break;
 				}
 			}
 		}
 		
-		bool tachePlacee = false;
-		int numTache = 0;
 		
-		while ( (!tachePlacee) && (numTache < tabTpsRestantExec.size()) ) {
-			
-			if (tabTpsRestantExec[numTache] == 0) {
-				numTache++;
+		// Affichage
+		if(task_executed == -1)
+			cout << "t=" << t << " : temps creux" << endl;
+		else if(task_executed >= tabPrioritePeriodique->size())
+			cout << "t=" << t << " : R" << tabPrioriteAperiodique->at(task_executed-tabPrioritePeriodique->size())->getNum() << endl;
+		else
+			cout << "t=" << t << " : T" << tabPrioritePeriodique->at(task_executed)->getNum() << endl;
+	
+		
+		// Mise à jour du contexte d'exécution
+		t++;
+		tabTpsRestantExec[task_executed]--;
+		
+		for(int i = 0 ; i < tabPrioritePeriodique->size() ; i++) {
+			if(t % (tabPrioritePeriodique->at(i)->getDi()) == 0 && t != 0) {
+				if(tabTpsRestantExec[i] > 0) {
+					cout << "ERREUR FATALE : la tâche T" << tabPrioritePeriodique->at(i)->getNum() << " n'a pas pu terminer son exécution. Arrêt du système" << endl;
+					return 1;
+				}
+				else
+					tabTpsRestantExec[i] = tabPrioritePeriodique->at(i)->getCi();
 			}
-			else
-			{
-				tabOrdo[i] = tabPrioritePeriodique->at(numTache);
-				tabTpsRestantExec[numTache] -= 1;
-				tachePlacee = true;
-			}
-		}
-		if (numTache >= tabTpsRestantExec.size()) {
-			// Temps Creux representer par une tache vide
-			tabOrdo[i] = new TachePeriodique();
 		}
 	}
-	afficherOrdonnancement(tabOrdo);
 	return 0;
 }
 
-int Ordonnanceur::RM_BG() {
+/*int Ordonnanceur::RM_BG() {
 	
-	/* TODO 
+	//TODO 
 	Depassement de capacite 
-	*/
 	
-	/*
+	
 
 	TableauPrioritePeriodique tabPrioritePeriodique = this->getOrdrePrioPeriodique();
 	TableauPrioriteAperiodique tabPrioriteAperiodique = this->getOrdrePrioAperiodique();
@@ -175,14 +215,14 @@ int Ordonnanceur::RM_BG() {
 	}
 	//afficherOrdonnancement(tabOrdo);
 	return 0;
-*/
-}
+
+}*/
 
 int Ordonnanceur::EDF(int serveur) {
 
 	ListeTachesPeriodiques tachesP = *this->conteneur_->getVectorPeriodique();
 	int nbTachesP = tachesP.size();
-	ListeTachesAperiodiques tachesA = *this->conteneur_->getVectorAperiodique();
+	ListeTachesAperiodiques tachesA = *this->getOrdrePrioAperiodique();
 	int nbTachesA = tachesA.size();
 	int nbTaches = nbTachesP + nbTachesA;
 
@@ -199,13 +239,12 @@ int Ordonnanceur::EDF(int serveur) {
 		context[i][1] = tachesP.at(i)->getDi();	
 	}
 	
+	// TODO : classer les tâches apériodique par ordre de Ri
 	// Parcours des tâches apériodiques pour les mettre dans la matrice
 	for(int i = nbTachesP ; i < nbTaches ; i++) {
 		context[i][0] = tachesA.at(i-nbTachesP)->getCi();
 		context[i][1] = tachesA.at(i-nbTachesP)->getri();
 	}
-	
-	
 	
 	//
 	// Début de l'algorithme EDF
@@ -213,7 +252,7 @@ int Ordonnanceur::EDF(int serveur) {
 	
 	// Initialisation du temps courant et du numéro de la tâche en cours d'éxécution
 	unsigned int t = 0;
-	unsigned int task_executed; // -1 signifie qu'aucune tâche ne s'exécute
+	unsigned int task_executed = -1; // -1 signifie qu'aucune tâche ne s'exécute
 	bool need_to_poll;
 	
 	while( t < conteneur_->getHyperPeriode() ) {
@@ -237,12 +276,10 @@ int Ordonnanceur::EDF(int serveur) {
 				need_to_poll = true;
 		}
 		
-		else {
-			for(int i = 0 ; i < nbTachesP ; i++) {
-				if(context[i][1] == t) {
-					need_to_poll = true;
-					break;
-				}
+		for(int i = 0 ; i < nbTachesP ; i++) {
+			if(context[i][1] == t) {
+				need_to_poll = true;
+				break;
 			}
 		}
 		
@@ -269,32 +306,25 @@ int Ordonnanceur::EDF(int serveur) {
 		
 		
 		// Si on est sur du BG et qu'on a un temps creux, on essaie d'élire une tâche apériodique
-		if(serveur == BG && task_executed == -1) {
-			
+		if(serveur == BG && task_executed == -1) {			
 			for(int i = nbTachesP ; i < nbTaches ; i++) {
-				
-				if(context[i][0] == 0) // Si la tâche a terminé son exécution, on passe à la suivante
-					continue;
-				else if(context[i][1] > t) // Si elle n'est pas encore réveillée, on passe à la suivante
-					break;
-				
-				else {
+			
+				// Si la tâche n'a pas terminé son exécution et si elle est réveillée, on la choisie
+				if( (context[i][0] > 0) && (context[i][1] <= t) ) {
 					task_executed = i;
-				
+					break;
 				}
-				
 			}
 		}
 		
 		
 		// Affichage
-		// TODO : remplacer par une écriture fichier ou par un enregistrement mémoire du résultat
 		if(task_executed == -1)
 			cout << "t=" << t << " : temps creux" << endl;
 		else if(task_executed >= nbTachesP)
-			cout << "t=" << t << " : R" << (task_executed+1)%nbTachesP << endl;
+			cout << "t=" << t << " : R" << tachesA[(task_executed+1)-nbTachesP-1]->getNum() << endl;
 		else
-			cout << "t=" << t << " : T" << task_executed+1 << endl;
+			cout << "t=" << t << " : T" << tachesP[task_executed]->getNum() << endl;
 
 		
 		// Mise à jour du contexte
@@ -339,7 +369,6 @@ ListeTachesPeriodiques* Ordonnanceur::getOrdrePrioPeriodique() {
 	
     bool tab_en_ordre = false;
     int taille = tabPrioPeriodique->size();
-    cout << "taille tab prio Periodique : " << taille << endl;
     while(!tab_en_ordre)
     {
         tab_en_ordre = true;
@@ -364,7 +393,6 @@ ListeTachesAperiodiques* Ordonnanceur::getOrdrePrioAperiodique() {
 	
     bool tab_en_ordre = false;
     int taille = tabPrioAperiodique->size();
-    cout << "taille tab prio Aperiodique : " << taille << endl;
     while(!tab_en_ordre)
     {
         tab_en_ordre = true;
