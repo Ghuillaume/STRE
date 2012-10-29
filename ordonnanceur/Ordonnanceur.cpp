@@ -1,6 +1,6 @@
 #include "Ordonnanceur.hpp"
 
-Ordonnanceur::Ordonnanceur(Conteneur* conteneur, Traceur* traceur) : conteneur_(conteneur), traceur_(traceur) {
+Ordonnanceur::Ordonnanceur(Conteneur* conteneur, Traceur* traceur) : conteneur(conteneur), traceur(traceur) {
 	
 }
 
@@ -10,12 +10,12 @@ Ordonnanceur::~Ordonnanceur() {
 
 int Ordonnanceur::RM(int serveur) {
 
-	int hyperPeriode = conteneur_->getHyperPeriode();
-	traceur_->entete(hyperPeriode);
+	int hyperPeriode = this->conteneur->getHyperPeriode();
+	this->traceur->entete(hyperPeriode);
 
 	//Tableau qui contient les taches Periodiques rangées par Ordre de priorité
-	ListeTachesPeriodiques* tabPrioritePeriodique = this->getOrdrePrioPeriodique();
-	ListeTachesAperiodiques* tabPrioriteAperiodique = this->getOrdrePrioAperiodique();
+	ListeTachesPeriodiques* tabPrioritePeriodique = this->ordonnerTachesPeriodiquesPi();
+	ListeTachesAperiodiques* tabPrioriteAperiodique = this->ordonnerTachesAperiodiques();
 	
 	//Tableau qui contient le temps d'execution restant de chaque tache rangé par ordre de priorité
 	vector<int> tabTpsRestantExec(tabPrioritePeriodique->size() + tabPrioriteAperiodique->size());
@@ -26,8 +26,8 @@ int Ordonnanceur::RM(int serveur) {
 	
 	// Déclaration et réveil des tâches
 	for(int i = 0 ; i < tabPrioritePeriodique->size() ; i++) {
-		traceur_->declarationTache(i, tabPrioritePeriodique->at(i)->formatKTR());
-		traceur_->reveil(0,i);
+		this->traceur->declarationTache(i, tabPrioritePeriodique->at(i)->formatKTR());
+		this->traceur->reveil(0,i);
 	}
 	
 	//
@@ -120,8 +120,8 @@ int Ordonnanceur::RM(int serveur) {
 	
 	
 
-	TableauPrioritePeriodique tabPrioritePeriodique = this->getOrdrePrioPeriodique();
-	TableauPrioriteAperiodique tabPrioriteAperiodique = this->getOrdrePrioAperiodique();
+	TableauPrioritePeriodique tabPrioritePeriodique = this->ordonnerTachesPeriodiquesPi();
+	TableauPrioriteAperiodique tabPrioriteAperiodique = this->ordonnerTachesAperiodiques();
 	//Tableau qui represente l'ordonnancement 
 	// TabOrdo[i] = numTache Tache qui s'execute a l'instant i
 	vector<int> tabOrdo(conteneurPeriodique_->getHyperPeriode());
@@ -220,9 +220,9 @@ int Ordonnanceur::RM(int serveur) {
 
 int Ordonnanceur::EDF(int serveur) {
 
-	ListeTachesPeriodiques tachesP = *this->conteneur_->getVectorPeriodique();
+	ListeTachesPeriodiques tachesP = *this->conteneur->getVectorPeriodique();
 	int nbTachesP = tachesP.size();
-	ListeTachesAperiodiques tachesA = *this->getOrdrePrioAperiodique();
+	ListeTachesAperiodiques tachesA = *this->ordonnerTachesAperiodiques();
 	int nbTachesA = tachesA.size();
 	int nbTaches = nbTachesP + nbTachesA;
 
@@ -255,7 +255,7 @@ int Ordonnanceur::EDF(int serveur) {
 	unsigned int task_executed = -1; // -1 signifie qu'aucune tâche ne s'exécute
 	bool need_to_poll;
 	
-	while( t < conteneur_->getHyperPeriode() ) {
+	while( t < this->conteneur->getHyperPeriode() ) {
 	
 		// Affichage du contexte pour debuggage
 		/*cout << "\t\tN\tExec\tDeadline" << endl;
@@ -356,16 +356,9 @@ int Ordonnanceur::EDF(int serveur) {
 }
 
 	
-
-void Ordonnanceur::afficherOrdonnancement(ListeTachesPeriodiques tabOrdonnancement) {
-	for(int i = 0 ; i < tabOrdonnancement.size() ; i++) {
-		cout << "t=" << i << " : Tache" << tabOrdonnancement[i]->getNum() << endl;
-	}
-}
+ListeTachesPeriodiques* Ordonnanceur::ordonnerTachesPeriodiquesPi() {
 	
-ListeTachesPeriodiques* Ordonnanceur::getOrdrePrioPeriodique() {
-	
-	ListeTachesPeriodiques* tabPrioPeriodique = conteneur_->getVectorPeriodique();
+	ListeTachesPeriodiques* tabPrioPeriodique = this->conteneur->getVectorPeriodique();
 	
     bool tab_en_ordre = false;
     int taille = tabPrioPeriodique->size();
@@ -386,9 +379,9 @@ ListeTachesPeriodiques* Ordonnanceur::getOrdrePrioPeriodique() {
 
 }
 
-ListeTachesAperiodiques* Ordonnanceur::getOrdrePrioAperiodique() {
+ListeTachesAperiodiques* Ordonnanceur::ordonnerTachesAperiodiques() {
 	
-	ListeTachesAperiodiques* tabPrioAperiodique = conteneur_->getVectorAperiodique();
+	ListeTachesAperiodiques* tabPrioAperiodique = this->conteneur->getVectorAperiodique();
 	
 	
     bool tab_en_ordre = false;
@@ -446,7 +439,7 @@ void Ordonnanceur::verifierConditionEDF() {
 	int Pi = 0;
 	int Di = 0;
 	double U = 0.0;
-	ListeTachesPeriodiques* liste = conteneur_->getVectorPeriodique();
+	ListeTachesPeriodiques* liste = this->conteneur->getVectorPeriodique();
 
 	for (int i = 0; i++; i < liste->size()) {
 		Pi = liste->at(i)->getPi();
@@ -493,7 +486,7 @@ double Ordonnanceur::calculerU() {
 	int Pi = 0;
 	int Ci = 0;
 	double Up = 0.0;
-	ListeTachesPeriodiques* liste = conteneur_->getVectorPeriodique();
+	ListeTachesPeriodiques* liste = this->conteneur->getVectorPeriodique();
 
 	// Somme de 1 à n des Ci/Pi
 	for (int i = 0; i++; i < liste->size()) {
@@ -508,7 +501,7 @@ double Ordonnanceur::calculerU2() {
 	int Di = 0;
 	int Ci = 0;
 	double Up = 0.0;
-	ListeTachesPeriodiques* liste = conteneur_->getVectorPeriodique();
+	ListeTachesPeriodiques* liste = this->conteneur->getVectorPeriodique();
 	
 	// Somme de 1 à n des Ci/Di
 	for (int i = 0; i++; i < liste->size()) {
@@ -520,7 +513,7 @@ double Ordonnanceur::calculerU2() {
 }
 
 double Ordonnanceur::calculerUBound() {
-	double n = (double) conteneur_->getVectorPeriodique()->size();
+	double n = (double) this->conteneur->getVectorPeriodique()->size();
 	double puissance = pow(2.0, (1.0 / n));
 	return n * (puissance - 1);
 }
