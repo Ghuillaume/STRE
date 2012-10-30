@@ -30,19 +30,21 @@ int Ordonnanceur::RM() {
 	}
 	
 	//boucle d'ordonnancement
-	for(int i = 0 ; i < tabOrdo.size() ; i++) {
+	for(int t = 0 ; t < tabOrdo.size() ; t++) {
 		//vérification du reveil des taches 
-		for(int t = 0 ; t < tabTpsRestantExec.size() ; t++) {
-			if ( (i % (tabPrioritePeriodique->at(t)->getPi())) == 0 ) {
-				if (i != 0) {
-					if ( tabTpsRestantExec[t] != 0 ) {
+		for(int i = 0 ; i < tabTpsRestantExec.size() ; i++) {
+			if ( (t % (tabPrioritePeriodique->at(i)->getPi())) == 0 ) {
+				if (t != 0) {
+					if ( tabTpsRestantExec[i] != 0 ) {
 						//depassement d'echeance
 						cout << "Depassement d'echeance" << endl;
-						cout << "Pour la Tache : " << tabPrioritePeriodique->at(t)->getNum() << endl;
+						cout << "Pour la Tache : " << tabPrioritePeriodique->at(i)->getNum() << endl;
 						return 1;
 					}
 					else {
-						tabTpsRestantExec[t] = tabPrioritePeriodique->at(t)->getCi();
+						tabTpsRestantExec[i] = tabPrioritePeriodique->at(i)->getCi();
+						traceur_->dateEcheance(t,i);
+						traceur_->reveil(t,i);
 					}
 				}
 			}
@@ -57,15 +59,16 @@ int Ordonnanceur::RM() {
 				numTache++;
 			}
 			else
-			{
-				tabOrdo[i] = tabPrioritePeriodique->at(numTache);
+			{	
+				traceur_->execution(t,numTache);
+				tabOrdo[t] = tabPrioritePeriodique->at(numTache);
 				tabTpsRestantExec[numTache] -= 1;
 				tachePlacee = true;
 			}
 		}
 		if (numTache >= tabTpsRestantExec.size()) {
 			// Temps Creux representer par une tache vide
-			tabOrdo[i] = new TachePeriodique();
+			tabOrdo[t] = new TachePeriodique();
 		}
 	}
 	afficherOrdonnancement(tabOrdo);
@@ -330,6 +333,7 @@ int Ordonnanceur::EDF(int serveur) {
 void Ordonnanceur::afficherOrdonnancement(ListeTachesPeriodiques tabOrdonnancement) {
 	for(int i = 0 ; i < tabOrdonnancement.size() ; i++) {
 		cout << "t=" << i << " : Tache" << tabOrdonnancement[i]->getNum() << endl;
+		
 	}
 }
 	
