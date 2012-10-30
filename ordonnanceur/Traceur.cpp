@@ -36,6 +36,14 @@ void Traceur::execution(int time, int numTache) {
 	this->ecritureFichier(oss.str());
 }
 
+void Traceur::finExecution(int time, int numTache) {
+	ostringstream oss;
+	oss << time << " STOP " << numTache << endl;
+	oss << time << " EXEC-E " << numTache << endl;
+	this->ecritureFichier(oss.str());
+}
+
+
 void Traceur::dateEcheance(int time, int numTache) {
 	ostringstream oss;
 	oss << time << " DEADLINE " << numTache << endl;

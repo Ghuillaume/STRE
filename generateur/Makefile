@@ -8,3 +8,6 @@ GenerateurAleatoire: GenerateurAleatoire.cpp GenerateurAleatoire.h
 
 GenerateurControlee: GenerateurControlee.cpp GenerateurControlee.h
 	$(CXX) -c GenerateurControlee.cpp -o GenerateurControlee.o
+	
+clean:
+	-rm *.o

@@ -11,7 +11,7 @@
 #include <iostream>
 using namespace std;
 int main(int argc, char** argv) {
-	string USAGE = "Usage : ./Ordonnanceur [fichier.txt]";
+	string USAGE = "Usage : ./Ordonnanceur file.txt";
 	
 	/*
 	if(argc != 1) {
@@ -20,30 +20,14 @@ int main(int argc, char** argv) {
 	}
 	*/
 	
-	// TODO : parser le fichier reçu en entrée (ligne de commande)
-
-		Conteneur* conteneur = new Conteneur();
-
-		// ajout Tache Periodique 
-		conteneur->addTacheP(2,2,8,8);
-		conteneur->addTacheP(1,2,6,6);
-		conteneur->addTacheP(3,2,12,12);
-	
-		// ajout Tache Aperiodique
-		conteneur->addTacheA(1,1,3);
-		conteneur->addTacheA(2,22,3);
-
+	Conteneur* conteneur = new Conteneur();
 	Traceur* traceur = new Traceur();
+	Parseur* parser = new Parseur();
+	
+	parser->lireFichier(argv[1], conteneur);
 	
 	Ordonnanceur* ordo = new Ordonnanceur(conteneur,traceur);
-	ordo->verifierCondNecessaireRM();
-	ordo->verifierCondSuffisanteRM();
-	ordo->verifierConditionEDF();
-	ordo->RM();
 	
-	traceur->fermetureFichier();
-	
-	/*
 	char action;
 	bool sortir = false;
 	while(!sortir) {
@@ -52,12 +36,13 @@ int main(int argc, char** argv) {
 		cout << "\t\t***** Simulateur d'ordonnanceur temps réel *****" << endl;
 		cout << "\t\t************************************************" << endl << endl;
 		cout << "\t0. Sortir" << endl;
-		cout << "\t1. Analyser l'ordonnançabilité du système" << endl;
-		cout << "\t2. Simuler l'ordonnancement sous RM (sans tâches apériodiques)" << endl;
-		cout << "\t3. Simuler l'ordonnancement sous RM-BG" << endl;
-		cout << "\t4. Simuler l'ordonnancement sous EDF (sans tâches apériodiques)" << endl;
-		cout << "\t5. Simuler l'ordonnancement sous EDF-BG" << endl;
-		cout << "\t6. Simuler l'ordonnancement sous EDF-TBS" << endl;
+		cout << "\t1. Afficher la liste des tâches" << endl;
+		cout << "\t2. Analyser l'ordonnançabilité du système" << endl;
+		cout << "\t3. Simuler l'ordonnancement sous RM (sans tâches apériodiques)" << endl;
+		cout << "\t4. Simuler l'ordonnancement sous RM-BG" << endl;
+		cout << "\t5. Simuler l'ordonnancement sous EDF (sans tâches apériodiques)" << endl;
+		cout << "\t6. Simuler l'ordonnancement sous EDF-BG" << endl;
+		cout << "\t7. Simuler l'ordonnancement sous EDF-TBS" << endl;
 		cout << endl << "Selection : ";
 	
 		cin >> action;
@@ -66,34 +51,41 @@ int main(int argc, char** argv) {
 			
 			case '0':
 				sortir = true;
+				traceur->fermetureFichier();
 				break;
 				
 			case '1':
-				//ordo->verifierOrdonnancabilite();
+				conteneur->toString();
 				break;
 				
 			case '2':
-				ordo->RM();
-				break;
-			
-			case '3':
-				ordo->RM_BG();
+				ordo->verifierCondNecessaireRM();
+				ordo->verifierCondSuffisanteRM();
+				ordo->verifierConditionEDF();
 				break;
 				
+			case '3':
+				ordo->RM(NO_SERV);
+				break;
+			
 			case '4':
-				ordo->EDF(NO_SERV);
+				ordo->RM(BG);
 				break;
 				
 			case '5':
-				ordo->EDF(BG);
+				ordo->EDF(NO_SERV);
 				break;
 				
 			case '6':
+				ordo->EDF(BG);
+				break;
+				
+			case '7':
 				// TODO pas de traitement si l'argument vaut TBS
 				ordo->EDF(TBS);
 				break;
 		}
 	
 	}
-*/
+
 }

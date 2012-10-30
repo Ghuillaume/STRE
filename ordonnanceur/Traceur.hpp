@@ -17,6 +17,7 @@ class Traceur {
 		void declarationTache(int indice, string nameTache);
 		void reveil(int time, int numTache );
 		void execution(int time, int numTache);
+		void finExecution(int time, int numTache);
 		void dateEcheance(int time, int numTache);
 		
 		void fermetureFichier();

@@ -27,6 +27,18 @@ ListeTachesAperiodiques* Conteneur::getVectorAperiodique() {
 	return listeTA_;
 }
 
+void Conteneur::toString() {
+
+	std::cout << "Hyperperiode = " << this->getHyperPeriode() << endl;
+
+	for(int i = 0 ; i < listeTP_->size() ; i++)
+		std::cout << "T" << listeTP_->at(i)->getNum() << ": " << listeTP_->at(i)->getCi() << "," << listeTP_->at(i)->getPi() << "," << listeTP_->at(i)->getDi() << endl;
+	for(int i = 0 ; i < listeTA_->size() ; i++)
+		std::cout << "R" << listeTA_->at(i)->getNum() << ": " << listeTA_->at(i)->getri() << "," << listeTA_->at(i)->getCi() << endl;
+
+
+}
+
 int Conteneur::getHyperPeriode() {
 	int hyperPeriode = listeTP_->at(0)->getPi();
 	for (int i = 0 ; i < listeTP_->size() - 1 ; i++) {

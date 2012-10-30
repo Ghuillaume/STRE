@@ -16,8 +16,7 @@ class Ordonnanceur {
 	public: 
 		Ordonnanceur(Conteneur* conteneur, Traceur* traceur);
 		~Ordonnanceur();
-		int RM();
-		int RM_BG();
+		int RM(int serveur);
 		int EDF(int serveur);
 		
 		void verifierCondNecessaireRM();
@@ -26,12 +25,12 @@ class Ordonnanceur {
 		void verifierConditionEDF_TBS(double Us);
 		
 	private:
-		Conteneur* conteneur_;
-		Traceur* traceur_;
+		Conteneur* conteneur;
+		Traceur* traceur;
 		
 		void afficherOrdonnancement(ListeTachesPeriodiques tabOrdonnancement);
-		ListeTachesPeriodiques* getOrdrePrioPeriodique();
-		ListeTachesAperiodiques* getOrdrePrioAperiodique();
+		ListeTachesPeriodiques ordonnerTachesPeriodiquesPi();
+		ListeTachesAperiodiques ordonnerTachesAperiodiques();
 		
 		 double calculerU();
 		 double calculerU2();
