@@ -29,10 +29,22 @@ void Traceur::reveil(int time, int numTache){
 	this->ecritureFichier(oss.str());
 }
 
+void Traceur::reveilAperiodique(int time, int Ci, int nbTacheA) {
+	ostringstream oss;
+	oss << time << " ARROWUP " << nbTacheA << " " << Ci << endl;
+	this->ecritureFichier(oss.str());
+}
+
 void Traceur::execution(int time, int numTache) {
 	ostringstream oss;
-	oss << time << " READY-E " << numTache << endl;
+	//oss << time << " READY-E " << numTache << endl;
 	oss << time << " EXEC-B " << numTache << endl;
+	this->ecritureFichier(oss.str());
+}
+
+void Traceur::preemption(int time, int numTache) {
+	ostringstream oss;
+	oss << time << " EXEC-E " << numTache << endl;
 	this->ecritureFichier(oss.str());
 }
 

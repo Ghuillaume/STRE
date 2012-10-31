@@ -16,7 +16,9 @@ class Traceur {
 		void entete(int hyperperiode);
 		void declarationTache(int indice, string nameTache);
 		void reveil(int time, int numTache );
+		void reveilAperiodique(int time, int Ci, int nbTacheA);
 		void execution(int time, int numTache);
+		void preemption(int time, int numTache);
 		void finExecution(int time, int numTache);
 		void dateEcheance(int time, int numTache);
 		
