@@ -21,11 +21,11 @@ int main(int argc, char** argv) {
 	*/
 	
 	Conteneur* conteneur = new Conteneur();
-	Traceur* traceur = new Traceur();
 	Parseur* parser = new Parseur();
 	
 	parser->lireFichier(argv[1], conteneur);
 	
+	Traceur* traceur = new Traceur();
 	Ordonnanceur* ordo = new Ordonnanceur(conteneur,traceur);
 	
 	char action;
@@ -51,7 +51,6 @@ int main(int argc, char** argv) {
 			
 			case '0':
 				sortir = true;
-				traceur->fermetureFichier();
 				break;
 				
 			case '1':
@@ -65,24 +64,34 @@ int main(int argc, char** argv) {
 				break;
 				
 			case '3':
+				traceur->creationFichier("ordoRM");
 				ordo->RM(NO_SERV);
+				traceur->fermetureFichier();
 				break;
 			
 			case '4':
+				traceur->creationFichier("ordoRM_BG");
 				ordo->RM(BG);
+				traceur->fermetureFichier();
 				break;
 				
 			case '5':
+				traceur->creationFichier("ordoEDF");
 				ordo->EDF(NO_SERV);
+				traceur->fermetureFichier();
 				break;
 				
 			case '6':
+				traceur->creationFichier("ordoEDF_BG");
 				ordo->EDF(BG);
+				traceur->fermetureFichier();
 				break;
 				
 			case '7':
 				// TODO pas de traitement si l'argument vaut TBS
+				traceur->creationFichier("ordoRM");
 				ordo->EDF(TBS);
+				traceur->fermetureFichier();
 				break;
 		}
 	
