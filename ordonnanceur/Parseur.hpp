@@ -1,3 +1,10 @@
+/*******************************************************
+Nom ......... : Parseur.hpp
+Role ........ : Verifie la syntaxe et recupérer les informations sur les taches
+				d'un fichier formaté
+Auteur ...... : BONCORPS, CHARON, PAGES 
+********************************************************/
+
 #ifndef _PARSER_H_
 #define _PARSER_H_
 

@@ -9,25 +9,32 @@ Ordonnanceur::~Ordonnanceur() {
 }
 
 int Ordonnanceur::RM(int serveur) {
-
+	
+	// initialisation du fichier de trace
 	int hyperPeriode = this->conteneur->getHyperPeriode();
 	this->traceur->entete(hyperPeriode);
 
-	//Tableau qui contient les taches Periodiques rangées par Ordre de priorité
+	// Tableau qui contient les taches Periodiques rangées par Ordre de priorité
 	ListeTachesPeriodiques tabPrioritePeriodique = this->ordonnerTachesPeriodiquesPi();
+	// Tableau qui contient les taches Aperiodiques rangées par Ordre de priorité
 	ListeTachesAperiodiques tabPrioriteAperiodique = this->ordonnerTachesAperiodiques();
 	
-	//Tableau qui contient le temps d'execution restant de chaque tache rangé par ordre de priorité
+	// Tableau qui contient le temps d'execution restant de chaque tache (periodique et aperiodique) rangé par ordre de priorité
 	vector<int> tabTpsRestantExec(tabPrioritePeriodique.size() + tabPrioriteAperiodique.size());
+	
+	// initialisation du temps d'exécution restant aux taches periodiques
+	// Ajout du nom de chaque tache dans l'entete du fichier de trace
 	for(int i = 0 ; i < tabPrioritePeriodique.size() ; i++) {
 		tabTpsRestantExec[i] = tabPrioritePeriodique[i]->getCi();
 		this->traceur->declarationTache(i, tabPrioritePeriodique[i]->formatKTR());
 	}
 	
+	// initialisation du temps d'exécution restant aux taches aperiodiques
 	for(int i = tabPrioritePeriodique.size() ; i < tabPrioriteAperiodique.size() + tabPrioritePeriodique.size() ; i++) {
 		tabTpsRestantExec[i] = tabPrioriteAperiodique[i-tabPrioritePeriodique.size()]->getCi();
 	}		 
 	
+	// Ajout de la tache "BG" dans l'entete du fichier de trace
 	if (serveur == BG) {
 		this->traceur->declarationTache(tabPrioritePeriodique.size(),"BG");
 	}
@@ -39,8 +46,11 @@ int Ordonnanceur::RM(int serveur) {
 	// Initialisation du temps courant et du numéro de la tâche en cours d'éxécution
 	unsigned int t = 0;
 	unsigned int task_executed = -1; // -1 signifie qu'aucune tâche ne s'exécute
+	
 	bool need_to_poll;
 	bool tacheElue = false;
+	//numero de la tache representant l'execution des taches aperiodiques 
+	// ce numero correspond a celui utilisé dans le fichier de trace
 	unsigned int numTacheBG = tabPrioritePeriodique.size();
 	unsigned int resteAperiodique_a_exec = 0;
 
@@ -50,11 +60,16 @@ int Ordonnanceur::RM(int serveur) {
 		need_to_poll = false;
 			
 		if(task_executed != -1) {
+			//Tache se termine
 			if(tabTpsRestantExec[task_executed] == 0) {
 				//si tache Aperiodique
 				if(task_executed >= tabPrioritePeriodique.size()) {
 					this->traceur->finExecution(t,numTacheBG);
 					resteAperiodique_a_exec--;
+					// a la fin de l'execution de la tache aperiodique la plus prioritaire
+					// s'il y a encore des taches aperiodiques en attente
+					// on simule un reveil sur le fichier de trace
+					// pour pouvoir differencier l'exécution des differentes taches aperiodiques
 					if(resteAperiodique_a_exec != 0) {
 						this->traceur->reveil(t, numTacheBG);
 					}
@@ -66,8 +81,9 @@ int Ordonnanceur::RM(int serveur) {
 			}
 		}
 		
+		//Verification du reveil d'une tache Periodique
 		for(int i = 0 ; i < tabPrioritePeriodique.size() ; i++) {
-			if((t % tabPrioritePeriodique[i]->getDi()) == 0) {// correspond au réveil d'une tâche périodique
+			if((t % tabPrioritePeriodique[i]->getPi()) == 0) {// correspond au réveil d'une tâche périodique
 				if (t != 0) {
 					this->traceur->dateEcheance(t,i);
 				}
@@ -79,9 +95,6 @@ int Ordonnanceur::RM(int serveur) {
 		// Election de la tâche la plus prioritaire
 		if(need_to_poll) {
 			
-			
-			// réinitialisation de la tâche élue
-			//task_executed = -1;
 			tacheElue = false;
 			for(int i = 0 ; i < tabPrioritePeriodique.size() ; i++) {
 				// On retient la première tâche qui n'a pas terminé son exécution
@@ -90,6 +103,7 @@ int Ordonnanceur::RM(int serveur) {
 						task_executed = i;
 						this->traceur->execution(t,task_executed);
 					}
+					//verification si la tache en cours d'execution est préemptée
 					if(task_executed != i) {
 						if(task_executed == -1) {
 							this->traceur->execution(t,i);
@@ -184,8 +198,8 @@ int Ordonnanceur::RM(int serveur) {
 	return 0;
 }
 
-int Ordonnanceur::EDF(int serveur) {
-
+int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
+	
 	int hyperPeriode = this->conteneur->getHyperPeriode();
 	this->traceur->entete(hyperPeriode);
 
@@ -194,25 +208,39 @@ int Ordonnanceur::EDF(int serveur) {
 	ListeTachesAperiodiques tachesA = this->ordonnerTachesAperiodiques();
 	int nbTachesA = tachesA.size();
 	int nbTaches = nbTachesP + nbTachesA;
+	unsigned int numTacheA = nbTachesP;
 
 	// Initialisation d'une matrice représentant le contexte d'exécution
 	// [i]	temps d'exec restant		prochaine deadline		-> pour les tâches périodiques
 	// [i]	temps d'exec restant		date de réveil			-> pour les tâches apériodiques
 	int** context = new int* [ nbTaches ];
-	for (int i = 0 ; i < nbTaches ; i++)
-		context[i] = new int[ 2 ];
+	for (int i = 0 ; i < nbTaches ; i++){
+		context[i] = new int[ 3 ];
+	}
+
 		
 	// Parcours des tâches périodiques pour les mettre dans cette matrice
 	for(int i = 0 ; i < nbTachesP ; i++) {
 		context[i][0] = tachesP.at(i)->getCi();
 		context[i][1] = tachesP.at(i)->getDi();	
+		context[i][2] = tachesP.at(i)->getPi();
+		this->traceur->declarationTache(i, tachesP[i]->formatKTR());
 	}
 	
-	// TODO : classer les tâches apériodique par ordre de Ri
-	// Parcours des tâches apériodiques pour les mettre dans la matrice
-	for(int i = nbTachesP ; i < nbTaches ; i++) {
-		context[i][0] = tachesA.at(i-nbTachesP)->getCi();
-		context[i][1] = tachesA.at(i-nbTachesP)->getri();
+	if(serveur != NO_SERV) {
+		if (serveur == BG) {
+			this->traceur->declarationTache(numTacheA,"BG");
+		}
+		else {
+			this->traceur->declarationTache(numTacheA,"TBS");
+		}
+		// TODO : classer les tâches apériodique par ordre de Ri
+		// Parcours des tâches apériodiques pour les mettre dans la matrice
+		for(int i = nbTachesP ; i < nbTaches ; i++) {
+			context[i][0] = tachesA.at(i-nbTachesP)->getCi();
+			context[i][1] = tachesA.at(i-nbTachesP)->getri();
+			context[i][2] = 0;
+		}
 	}
 	
 	//
@@ -223,69 +251,164 @@ int Ordonnanceur::EDF(int serveur) {
 	unsigned int t = 0;
 	unsigned int task_executed = -1; // -1 signifie qu'aucune tâche ne s'exécute
 	bool need_to_poll;
+	int deadlineProche = 0;
+	ListeTachesPretes tabTachesPretes(0);
+	queue<int> tabTachesApPretes;
+	int former_executedTask = task_executed;
+	int dk = 0;
 	
-	while( t < this->conteneur->getHyperPeriode() ) {
+	
+	while( t < hyperPeriode ) {
 	
 		// Affichage du contexte pour debuggage
 		/*cout << "\t\tN\tExec\tDeadline" << endl;
 		for(int i = 0 ; i < nbTaches ; i++)
 			cout << "\t\tT" << i+1 << "\t" << context[i][0] << "\t" << context[i][1] << endl;*/
-	
-
+		
 		// On vérifie si l'ordonnanceur doit élire une tâche (seulement si une tache se réveille ou se termine)
 		// Une tache se réveille si t=0 (toutes les tâches se réveillent à t=0 dans le tp) ou si on est sur sa deadline
 		// On sait qu'une tache se termine si son temps d'exec restant = 0
 		need_to_poll = false;
 		
-		if(t == 0)
+		if(t == 0) {
 			need_to_poll = true;
-			
-		else if(task_executed != -1) {
-			if(context[task_executed][0] == 0)
-				need_to_poll = true;
 		}
 		
+		if(task_executed != -1) {
+			//Tache se termine
+			if(context[task_executed][0] == 0) {
+				//si tache Aperiodique
+				if(task_executed >= nbTachesP) {
+					this->traceur->finExecution(t,numTacheA);
+					tabTachesApPretes.pop();
+					// a la fin de l'execution de la tache aperiodique la plus prioritaire
+					// s'il y a encore des taches aperiodiques en attente
+					// on simule un reveil sur le fichier de trace
+					// pour pouvoir differencier l'exécution des differentes taches aperiodiques
+					if(tabTachesApPretes.size() != 0) {
+						this->traceur->reveil(t, numTacheA);
+					}
+				}
+				else {
+					this->traceur->finExecution(t,task_executed);
+					for(int i = 0 ; i < tabTachesPretes.size() ; i++) {
+						if(tabTachesPretes[i] == task_executed) {
+							tabTachesPretes.erase(tabTachesPretes.begin() + i);
+						}
+					}
+				}
+				need_to_poll = true;	
+			}
+		}
+		
+		//Verification du reveil d'une tache Periodique
+		//remplissage du tableau des tâches prêtes
 		for(int i = 0 ; i < nbTachesP ; i++) {
-			if(context[i][1] == t) {
+			int ri = context[i][2] - tachesP[i]->getPi();
+			if(ri == t) {// correspond au réveil d'une tâche périodique
+				this->traceur->reveil(t,i);
 				need_to_poll = true;
-				break;
+				tabTachesPretes.push_back(i);
 			}
 		}
 		
-				
-		
-		// Recherche de la tache dont la prochaine deadline est la plus proche
-		if(need_to_poll) {
-		
-			// réinitialisation de la tâche élue
-			task_executed = -1;
-			
-			for(int i = 0 ; i < nbTachesP ; i++) {
-		
-				// On retient d'abord la première tâche qui n'a pas terminé son exécution
-				if(task_executed == -1 && context[i][0] != 0)
-					task_executed = i;
-		
-				// Ensuite, on cherche une tâche dont la deadline est plus proche (et dont l'exécution n'est pas terminée)
-				if( context[i][0] != 0 && (context[i][1] < context[task_executed][1]) )
-					task_executed = i;
-	
-			}
-		}
-		
-		
-		// Si on est sur du BG et qu'on a un temps creux, on essaie d'élire une tâche apériodique
-		if(serveur == BG && task_executed == -1) {			
-			for(int i = nbTachesP ; i < nbTaches ; i++) {
-			
-				// Si la tâche n'a pas terminé son exécution et si elle est réveillée, on la choisie
-				if( (context[i][0] > 0) && (context[i][1] <= t) ) {
-					task_executed = i;
-					break;
+		//Verification du reveil d'une tache Aperiodique
+		// remplissage du tableau des tâches prêtes
+		for (int i = nbTachesP ; i < nbTaches ; i++) {
+			if(context[i][1] == t) {
+				//reveil de tache Aperiodique
+				if(tabTachesApPretes.size() == 0) {
+					this->traceur->reveilAperiodiqueExec(t,context[i][0],numTacheA);
+				}
+				else {
+				 	this->traceur->reveilAperiodiqueAttente(t,context[i][0],numTacheA);
+				}
+				tabTachesApPretes.push(i);
+				//calcul dk
+				if(bandePassanteTBS != 0) {
+					int division = ((context[i][0])*100)/bandePassanteTBS; 
+					dk = max(context[i][1],dk) + division;
+					cout << "dk de " << i << " : "<< dk << endl;
+					context[i][2] = dk;
 				}
 			}
 		}
 		
+		// Election de la tâche la plus prioritaire
+		if(need_to_poll) {
+			if(tabTachesPretes.size() == 0) {
+				if(tabTachesApPretes.size() == 0) {
+					//pas de taches pretes -> temps creux
+					task_executed = -1;
+				}
+				else {
+					task_executed = tabTachesApPretes.front();
+				}
+			}
+			else {
+				deadlineProche = context[tabTachesPretes[0]][1];
+				task_executed = tabTachesPretes[0];
+				if(tabTachesPretes.size() != 1) {
+					for(int i = 1 ; i < tabTachesPretes.size() ; i++) {
+						if(context[tabTachesPretes[i]][1] < deadlineProche) {
+							deadlineProche = context[tabTachesPretes[i]][1];
+							task_executed = tabTachesPretes[i];
+						}
+						else if(context[tabTachesPretes[i]][1] == deadlineProche) {
+							int  riP = context[tabTachesPretes[i]][2] - tachesP[tabTachesPretes[i]]->getPi();
+							int ritask_executed = context[task_executed][2] - tachesP[task_executed]->getPi();
+							if(riP < ritask_executed) {
+								task_executed = tabTachesPretes[i];
+							}
+							else if (riP == ritask_executed) {
+								if(tabTachesPretes[i] < task_executed) {
+									task_executed = tabTachesPretes[i];
+								}
+							}
+						}
+					}
+				}
+				if(serveur == TBS) {
+					if(tabTachesApPretes.size() != 0) {
+						if(context[tabTachesApPretes.front()][2] < deadlineProche) {
+							//la tache aperiodique est plus prio
+							task_executed = tabTachesApPretes.front();
+						}
+						else if (context[tabTachesApPretes.front()][2] == deadlineProche) {
+							int ritask_executed = context[task_executed][2] - tachesP[task_executed]->getPi();
+							if(context[tabTachesApPretes.front()][1] < ritask_executed) {
+								task_executed = tabTachesApPretes.front();
+							}
+						}
+					}
+				}
+						
+			}
+			if (t !=0) {
+				if(former_executedTask != task_executed) {
+					if(context[former_executedTask][0] != 0) {
+						if(former_executedTask >= nbTachesP) {
+							//tache Aperiodique
+							this->traceur->preemption(t,numTacheA);
+						}
+						else {
+							this->traceur->preemption(t,former_executedTask);
+						}
+					}
+					if(task_executed >= nbTachesP) {
+						this->traceur->execution(t,numTacheA);
+					}
+					else {
+						this->traceur->execution(t,task_executed);
+					}
+				}
+			}
+			else {
+				this->traceur->execution(t,task_executed);
+			}
+			former_executedTask = task_executed;
+		}
+
 		
 		// Affichage
 		if(task_executed == -1)
@@ -297,7 +420,7 @@ int Ordonnanceur::EDF(int serveur) {
 
 		
 		// Mise à jour du contexte
-		t++;
+		t++;	
 		
 		if(task_executed != -1)
 			context[task_executed][0]--;
@@ -305,17 +428,18 @@ int Ordonnanceur::EDF(int serveur) {
 		for(int i = 0 ; i < nbTachesP ; i++) {
 		
 			// Si la deadline de la tache a été passée, on charge en mémoire la deadline suivante
-			if(context[i][1] < t) {
-				context[i][1] += tachesP.at(i)->getDi();
-				
-				// Si, alors que la deadline a été passée, et que Ci n'est pas égal à zéro, alors le système n'est pas ordonnançable
+			if(context[i][1] <= t) {
+			// Si, alors que la deadline a été passée, et que Ci n'est pas égal à zéro, alors le système n'est pas ordonnançable
 				if(context[i][0] > 0) {
 					cout << "ERREUR FATALE : la tâche T" << i << " n'a pas pu terminer son exécution. Arrêt du système" << endl;
 					return 1;
 				}
-				else
-					context[i][0] = tachesP.at(i)->getCi(); // réinitialisation du temps d'exécution restant
 			} 
+			if(context[i][2] <= t) {
+				context[i][2] += tachesP.at(i)->getPi();
+				context[i][1] += tachesP.at(i)->getDi();
+				context[i][0] = tachesP.at(i)->getCi(); // réinitialisation du temps d'exécution restant
+			}
 		}
 		
 	}

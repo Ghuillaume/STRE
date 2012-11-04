@@ -1,3 +1,10 @@
+/*******************************************************
+Nom ......... : Traceur.hpp
+Role ........ : Produit le fichier de trace lisible par Kiwi
+Auteur ...... : BONCORPS, CHARON, PAGES 
+********************************************************/
+
+
 #ifndef _TRACEUR_H_
 #define _TRACEUR_H_
 

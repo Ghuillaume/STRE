@@ -1,9 +1,17 @@
+/*******************************************************
+Nom ......... : Ordonnanceur.hpp
+Role ........ : Permet de Verifier l'ordonnancabilite
+				Environnement de simulation selon plusieurs algorithme d'ordonnancement
+Auteur ...... : BONCORPS, CHARON, PAGES 
+********************************************************/
+
 #ifndef ORDONNANCEUR_H
 #define ORDONNANCEUR_H
 
 #include <iostream>
 #include <string>
 #include <vector>
+#include <queue>
 #include <cmath>
 
 #include "common.h"
@@ -11,13 +19,14 @@
 #include "Conteneur.hpp"
 
 using namespace std;
+typedef vector<int> ListeTachesPretes;
 
 class Ordonnanceur {
 	public: 
 		Ordonnanceur(Conteneur* conteneur, Traceur* traceur);
 		~Ordonnanceur();
 		int RM(int serveur);
-		int EDF(int serveur);
+		int EDF(int serveur, int bandePassanteTBS = 0);
 		
 		void verifierCondNecessaireRM();
 		void verifierCondSuffisanteRM();

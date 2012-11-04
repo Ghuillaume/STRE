@@ -29,6 +29,7 @@ int main(int argc, char** argv) {
 	Ordonnanceur* ordo = new Ordonnanceur(conteneur,traceur);
 	
 	char action;
+	int bandePassanteTBS;
 	bool sortir = false;
 	while(!sortir) {
 	
@@ -89,8 +90,10 @@ int main(int argc, char** argv) {
 				
 			case '7':
 				// TODO pas de traitement si l'argument vaut TBS
-				traceur->creationFichier("ordoRM");
-				ordo->EDF(TBS);
+				traceur->creationFichier("ordoEDF_TBS");
+				cout << "Largeur de la bande Passante de TBS (pourcentage entier): ";
+				cin >> bandePassanteTBS;
+				ordo->EDF(TBS,bandePassanteTBS);
 				traceur->fermetureFichier();
 				break;
 		}
