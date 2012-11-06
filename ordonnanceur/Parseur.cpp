@@ -8,7 +8,7 @@ Parseur::~Parseur() {
 	
 }
 	
-void Parseur::lireFichier(char* nomFichier, Conteneur* c) {
+int Parseur::lireFichier(char* nomFichier, Conteneur* c) {
 	string line;
 	int numLine = 0;
 	ifstream streamFichier(nomFichier, ifstream::in);
@@ -47,11 +47,14 @@ void Parseur::lireFichier(char* nomFichier, Conteneur* c) {
 				
 			} else {
 				cout << "Erreur : Syntaxe non valide, ligne " << numLine << " ignorée" << endl;
+				return 2;
 			}
 		}
 		streamFichier.close();
+		return 0;
 	} else {
-		cout << "Erreur : impossibilité d'ouvrir le fichier '" << nomFichier << endl; 
+		cout << "Erreur : impossibilité d'ouvrir le fichier '" << nomFichier << endl;
+		return 1;
 	}
 }
 

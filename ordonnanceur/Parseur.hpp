@@ -24,7 +24,7 @@ class Parseur {
 		Parseur();
 		~Parseur();
 	
-		void lireFichier(char* nomFichier, Conteneur* c);
+		int lireFichier(char* nomFichier, Conteneur* c);
 	
 	private:
 		static bool verifierSyntaxe(string &line);

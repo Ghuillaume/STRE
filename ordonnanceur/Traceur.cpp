@@ -55,7 +55,6 @@ void Traceur::dateEcheance(int time, int numTache) {
 	this->deadline(time, numTache);
 }
 
-
 void Traceur::creationFichier(string nameFile) {
 	ostringstream name;
 	name << nameFile << ".ktr";
@@ -118,5 +117,4 @@ void Traceur::arrow_Up(int time, int Ci, int nbTacheA) {
 	oss << time << " ARROWUP " << nbTacheA << " " << Ci << endl;
 	this->ecritureFichier(oss.str());
 }
-
 

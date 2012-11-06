@@ -2,7 +2,6 @@
 
 #include "Parseur.hpp"
 #include "Traceur.hpp"
-
 #include "Conteneur.hpp"
 #include "TacheAperiodique.hpp"
 #include "TachePeriodique.hpp"
@@ -13,17 +12,33 @@ using namespace std;
 int main(int argc, char** argv) {
 	string USAGE = "Usage : ./Ordonnanceur file.txt";
 	
-	/*
-	if(argc != 1) {
+	
+	if(argc != 2) {
 		cout << USAGE << endl;
 		return -1;
 	}
-	*/
+
 	
 	Conteneur* conteneur = new Conteneur();
 	Parseur* parser = new Parseur();
 	
-	parser->lireFichier(argv[1], conteneur);
+	int erreur = parser->lireFichier(argv[1], conteneur);
+	switch(erreur) {
+		case 0:
+			//le fichier a été parse correctement
+			cout << "\tLes Taches ont été ajoutées corectement" << endl;
+			break;
+		
+		case 1:
+			//impossible d'ouvrir le fichier
+			return 1;
+		
+		case 2:
+			//erreur de syntaxe
+			cout << "\tVerifier la syntaxe" << endl;
+			return 1;
+			
+	}
 	
 	Traceur* traceur = new Traceur();
 	Ordonnanceur* ordo = new Ordonnanceur(conteneur,traceur);

@@ -239,6 +239,7 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 		for(int i = nbTachesP ; i < nbTaches ; i++) {
 			context[i][0] = tachesA.at(i-nbTachesP)->getCi();
 			context[i][1] = tachesA.at(i-nbTachesP)->getri();
+			//di
 			context[i][2] = 0;
 		}
 	}
@@ -256,7 +257,8 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 	queue<int> tabTachesApPretes;
 	int former_executedTask = task_executed;
 	int dk = 0;
-	
+	int UTC = 0;
+	int totalUTC = 0;
 	
 	while( t < hyperPeriode ) {
 	
@@ -304,6 +306,7 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 		//Verification du reveil d'une tache Periodique
 		//remplissage du tableau des tâches prêtes
 		for(int i = 0 ; i < nbTachesP ; i++) {
+			 
 			int ri = context[i][2] - tachesP[i]->getPi();
 			if(ri == t) {// correspond au réveil d'une tâche périodique
 				this->traceur->reveil(t,i);
@@ -314,22 +317,24 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 		
 		//Verification du reveil d'une tache Aperiodique
 		// remplissage du tableau des tâches prêtes
-		for (int i = nbTachesP ; i < nbTaches ; i++) {
-			if(context[i][1] == t) {
-				//reveil de tache Aperiodique
-				if(tabTachesApPretes.size() == 0) {
-					this->traceur->reveilAperiodiqueExec(t,context[i][0],numTacheA);
-				}
-				else {
-				 	this->traceur->reveilAperiodiqueAttente(t,context[i][0],numTacheA);
-				}
-				tabTachesApPretes.push(i);
-				//calcul dk
-				if(bandePassanteTBS != 0) {
-					int division = ((context[i][0])*100)/bandePassanteTBS; 
-					dk = max(context[i][1],dk) + division;
-					cout << "dk de " << i << " : "<< dk << endl;
-					context[i][2] = dk;
+		if ( serveur != NO_SERV ) {
+			for (int i = nbTachesP ; i < nbTaches ; i++) {
+				if(context[i][1] == t) {
+					//reveil de tache Aperiodique
+					if(tabTachesApPretes.size() == 0) {
+						this->traceur->reveilAperiodiqueExec(t,context[i][0],numTacheA);
+					}
+					else {
+					 	this->traceur->reveilAperiodiqueAttente(t,context[i][0],numTacheA);
+					}
+					tabTachesApPretes.push(i);
+					//calcul dk
+					if(bandePassanteTBS != 0) {
+						int division = ((context[i][0])*100)/bandePassanteTBS; 
+						dk = max(context[i][1],dk) + division;
+						cout << "dk de " << i << " : "<< dk << endl;
+						context[i][2] = dk;
+					}
 				}
 			}
 		}
@@ -355,6 +360,7 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 							task_executed = tabTachesPretes[i];
 						}
 						else if(context[tabTachesPretes[i]][1] == deadlineProche) {
+							
 							int  riP = context[tabTachesPretes[i]][2] - tachesP[tabTachesPretes[i]]->getPi();
 							int ritask_executed = context[task_executed][2] - tachesP[task_executed]->getPi();
 							if(riP < ritask_executed) {
@@ -384,31 +390,45 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 				}
 						
 			}
-			if (t !=0) {
-				if(former_executedTask != task_executed) {
-					if(context[former_executedTask][0] != 0) {
-						if(former_executedTask >= nbTachesP) {
-							//tache Aperiodique
-							this->traceur->preemption(t,numTacheA);
-						}
-						else {
-							this->traceur->preemption(t,former_executedTask);
-						}
-					}
+			
+			if(former_executedTask != task_executed) {
+				if(former_executedTask == -1) {
 					if(task_executed >= nbTachesP) {
 						this->traceur->execution(t,numTacheA);
 					}
 					else {
 						this->traceur->execution(t,task_executed);
 					}
+				totalUTC = totalUTC + (t - UTC);
+				UTC = 0;
+				}
+				else {
+					if(task_executed != -1) {
+						if(context[former_executedTask][0] != 0) {
+							//preemption
+							if(former_executedTask >= nbTachesP) {
+								//tache Aperiodique
+								this->traceur->preemption(t,numTacheA);
+							}
+							else {
+								this->traceur->preemption(t,former_executedTask);
+							}
+						}
+						if(task_executed >= nbTachesP) {
+							this->traceur->execution(t,numTacheA);
+						}
+						else {
+							this->traceur->execution(t,task_executed);
+						}		
+					}
+					else {
+						UTC = t;
+					}
 				}
 			}
-			else {
-				this->traceur->execution(t,task_executed);
-			}
-			former_executedTask = task_executed;
 		}
-
+		
+		former_executedTask = task_executed;
 		
 		// Affichage
 		if(task_executed == -1)
@@ -418,7 +438,6 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 		else
 			cout << "t=" << t << " : T" << tachesP[task_executed]->getNum() << endl;
 
-		
 		// Mise à jour du contexte
 		t++;	
 		
@@ -428,22 +447,49 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 		for(int i = 0 ; i < nbTachesP ; i++) {
 		
 			// Si la deadline de la tache a été passée, on charge en mémoire la deadline suivante
-			if(context[i][1] <= t) {
+			if(context[i][1] == t) {
 			// Si, alors que la deadline a été passée, et que Ci n'est pas égal à zéro, alors le système n'est pas ordonnançable
 				if(context[i][0] > 0) {
 					cout << "ERREUR FATALE : la tâche T" << i << " n'a pas pu terminer son exécution. Arrêt du système" << endl;
 					return 1;
 				}
+				this->traceur->dateEcheance(t,i);
 			} 
-			if(context[i][2] <= t) {
-				context[i][2] += tachesP.at(i)->getPi();
-				context[i][1] += tachesP.at(i)->getDi();
+			if(context[i][2] == t) {
 				context[i][0] = tachesP.at(i)->getCi(); // réinitialisation du temps d'exécution restant
+				context[i][1] = t + tachesP.at(i)->getDi();
+				context[i][2] = t + tachesP.at(i)->getPi();		
 			}
 		}
 		
+		if(serveur == TBS) {
+			for(int i = nbTachesP ; i < nbTaches ; i++) {
+		
+				// Si la deadline de la tache a été passée, on charge en mémoire la deadline suivante
+				if(context[i][2] == t) {
+				// Si, alors que la deadline a été passée, et que Ci n'est pas égal à zéro, alors le système n'est pas ordonnançable
+					if(context[i][0] > 0) {
+						cout << "ERREUR FATALE : la tâche R" << i << " n'a pas pu terminer son exécution. Arrêt du système" << endl;
+						return 1;
+					}
+					this->traceur->dateEcheance(t,numTacheA);
+				}
+			}
+		}	
 	}
 	
+	if(task_executed != -1) {
+		if(task_executed >= nbTachesP) {
+			this->traceur->finExecution(t,numTacheA);
+		}
+		else {
+			this->traceur->finExecution(t,task_executed);
+		}
+	}
+	else {
+		totalUTC = totalUTC + (t - UTC);
+	}
+	cout << "UTC total: " << totalUTC << endl;
 	return 0;
 }
 	
