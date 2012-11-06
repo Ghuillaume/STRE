@@ -7,61 +7,66 @@
 %        5) Réalisation 
 %        6) Tests
 
-\chapter{Spécification de l’environnement}
-Lorsque le programme est lancé, l’utilisateur doit choisir le mode de génération. Il rentre les données nécessaires au bon déroulement du mode. Le programme crée un fichier qui contient le résultat de la génération de tâches.
 
-
-\chapter{Spécification du logiciel}
-
-	\section{Explication du choix du langage}
+\chapter{Générateur de tâches}
+	\label{chap:1}
 	
-		Nous avons opté pour le langage C++ pour réaliser ce projet car celui-ci possède un certain nombre d'avantages :
-		\begin{itemize}
-			\item Il s'agit d'un langage orienté objet très utilisé dans le monde et de nombreux outils libres sont disponibles pour l'utiliser (comme GCC pour la compilation par exemple). De plus, la documentation correspondante est très facilement accessible dans la littérature ou sur le web.
-			\item Les langages C/C++ sont très utilisés dans le monde de la programmation système (par exemple le noyau Linux) ou de l'embarqué (comme le système d'exploitation Trampoline par exemple). En effet, ceux-ci étant bas niveau, il permet de gérer de manière assez précise la mémoire (pointeurs, allocations, etc.).
-		\end{itemize}
+	\section{Spécification de l’environnement}
+	Lorsque le programme est lancé, l’utilisateur doit choisir le mode de génération. Il rentre les données nécessaires au bon déroulement du mode. Le programme crée un fichier qui contient le résultat de la génération de tâches.
+
+
+	\section{Spécification du logiciel}
+
+		\subsection{Explication du choix du langage}
+	
+			\label{sec:langage}
+			Nous avons opté pour le langage C++ pour réaliser ce projet car celui-ci possède un certain nombre d'avantages :
+			\begin{itemize}
+				\item Il s'agit d'un langage orienté objet très utilisé dans le monde et de nombreux outils libres sont disponibles pour l'utiliser (comme GCC pour la compilation par exemple). De plus, la documentation correspondante est très facilement accessible dans la littérature ou sur le web.
+				\item Les langages C/C++ sont très utilisés dans le monde de la programmation système (par exemple le noyau Linux) ou de l'embarqué (comme le système d'exploitation Trampoline par exemple). En effet, ceux-ci étant bas niveau, il permet de gérer de manière assez précise la mémoire (pointeurs, allocations, etc.).
+			\end{itemize}
 		
-		Bien que le travail qui nous a été demandé ne requiert pas la maîtrise d'une programmation bas niveau, le langage C/C++ nous apparait en cohérence avec le thème abordé par le projet (les systèmes temps réel embarqués).
+			Bien que le travail qui nous a été demandé ne requiert pas la maîtrise d'une programmation bas niveau, le langage C/C++ nous apparait en cohérence avec le thème abordé par le projet (les systèmes temps réel embarqués).
 
-	\section{Fonctionnalités}
+		\subsection{Fonctionnalités}
 
-		\Huge
-		A mettre : un petit schéma comme on a fait au premier TP qui montre le lien entre les différents modules
-		\normalsize
-        
-		\subsection{Choix du mode}
-			Dans ce premier module, on choisit le mode d’utilisation du logiciel en fonction de ce que souhaite l’utilisateur. Pour cela, il peut soit renseigner sous forme d’arguments les différentes données, soit en sélectionnant dans le menu ses préférences. \\
-
-			Parmi les choix qui lui sont offerts, on retrouve les cas présentés dans le sujet du projet (génération aléatoire ou contrôlée et tâches périodiques ou non) mais aussi la possibilité de renseigner un fichier contenant déjà toutes les informations sur les tâches. Dans le premier cas, l’utilisateur devra renseigner ensuite le nombre de tâches concernées tandis que dans l’autre cas, le fichier ne sera pas interprété et ce programme s’arrêtera.
-
-
-		\subsection{Génération aléatoire de tâches}
 			\Huge
-			TODO
+			A mettre : un petit schéma comme on a fait au premier TP qui montre le lien entre les différents modules
 			\normalsize
+		    
+			\subsubsection{Choix du mode}
+				Dans ce premier module, on choisit le mode d’utilisation du logiciel en fonction de ce que souhaite l’utilisateur. Pour cela, il peut soit renseigner sous forme d’arguments les différentes données, soit en sélectionnant dans le menu ses préférences. \\
 
-		\subsection{Génération contrôlée de tâches}
-			Le deuxième type de génération fait appel à l'utilisateur pour rensigner chacune des valeurs de chaque tâche. De cette manière, l'utilisateur va pouvoir tester plus facilement des cas spécifiques et donc observer de manière plus précise le fonctionnement de l'ordonnanceur par la suite. \\
-			Lors de la génération, pour toutes les tâches périodiques il devra renseigner les Ci, Pi et Di, c'est-à-dire respectivement les durées d'exécution maximales, les périodes d'activation et le délai critique). Dans le cas où il y a aussi des tâches apériodiques, il devra renseigner aussi ri (la date de réveil) et Ci.
-
-		\subsection{Écriture dans un fichier}
-			Ce module a pour fonction d’écrire dans un fichier les données contenues dans un flux (= stream)  et calculées à partir des deux modules précédents de génération. L’intérêt de séparer ces fonctions est double : il est plus pratique de factoriser le code à travers une seule fonction d’écriture appelée par les différentes générations et cela facilite la maintenance.
+				Parmi les choix qui lui sont offerts, on retrouve les cas présentés dans le sujet du projet (génération aléatoire ou contrôlée et tâches périodiques ou non) mais aussi la possibilité de renseigner un fichier contenant déjà toutes les informations sur les tâches. Dans le premier cas, l’utilisateur devra renseigner ensuite le nombre de tâches concernées tandis que dans l’autre cas, le fichier ne sera pas interprété et ce programme s’arrêtera.
 
 
-	\section{Décomposition fonctionnelle}
-		Une classe par type de génération 
+			\subsubsection{Génération aléatoire de tâches}
+				\Huge
+				TODO
+				\normalsize
+
+			\subsubsection{Génération contrôlée de tâches}
+				Le deuxième type de génération fait appel à l'utilisateur pour rensigner chacune des valeurs de chaque tâche. De cette manière, l'utilisateur va pouvoir tester plus facilement des cas spécifiques et donc observer de manière plus précise le fonctionnement de l'ordonnanceur par la suite. \\
+				Lors de la génération, pour toutes les tâches périodiques il devra renseigner les Ci, Pi et Di, c'est-à-dire respectivement les durées d'exécution maximales, les périodes d'activation et le délai critique). Dans le cas où il y a aussi des tâches apériodiques, il devra renseigner aussi ri (la date de réveil) et Ci.
+
+			\subsubsection{Écriture dans un fichier}
+				Ce module a pour fonction d’écrire dans un fichier les données contenues dans un flux (= stream)  et calculées à partir des deux modules précédents de génération. L’intérêt de séparer ces fonctions est double : il est plus pratique de factoriser le code à travers une seule fonction d’écriture appelée par les différentes générations et cela facilite la maintenance.
 
 
-\chapter{Conception fonctionnelle}
+		\subsection{Décomposition fonctionnelle}
+			Une classe par type de génération 
 
-	\section{Choix du mode}
-		\paragraph{pré-condition :} Le programme vient d’être lancé.
-		\paragraph{post-condition :} Un choix valide a été effectué.
-		\paragraph{Objectif :} Permettre de choisir entre la génération aléatoire et la génération controlée.
-		\paragraph{Algo :}
-		\begin{verbatim} 
-Entrée : Int choix
-Sortie :  -
+
+	\section{Conception fonctionnelle}
+
+		\subsection{Choix du mode}
+			\paragraph{pré-condition :} Le programme vient d’être lancé.
+			\paragraph{post-condition :} Un choix valide a été effectué.
+			\paragraph{Objectif :} Permettre de choisir entre la génération aléatoire et la génération controlée.
+			\paragraph{Algo :}
+			\begin{verbatim} 
+	Entrée : Int choix
+	Sortie :  -
 
 Si (choix == 1 ) Alors
    Lancer la génération controlée
@@ -79,7 +84,7 @@ FinSi
 		\end{verbatim} 
 
 	\newpage
-	\section{Génération Aléatoire}
+	\subsection{Génération Aléatoire}
 		\paragraph{pré-condition :} La génération aléatoire a été choisie.
 		\paragraph{post-condition :} Toutes les valeurs caractéristiques des tâches ont été générées en accord avec le paramétrage de l’utilisateur.
 
@@ -145,7 +150,7 @@ tabPi[ nbTaches - 1 ] =100 / pgcd(nb\_genere,100)
 tabCi[ nbTaches - 1 ] = 100 / pgcd(nb\_genere,100)
 			\end{verbatim}
 
-	\section{Generation Controlée}  
+	\subsection{Generation Controlée}  
 		\paragraph{pré-condition :} La génération controlée a été choisie.
 		\paragraph{post-condition :} Toutes les valeurs caractéristiques des tâches ont été générées en accord avec le paramétrage de l’utilisateur.
 		\paragraph{Objectif :} Permettre à l’utilisateur de générer des tâches périodiques ou apériodiques en renseignant les différentes caractéristiques de chacune des tâches (Ci, Pi, Di).
@@ -170,7 +175,7 @@ Pour i allant de 0 à (nbTaches - 1)
 fin pour
 			\end{verbatim}
 
-	\section{Ecriture du résultat obtenu}
+	\subsection{Ecriture du résultat obtenu}
 		\paragraph{pré-condition :} La génération (qu'elle soit contrôlée ou non) envoie un outputstream contenant les chaînes de caractère à écrire dans un fichier.
 		\paragraph{post-condition :} L'écriture s'est bien déroulée : le fichier contient bien la chaîne.
 		\paragraph{Objectif :} Enregistrer les données générées par le module précédent de manière pérenne dans un fichier.
@@ -179,13 +184,167 @@ fin pour
 		TODO
 		\normalsize
 
-\chapter{Définition de la réalisation}
+\section{Définition de la réalisation}
 	\Huge
 	TODO
 	\normalsize
 
-\chapter{Réalisation}
-	\section{Répartition des tâches}
+\section{Réalisation}
+	\subsection{Répartition des tâches}
 
-\chapter{Tests}
+\section{Tests}
+
+
+
+\chapter{Simulateur d'ordonnanceur}
+	\section{Spécification de l’environnement}
+		Le programme final devra pouvoir être exécutable en ligne de commande.\\
+		
+		En entrée : le nom du fichier contenant le jeu de tâches périodiques et apériodiques pour lesquelles on veut simuler l'ordonnancement.\\
+		
+		En sortie : un ou plusieurs fichiers .ktr utilisable avec l'outil Kiwi\footnote{\Huge TODO présenter kiwi vite fait} et contenant la séquence d'ordonnancement. Le programme affichera également quelques résultats via la sortie standard.\\
+		
+		Afin de faciliter la prise en main du programme, on proposera un menu succint présentant les différentes fonctionnalités qui s'offrent à l'utilisateur.
+	
+	\section{Specification du logiciel}
+		Pour les mêmes raisons que celles décrites dans le Chapitre \ref{sec:langage}, le langage utilisé est le C++.
+
+		\subsection{Fonctionnalité}
+			\begin{figure}
+				\centering
+				\includegraphics[scale=0.55]{ordo_fct_diag.png}
+				\caption{Diagramme des fonctionnalités}
+			\end{figure}
+			\FloatBarrier
+			
+			\subsubsection{Parsage du fichier d'entrée}
+				Vérification de la syntaxe avec expression régulière + enregistrement des tâches et de leurs paramètres dans un modèle.
+			
+			\subsubsection{Analyse d'ordonnançabilité}
+				On fait tous les calculs en même temps :
+				\begin{itemize}
+					\item Condition nécessaire pour l'ordonnançabilité du jeu de tâche avec RM ;
+					\item Condition suffisante avec RM ;
+					\item Condition suffisante et nécessaire avec EDF.
+				\end{itemize}
+			
+			\subsubsection{Simulation d'ordonnancement}
+			
+		\subsection{Decomposition fonctionnelle}
+
+	\section{Conception fonctionnelle}
+	
+		\subsection{Parsage du fichier d'entrée}
+				\paragraph{post-condition :} 
+				\paragraph{Objectif :} 
+				\paragraph{Algo :} 
+					\begin{verbatim}
+ALGO TODO
+					\end{verbatim}
+		
+		
+		\subsection{Analyse d'ordonnançabilité}
+		
+			\subsubsection{Condition nécessaire RM}\paragraph{pré-condition :} 
+				\paragraph{post-condition :} 
+				\paragraph{Objectif :} 
+				\paragraph{Algo :} 
+					\begin{verbatim}
+ALGO TODO
+					\end{verbatim}
+			
+			\subsubsection{Condition suffisante RM}
+				\paragraph{post-condition :} 
+				\paragraph{Objectif :} 
+				\paragraph{Algo :} 
+					\begin{verbatim}
+ALGO TODO
+					\end{verbatim}
+			
+			
+			\subsubsection{Condition nécessaire et suffisante EDF}
+				\paragraph{post-condition :} 
+				\paragraph{Objectif :} 
+				\paragraph{Algo :} 
+					\begin{verbatim}
+ALGO TODO
+					\end{verbatim}
+	
+		\subsection{Simulation d'ordonnancement}
+			Le simulateur d'ordonnancement est découpé en deux algorithmes principaux :
+			\begin{itemize}
+				\item RM ;
+				\item EDF.
+			\end{itemize}
+			
+			Nous avons en premier lieu commencé par développer ces deux algorithmes sans tenir compte des tâches périodiques dans le but ensuite de les "patcher" avec nos algorithmes d'ordonnancement des tâches apériodiques (BG et TBS).
+			
+			\subsubsection{Rate Monotonic}
+				\paragraph{pré-condition :} 
+				\paragraph{post-condition :} 
+				\paragraph{Objectif :} 
+				\paragraph{Algo :} 
+					\begin{verbatim}
+Entrée : 
+Sortie :  
+
+
+init_context()
+int t := 0
+int task_executed := -1
+
+tant que (t < getHyperPeriode())
+	
+    Booleen need_to_poll = poll_needed()
+	
+    si(need_to_poll)
+        
+        TODO : ALGO RM
+        
+    fsi
+	
+    maj_context()
+    t++
+	
+fin tant que
+					\end{verbatim}
+					
+					
+			\subsubsection{Earliest Deadline First}
+			
+				\paragraph{pré-condition :} 
+				\paragraph{post-condition :} 
+				\paragraph{Objectif :} 
+				\paragraph{Algo :} 
+					\begin{verbatim}
+Entrée : 
+Sortie :  
+
+
+init_context()
+int t := 0
+int task_executed := -1
+
+tant que (t < getHyperPeriode())
+	
+	Booleen need_to_poll = poll_needed()
+	
+	si(need_to_poll)
+		
+		TODO : ALGO EDF
+		
+	fsi
+	
+	maj_context()
+	t++
+	
+fin tant que
+					\end{verbatim}
+				
+
+	\section{Définition de la réalisation}
+
+	\section{Réalisation}
+
+	\section{Tests}
 
