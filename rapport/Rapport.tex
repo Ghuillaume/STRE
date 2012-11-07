@@ -11,7 +11,8 @@
 \usepackage{fancyhdr}											% Pour gérer les en-tête / pied de page
 \usepackage{placeins}											% Pour utiliser \FloatBarrier qui annule les flottants
 \usepackage{pdfpages}											% Include du pdf (\includepdf[options]{doc})
-\usepackage{listings}	
+\usepackage{listings}											% Include du pdf (\includepdf[options]{doc})
+\usepackage{color}
 \usepackage{verbatim}										% Insérer du code/texte (\lstinputlisting{doc}, \lstset juste avant pour modifier le style)
 
 
@@ -22,7 +23,7 @@
 \include{garde}
 
 \pagestyle{fancy}												% Permet de dire qu'on veut afficher les headers, on peut le mettre plus tard
-\fancyhf{}	 													% On dÃÂ©gage tout ce qui existe déjà
+\fancyhf{}	 													% On dégage tout ce qui existe déjà
 \lhead[]{TITRE}		% Haut-gauche
 \rhead[]{\leftmark}												% Haut-droite
 \lfoot[]{NOM}										% Bas-gauche
@@ -33,6 +34,13 @@
 %\setlength{\baselineskip}{1.5em}								% Espace interligne
 %\setlength{\parskip}{0pt}										% Espace interparagraphe
 
+\lstset{
+	tabsize=4,
+	keywordstyle=\color{blue},          
+	commentstyle=\color{dkgreen},     
+	stringstyle=\color{mauve},
+	morekeywords={Pour,faire,Si,Sinon,alors,Finpour,Finsi,afficher}
+}
  
 
 \begin{document}

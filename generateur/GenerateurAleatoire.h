@@ -1,6 +1,8 @@
 #ifndef GENERATEUR_ALEATOIRE_H
 #define GENERATEUR_ALEATOIRE_H
 
+#define FILEOUT jeuDeTaches.txt
+
 #include <fstream>
 #include <iostream>
 #include <cstdlib>

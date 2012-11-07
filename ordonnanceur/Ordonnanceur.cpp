@@ -18,6 +18,7 @@ int Ordonnanceur::RM(int serveur) {
 	ListeTachesPeriodiques tabPrioritePeriodique = this->ordonnerTachesPeriodiquesPi();
 	// Tableau qui contient les taches Aperiodiques rangées par Ordre de priorité
 	ListeTachesAperiodiques tabPrioriteAperiodique = this->ordonnerTachesAperiodiques();
+	vector<int> tabTpsReponse(tabPrioriteAperiodique.size());
 	
 	// Tableau qui contient le temps d'execution restant de chaque tache (periodique et aperiodique) rangé par ordre de priorité
 	vector<int> tabTpsRestantExec(tabPrioritePeriodique.size() + tabPrioriteAperiodique.size());
@@ -43,9 +44,12 @@ int Ordonnanceur::RM(int serveur) {
 	// Début de l'algorithme RM
 	//
 	
+	int nb_commutation = 0;
+	int nb_preemption = 0;
+	
 	// Initialisation du temps courant et du numéro de la tâche en cours d'éxécution
 	unsigned int t = 0;
-	unsigned int task_executed = -1; // -1 signifie qu'aucune tâche ne s'exécute
+	unsigned int task_executed = -1, task_executed_before = -1; // -1 signifie qu'aucune tâche ne s'exécute
 	
 	bool need_to_poll;
 	bool tacheElue = false;
@@ -54,16 +58,19 @@ int Ordonnanceur::RM(int serveur) {
 	unsigned int numTacheBG = tabPrioritePeriodique.size();
 	unsigned int resteAperiodique_a_exec = 0;
 
-	while(t < hyperPeriode) {	
+	while(t < hyperPeriode) {
+		task_executed_before = task_executed;
+		
 		// On vérifie si l'ordonnanceur doit choisir une tâche
 		// Seulement si une tâche se réveille ou se termine
 		need_to_poll = false;
-			
+		
 		if(task_executed != -1) {
 			//Tache se termine
 			if(tabTpsRestantExec[task_executed] == 0) {
 				//si tache Aperiodique
 				if(task_executed >= tabPrioritePeriodique.size()) {
+					tabTpsReponse[task_executed - tabPrioritePeriodique.size()] = t - tabPrioriteAperiodique[task_executed - tabPrioritePeriodique.size()]->getri();
 					this->traceur->finExecution(t,numTacheBG);
 					resteAperiodique_a_exec--;
 					// a la fin de l'execution de la tache aperiodique la plus prioritaire
@@ -110,6 +117,7 @@ int Ordonnanceur::RM(int serveur) {
 						}
 						else {
 							if(tabTpsRestantExec[task_executed] != 0) {
+								nb_preemption++;
 								//preemption
 								if(task_executed >= tabPrioritePeriodique.size()) {
 									this->traceur->preemption(t,numTacheBG);
@@ -166,6 +174,9 @@ int Ordonnanceur::RM(int serveur) {
 			}
 		}
 		
+		if(task_executed != task_executed_before && task_executed != -1 && t != 0)
+			nb_commutation++;
+		
 		
 		// Affichage
 		if(task_executed == -1) {
@@ -195,6 +206,17 @@ int Ordonnanceur::RM(int serveur) {
 			}
 		}
 	}
+	
+	cout << endl << "Temps de réponses :" << endl;
+	for(unsigned int i = 0 ; i < tabTpsReponse.size() ; i++) {
+		if(tabTpsReponse[i] > 0)
+			cout << "\tR" << tabPrioriteAperiodique[i]->getNum() << " : " << tabTpsReponse[i] << endl;
+		else
+			cout << "\tR" << tabPrioriteAperiodique[i]->getNum() << " : " << "Tâche non terminée sur l'hyperperiode" << endl;
+	}
+	
+	cout << endl << nb_commutation << " changements de contextes, et " << nb_preemption << " préemptions." << endl << endl;
+	
 	return 0;
 }
 
@@ -209,6 +231,8 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 	int nbTachesA = tachesA.size();
 	int nbTaches = nbTachesP + nbTachesA;
 	unsigned int numTacheA = nbTachesP;
+	
+	vector<int> tabTpsReponse(tachesA.size());
 
 	// Initialisation d'une matrice représentant le contexte d'exécution
 	// [i]	temps d'exec restant		prochaine deadline		-> pour les tâches périodiques
@@ -248,9 +272,12 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 	// Début de l'algorithme EDF
 	//
 	
+	int nb_commutation = 0;
+	int nb_preemption = 0;
+	
 	// Initialisation du temps courant et du numéro de la tâche en cours d'éxécution
 	unsigned int t = 0;
-	unsigned int task_executed = -1; // -1 signifie qu'aucune tâche ne s'exécute
+	unsigned int task_executed = -1, task_executed_before; // -1 signifie qu'aucune tâche ne s'exécute
 	bool need_to_poll;
 	int deadlineProche = 0;
 	ListeTachesPretes tabTachesPretes(0);
@@ -261,6 +288,8 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 	int totalUTC = 0;
 	
 	while( t < hyperPeriode ) {
+	
+		task_executed_before = task_executed;
 	
 		// Affichage du contexte pour debuggage
 		/*cout << "\t\tN\tExec\tDeadline" << endl;
@@ -281,6 +310,7 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 			if(context[task_executed][0] == 0) {
 				//si tache Aperiodique
 				if(task_executed >= nbTachesP) {
+					tabTpsReponse[task_executed - tachesP.size()] = t - tachesA[task_executed - tachesP.size()]->getri();
 					this->traceur->finExecution(t,numTacheA);
 					tabTachesApPretes.pop();
 					// a la fin de l'execution de la tache aperiodique la plus prioritaire
@@ -405,6 +435,7 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 				else {
 					if(task_executed != -1) {
 						if(context[former_executedTask][0] != 0) {
+							nb_preemption++;
 							//preemption
 							if(former_executedTask >= nbTachesP) {
 								//tache Aperiodique
@@ -427,6 +458,9 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 				}
 			}
 		}
+		
+		if(task_executed != task_executed_before && task_executed != -1)
+			nb_commutation++;
 		
 		former_executedTask = task_executed;
 		
@@ -489,7 +523,18 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 	else {
 		totalUTC = totalUTC + (t - UTC);
 	}
-	cout << "UTC total: " << totalUTC << endl;
+	
+	cout << "UTC total: " << totalUTC << endl;	
+	
+	cout << endl << "Temps de réponses :" << endl;
+	for(unsigned int i = 0 ; i < tabTpsReponse.size() ; i++) {
+		if(tabTpsReponse[i] > 0)
+			cout << "\tR" << tachesA[i]->getNum() << " : " << tabTpsReponse[i] << endl;
+		else
+			cout << "\tR" << tachesA[i]->getNum() << " : " << "Tâche non terminée sur l'hyperperiode" << endl;
+	}
+	
+	cout << endl << nb_commutation << " changements de contextes, et " << nb_preemption << " préemptions." << endl;
 	return 0;
 }
 	
@@ -540,7 +585,6 @@ ListeTachesAperiodiques Ordonnanceur::ordonnerTachesAperiodiques() {
 
 }
 
-
 void Ordonnanceur::verifierCondNecessaireRM() {
 	int Pi = 0;
 	int Ci = 0;
@@ -558,7 +602,6 @@ void Ordonnanceur::verifierCondSuffisanteRM() {
 	int Pi = 0;
 	int Ci = 0;
 	double Up = calculerU();
-	
 	double UBoundRM = calculerUBound();
 	
 	cout << "Test de condition suffisante pour RM : ";
@@ -576,6 +619,7 @@ void Ordonnanceur::verifierConditionEDF() {
 	int Pi = 0;
 	int Di = 0;
 	double U = 0.0;
+	
 	ListeTachesPeriodiques* liste = this->conteneur->getVectorPeriodique();
 
 	// Somme de 1 à n des Ci/Pi
@@ -583,6 +627,7 @@ void Ordonnanceur::verifierConditionEDF() {
 		Pi = liste->at(i)->getPi();
 		Di = liste->at(i)->getDi();
 		
+		// Vérification pour savoir si tous les Pi = ou > à Di
 		egaliteDiPi &= (Pi == Di);
 		superioritePiDi &= (Pi > Di);
 	}
@@ -624,6 +669,7 @@ double Ordonnanceur::calculerU() {
 	int Pi = 0;
 	int Ci = 0;
 	double Up = 0.0;
+	
 	ListeTachesPeriodiques* liste = this->conteneur->getVectorPeriodique();
 
 	// Somme de 1 à n des Ci/Pi
@@ -639,6 +685,7 @@ double Ordonnanceur::calculerU2() {
 	int Di = 0;
 	int Ci = 0;
 	double Up = 0.0;
+	
 	ListeTachesPeriodiques* liste = this->conteneur->getVectorPeriodique();
 	
 	// Somme de 1 à n des Ci/Di
