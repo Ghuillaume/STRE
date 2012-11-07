@@ -6,6 +6,8 @@
 #include "TacheAperiodique.hpp"
 #include "TachePeriodique.hpp"
 #include "Ordonnanceur.hpp"
+#include <sys/types.h>
+#include <sys/stat.h>
 
 #include <iostream>
 using namespace std;
@@ -42,6 +44,7 @@ int main(int argc, char** argv) {
 	
 	Traceur* traceur = new Traceur();
 	Ordonnanceur* ordo = new Ordonnanceur(conteneur,traceur);
+	int rtn = mkdir("Traces",S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	
 	char action;
 	int bandePassanteTBS;
@@ -80,32 +83,32 @@ int main(int argc, char** argv) {
 				break;
 				
 			case '3':
-				traceur->creationFichier("ordoRM");
+				traceur->creationFichier("Traces/ordoRM");
 				ordo->RM(NO_SERV);
 				traceur->fermetureFichier();
 				break;
 			
 			case '4':
-				traceur->creationFichier("ordoRM_BG");
+				traceur->creationFichier("Traces/ordoRM_BG");
 				ordo->RM(BG);
 				traceur->fermetureFichier();
 				break;
 				
 			case '5':
-				traceur->creationFichier("ordoEDF");
+				traceur->creationFichier("Traces/ordoEDF");
 				ordo->EDF(NO_SERV);
 				traceur->fermetureFichier();
 				break;
 				
 			case '6':
-				traceur->creationFichier("ordoEDF_BG");
+				traceur->creationFichier("Traces/ordoEDF_BG");
 				ordo->EDF(BG);
 				traceur->fermetureFichier();
 				break;
 				
 			case '7':
 				// TODO pas de traitement si l'argument vaut TBS
-				traceur->creationFichier("ordoEDF_TBS");
+				traceur->creationFichier("Traces/ordoEDF_TBS");
 				cout << "Largeur de la bande Passante de TBS (pourcentage entier): ";
 				cin >> bandePassanteTBS;
 				ordo->EDF(TBS,bandePassanteTBS);
