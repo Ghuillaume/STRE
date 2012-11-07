@@ -583,6 +583,7 @@ void Ordonnanceur::verifierConditionEDF() {
 		Pi = liste->at(i)->getPi();
 		Di = liste->at(i)->getDi();
 		
+		// Vérification pour savoir si tous les Pi = ou > à Di
 		egaliteDiPi &= (Pi == Di);
 		superioritePiDi &= (Pi > Di);
 	}
