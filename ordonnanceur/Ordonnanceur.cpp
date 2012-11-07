@@ -540,7 +540,6 @@ ListeTachesAperiodiques Ordonnanceur::ordonnerTachesAperiodiques() {
 
 }
 
-
 void Ordonnanceur::verifierCondNecessaireRM() {
 	int Pi = 0;
 	int Ci = 0;
@@ -558,7 +557,6 @@ void Ordonnanceur::verifierCondSuffisanteRM() {
 	int Pi = 0;
 	int Ci = 0;
 	double Up = calculerU();
-	
 	double UBoundRM = calculerUBound();
 	
 	cout << "Test de condition suffisante pour RM : ";
@@ -576,6 +574,7 @@ void Ordonnanceur::verifierConditionEDF() {
 	int Pi = 0;
 	int Di = 0;
 	double U = 0.0;
+	
 	ListeTachesPeriodiques* liste = this->conteneur->getVectorPeriodique();
 
 	// Somme de 1 à n des Ci/Pi
@@ -625,6 +624,7 @@ double Ordonnanceur::calculerU() {
 	int Pi = 0;
 	int Ci = 0;
 	double Up = 0.0;
+	
 	ListeTachesPeriodiques* liste = this->conteneur->getVectorPeriodique();
 
 	// Somme de 1 à n des Ci/Pi
@@ -640,6 +640,7 @@ double Ordonnanceur::calculerU2() {
 	int Di = 0;
 	int Ci = 0;
 	double Up = 0.0;
+	
 	ListeTachesPeriodiques* liste = this->conteneur->getVectorPeriodique();
 	
 	// Somme de 1 à n des Ci/Di
