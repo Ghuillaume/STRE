@@ -90,7 +90,7 @@ void GenerateurAleatoire::generationAperiodique() {
 
 void GenerateurAleatoire::ecritureFichier() {
 	ofstream fichier;
-	fichier.open("fichierTestAlea.txt");
+	fichier.open(FILEOUT);
 	for (int i = 0 ; i < nbTachesP_; i++) {
 		fichier << "T" << i+1 << ": " << tabCiP_[i] << "," << tabPiP_[i] << "," << tabDiP_[i] << endl;
 	}
