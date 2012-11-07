@@ -1,6 +1,9 @@
 #ifndef GENERATEUR_CONTROLEE_H
 #define GENERATEUR_CONTROLEE_H
 
+
+#define FILEOUT jeuDeTaches.txt
+
 #include <string>
 #include <iostream>
 #include <fstream>

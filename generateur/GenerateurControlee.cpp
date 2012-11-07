@@ -40,7 +40,7 @@ void GenerateurControlee::generation() {
 
 void GenerateurControlee::ecritureFichier() {
 	ofstream fichier;
-	fichier.open("fichierTestContr.txt");
+	fichier.open(FILEOUT);
 	for (int i = 0 ; i < nbTachesP_; i++) {
 		fichier << "T" << i+1 << ": " << tabCiP_[i] << "," << tabPiP_[i] << "," << tabDiP_[i] << endl;
 	}

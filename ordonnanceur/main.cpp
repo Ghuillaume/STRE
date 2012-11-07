@@ -8,6 +8,8 @@
 #include "Ordonnanceur.hpp"
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <iostream> 
+#include <limits>
 
 #include <iostream>
 using namespace std;
@@ -19,6 +21,8 @@ int main(int argc, char** argv) {
 		cout << USAGE << endl;
 		return -1;
 	}
+	
+	cout << endl << endl;
 
 	
 	Conteneur* conteneur = new Conteneur();
@@ -115,6 +119,8 @@ int main(int argc, char** argv) {
 				traceur->fermetureFichier();
 				break;
 		}
+		
+		cout << endl << endl;
 	
 	}
 
