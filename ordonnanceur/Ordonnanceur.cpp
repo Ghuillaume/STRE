@@ -606,7 +606,7 @@ void Ordonnanceur::verifierCondSuffisanteRM() {
 	
 	double UBoundRM = calculerUBound();
 	
-	cout << " Test de condition suffisante pour RM : ";
+	cout << "Test de condition suffisante pour RM : ";
 	if (Up <= UBoundRM) {
 		cout << "ordonnançable" << endl;
 	} else {
@@ -623,10 +623,12 @@ void Ordonnanceur::verifierConditionEDF() {
 	double U = 0.0;
 	ListeTachesPeriodiques* liste = this->conteneur->getVectorPeriodique();
 
+	// Somme de 1 à n des Ci/Pi
 	for (int i = 0; i++; i < liste->size()) {
 		Pi = liste->at(i)->getPi();
 		Di = liste->at(i)->getDi();
 		
+		// Vérification pour savoir si tous les Pi = ou > à Di
 		egaliteDiPi &= (Pi == Di);
 		superioritePiDi &= (Pi > Di);
 	}
@@ -646,7 +648,7 @@ void Ordonnanceur::verifierConditionEDF() {
 		U = calculerU2();
 		
 		if (U <= 1.0) {
-			cout << "ordonnaçable" << endl;
+			cout << "ordonnançable" << endl;
 		} else {
 			cout << "on ne peut rien conclure" << endl;
 		}
@@ -658,7 +660,7 @@ void Ordonnanceur::verifierConditionEDF_TBS(double Us) {
 	
 	cout << "Test de condition nécessaire et suffisante pour EDF-TBS : ";
 	if (Up + Us <= 1.0) {
-		cout << "ordonnaçable" << endl;
+		cout << "ordonnançable" << endl;
 	} else {
 		cout << "non-ordonnançable" << endl;
 	}
