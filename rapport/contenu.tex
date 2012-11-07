@@ -60,8 +60,8 @@
 	\section{Conception fonctionnelle}
 
 		\subsection{Choix du mode}
-			\paragraph{pré-condition :} Le programme vient d’être lancé.
-			\paragraph{post-condition :} Un choix valide a été effectué.
+			\paragraph{Pré-condition :} Le programme vient d’être lancé.
+			\paragraph{Post-condition :} Un choix valide a été effectué.
 			\paragraph{Objectif :} Permettre de choisir entre la génération aléatoire et la génération controlée.
 			\paragraph{Algo :}
 			\begin{verbatim} 
@@ -85,8 +85,8 @@ FinSi
 
 	\newpage
 	\subsection{Génération Aléatoire}
-		\paragraph{pré-condition :} La génération aléatoire a été choisie.
-		\paragraph{post-condition :} Toutes les valeurs caractéristiques des tâches ont été générées en accord avec le paramétrage de l’utilisateur.
+		\paragraph{Pré-condition :} La génération aléatoire a été choisie.
+		\paragraph{Post-condition :} Toutes les valeurs caractéristiques des tâches ont été générées en accord avec le paramétrage de l’utilisateur.
 
 
 		\paragraph{Objectif :} Générer aléatoirement les caractéristiques (Ci,Pi,Di) d’un nombre de tâches (determiné par l’utilisateur) en accord avec un facteur d’utilisation du processeur (déterminé lui aussi par l’utilisateur).
@@ -151,8 +151,8 @@ tabCi[ nbTaches - 1 ] = 100 / pgcd(nb\_genere,100)
 			\end{verbatim}
 
 	\subsection{Generation Controlée}  
-		\paragraph{pré-condition :} La génération controlée a été choisie.
-		\paragraph{post-condition :} Toutes les valeurs caractéristiques des tâches ont été générées en accord avec le paramétrage de l’utilisateur.
+		\paragraph{Pré-condition :} La génération controlée a été choisie.
+		\paragraph{Post-condition :} Toutes les valeurs caractéristiques des tâches ont été générées en accord avec le paramétrage de l’utilisateur.
 		\paragraph{Objectif :} Permettre à l’utilisateur de générer des tâches périodiques ou apériodiques en renseignant les différentes caractéristiques de chacune des tâches (Ci, Pi, Di).
 		\paragraph{Algo :} 
 			\begin{verbatim}
@@ -176,8 +176,8 @@ fin pour
 			\end{verbatim}
 
 	\subsection{Ecriture du résultat obtenu}
-		\paragraph{pré-condition :} La génération (qu'elle soit contrôlée ou non) envoie un outputstream contenant les chaînes de caractère à écrire dans un fichier.
-		\paragraph{post-condition :} L'écriture s'est bien déroulée : le fichier contient bien la chaîne.
+		\paragraph{Pré-condition :} La génération (qu'elle soit contrôlée ou non) envoie un outputstream contenant les chaînes de caractère à écrire dans un fichier.
+		\paragraph{Post-condition :} L'écriture s'est bien déroulée : le fichier contient bien la chaîne.
 		\paragraph{Objectif :} Enregistrer les données générées par le module précédent de manière pérenne dans un fichier.
 		\paragraph{Algo :}
 		\Huge
@@ -234,8 +234,8 @@ fin pour
 
 	\section{Conception fonctionnelle}
 	
-		\subsection{Parsage du fichier d'entrée}
-				\paragraph{post-condition :} 
+		\subsection{Analyse du fichier d'entrée}
+				\paragraph{Post-condition :} 
 				\paragraph{Objectif :} 
 				\paragraph{Algo :} 
 					\begin{verbatim}
@@ -244,31 +244,61 @@ ALGO TODO
 		
 		
 		\subsection{Analyse d'ordonnançabilité}
-		
-			\subsubsection{Condition nécessaire RM}\paragraph{pré-condition :} 
-				\paragraph{post-condition :} 
-				\paragraph{Objectif :} 
+			
+			\subsubsection{Condition nécessaire RM}
+				\paragraph{Pré-condition :} n représente le nombre de tâches périodiques
+				\paragraph{Post-condition :} 
+				\paragraph{Objectif :} Vérifier les conditions d'ordonnançabilité nécessaires de l'algorithme RM 
 				\paragraph{Algo :} 
-					\begin{verbatim}
-ALGO TODO
-					\end{verbatim}
+					\begin{lstlisting}
+U = 0
+					
+Pour i de 0 \'a n faire
+	U = U + Ci/Pi
+Finpour		
+
+Si U <= 1.0 alors
+	afficher("On ne peut rien conclure")
+Sinon
+	afficher("Non-ordonnan\c{c}able")
+Finsi
+					\end{lstlisting}
 			
 			\subsubsection{Condition suffisante RM}
-				\paragraph{post-condition :} 
+				\paragraph{Pré-condition :} n représente le nombre de tâches périodiques
+				\paragraph{Post-condition :} 
 				\paragraph{Objectif :} 
 				\paragraph{Algo :} 
-					\begin{verbatim}
-ALGO TODO
-					\end{verbatim}
-			
+					\begin{lstlisting}
+U = 0
+UBoundRM =  $n * (2^{(1.0 / n)} - 1)$
+					
+Pour i de 0 \'a n faire
+	U = U + Ci/Pi
+Finpour
+
+Si U <= UBoundRM alors
+	afficher("Ordonnan\c{c}able")
+Sinon
+	afficher("On ne peut rien conclure")
+Finsi
+					\end{lstlisting}
 			
 			\subsubsection{Condition nécessaire et suffisante EDF}
-				\paragraph{post-condition :} 
+				\paragraph{Post-condition :} 
 				\paragraph{Objectif :} 
 				\paragraph{Algo :} 
-					\begin{verbatim}
+					\begin{lstlisting}
 ALGO TODO
-					\end{verbatim}
+					\end{lstlisting}
+					
+			\subsubsection{Condition nécessaire et suffisante EDF-TBS}
+				\paragraph{Post-condition :} 
+				\paragraph{Objectif :} 
+				\paragraph{Algo :} 
+					\begin{lstlisting}
+ALGO TODO
+					\end{lstlisting}
 	
 		\subsection{Simulation d'ordonnancement}
 			Le simulateur d'ordonnancement est découpé en deux algorithmes principaux :
@@ -280,8 +310,8 @@ ALGO TODO
 			Nous avons en premier lieu commencé par développer ces deux algorithmes sans tenir compte des tâches périodiques dans le but ensuite de les "patcher" avec nos algorithmes d'ordonnancement des tâches apériodiques (BG et TBS).
 			
 			\subsubsection{Rate Monotonic}
-				\paragraph{pré-condition :} 
-				\paragraph{post-condition :} 
+				\paragraph{Pré-condition :} 
+				\paragraph{Post-condition :} 
 				\paragraph{Objectif :} 
 				\paragraph{Algo :} 
 					\begin{verbatim}
@@ -312,8 +342,8 @@ fin tant que
 					
 			\subsubsection{Earliest Deadline First}
 			
-				\paragraph{pré-condition :} 
-				\paragraph{post-condition :} 
+				\paragraph{Pré-condition :} 
+				\paragraph{Post-condition :} 
 				\paragraph{Objectif :} 
 				\paragraph{Algo :} 
 					\begin{verbatim}
