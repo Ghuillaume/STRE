@@ -26,13 +26,9 @@
 		\subsection{Explication du choix du langage}
 	
 			\label{sec:langage}
-			Nous avons opté pour le langage C++ pour réaliser ce projet car celui-ci possède un certain nombre d'avantages :
-			\begin{itemize}
-				\item Il s'agit d'un langage orienté objet très utilisé dans le monde et de nombreux outils libres sont disponibles pour l'utiliser (comme GCC pour la compilation par exemple). De plus, la documentation correspondante est très facilement accessible dans la littérature ou sur le web.
-				\item Les langages C/C++ sont très utilisés dans le monde de la programmation système (par exemple le noyau Linux) ou de l'embarqué (comme le système d'exploitation Trampoline par exemple). En effet, ceux-ci étant bas niveau, il permet de gérer de manière assez précise la mémoire (pointeurs, allocations, etc.).
-			\end{itemize}
+			Nous avons opté pour le langage C++ pour réaliser ce projet car celui-ci possède un certain nombre d'avantages. Il s'agit d'un langage orienté objet très utilisé dans le monde et de nombreux outils libres sont disponibles pour l'utiliser (comme GCC pour la compilation par exemple). De plus, la documentation correspondante est très facilement accessible dans la littérature ou sur le web.
 		
-			Bien que le travail qui nous a été demandé ne requiert pas la maîtrise d'une programmation bas niveau, le langage C/C++ nous apparait en cohérence avec le thème abordé par le projet (les systèmes temps réel embarqués).
+			Bien que le travail qui nous a été demandé ne requiert pas la maîtrise d'une programmation bas niveau, le langage C++ nous apparait en cohérence avec le thème abordé par le projet (les systèmes temps réel embarqués).
 
 		\subsection{Fonctionnalités}
 
@@ -279,50 +275,89 @@ ALGO TODO
 		\subsection{Analyse d'ordonnançabilité}
 			
 			\subsubsection{Condition nécessaire RM}
-				\paragraph{Pré-condition :} n représente le nombre de tâches périodiques
-				\paragraph{Post-condition :} 
-				\paragraph{Objectif :} Vérifier les conditions d'ordonnançabilité nécessaires de l'algorithme RM 
+				\paragraph{Pré-condition :} $n$ représente le nombre de tâches périodiques.
+				\paragraph{Post-condition :} Soit c'est non-ordonnançable, soit on ne peut rien conclure.
+				\paragraph{Objectif :} Vérifier les conditions d'ordonnançabilité nécessaires pour l'algorithme RM.
 				\paragraph{Algo :} 
 					\begin{lstlisting}
 U = 0
 					
-Pour i de 0 \'a n faire
+Pour i de 0 œàœ n faire
 	U = U + Ci/Pi
 Finpour		
 
 Si U <= 1.0 alors
 	afficher("On ne peut rien conclure")
 Sinon
-	afficher("Non-ordonnan\c{c}able")
+	afficher("Non-ordonnanœçœable")
 Finsi
 					\end{lstlisting}
 			
 			\subsubsection{Condition suffisante RM}
-				\paragraph{Pré-condition :} n représente le nombre de tâches périodiques
-				\paragraph{Post-condition :} 
-				\paragraph{Objectif :} 
+				\paragraph{Pré-condition :} $n$ représente le nombre de tâches périodiques.
+				\paragraph{Post-condition :} Soit c'est ordonnançable, soit on ne peut rien conclure.
+				\paragraph{Objectif :} Vérifier les conditions d'ordonnançabilité suffisantes pour l'algorithme RM.
 				\paragraph{Algo :} 
-					\begin{lstlisting}
+					\begin{lstlisting}[mathescape]
 U = 0
-UBoundRM =  $n * (2^{(1.0 / n)} - 1)$
+UBoundRM = $n * (2^{(1.0 / n)} - 1)$
 					
-Pour i de 0 \'a n faire
+Pour i de 0 œàœ n faire
 	U = U + Ci/Pi
 Finpour
 
 Si U <= UBoundRM alors
-	afficher("Ordonnan\c{c}able")
+	afficher("Ordonnanœçœable")
 Sinon
 	afficher("On ne peut rien conclure")
 Finsi
 					\end{lstlisting}
 			
 			\subsubsection{Condition nécessaire et suffisante EDF}
-				\paragraph{Post-condition :} 
-				\paragraph{Objectif :} 
+				\paragraph{Pré-condition :} $n$ représente le nombre de tâches périodiques et il n'y a pas de tâches apériodiques.
+				\paragraph{Post-condition :} On obtient une réponse binaire : le système est ordonnançable ou non.
+				\paragraph{Objectif :} Vérifier les conditions d'ordonnançabilité nécessaires et suffisantes pour l'algorithme EDF.
 				\paragraph{Algo :} 
-					\begin{lstlisting}
-ALGO TODO
+					\begin{lstlisting}[mathescape]
+egaliteDiPi = vrai					
+superioritePiDi = vrai
+U = 0		
+			
+pour i de 0 œàœ n faire
+    œ// Vérifie si tous les Pi sont bien égaux aux Diœ
+	egaliteDiPi &= (Pi == Di) 
+	// idem pour Pi > Di
+	superioritePiDi &= (Pi > Di) 
+Finpour
+
+Si egaliteDiPi alors
+	afficher "Test de condition nœéœcessaire et suffisante pour EDF : "
+
+    Pour i de 0 œàœ n faire
+	    U = U + Ci/Pi
+    Finpour
+	
+	Si (U <= 1.0) alors
+		afficher "ordonnanœçœable"
+	Sinon
+		afficher "non-ordonnanœçœable"
+	Finsi
+	
+Sinon Si superioritePiDi alors
+	afficher "Test de condition suffisante pour EDF : "
+    
+    Pour i de 0 œàœ n faire
+	    U = U + Ci/Di
+    Finpour
+	
+	Si (U <= 1.0) alors
+		afficher "ordonnanœçœable"
+	Sinon
+		afficher "on ne peut rien conclure"
+	Finsi
+Sinon
+    afficher "Erreur : au moins un Pi < Di"
+Finsi
 					\end{lstlisting}
 					
 			\subsubsection{Condition nécessaire et suffisante EDF-TBS}
