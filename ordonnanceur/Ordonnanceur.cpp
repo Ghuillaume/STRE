@@ -651,6 +651,8 @@ void Ordonnanceur::verifierConditionEDF() {
 		} else {
 			cout << "on ne peut rien conclure" << endl;
 		}
+	} else {
+	    cout << "Erreur : au moins un Pi < Di" << endl;
 	}
 }
 
