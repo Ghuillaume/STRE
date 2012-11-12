@@ -12,6 +12,12 @@
 	\label{chap:1}
 	
 	\section{Spécification de l’environnement}
+	
+	Cette application offre la possibilité de créer un fichier contenant un jeu de tâches (périodiques et apériodiques non critiques).
+	Dans un premier temps, le programme permet de générer manuellement ce jeu de tâche en offrant une interface minimaliste.
+	Dans un deuxième temps, il est possible de générer automatiquement ce fichier en fournissant des contraintes à respecter pour les tâches périodiques et apériodiques.
+	
+	
 	Lorsque le programme est lancé, l’utilisateur doit choisir le mode de génération. Il rentre les données nécessaires au bon déroulement du mode. Le programme crée un fichier qui contient le résultat de la génération de tâches.
 
 
@@ -42,7 +48,7 @@
 
 			\subsubsection{Génération aléatoire de tâches}
 				Le premier type de génération permet de générer automatiquement des tâches. L'utilisateur devra renseigner le nombre de tâches périodiques et apériodiques à générer ainsi que le pourcentage d'utilisation du CPU. Ceci permet de générer des fichiers de test aléatoire qui seront visualisable par la suite.\\
-				Lors de la génération, le système calcule les différentes valeurs caractéristiques des tâches 
+				Lors de la génération, le système calcule les différentes valeurs caractéristiques des tâches périodiques (Ci, Pi, Di) et des tâches apériodiques (ri, Ci) en accord avec le pourcentage d'utilisation du CPU. 
 
 			\subsubsection{Génération contrôlée de tâches}
 				Le deuxième type de génération fait appel à l'utilisateur pour renseigner chacune des valeurs de chaque tâche. De cette manière, l'utilisateur va pouvoir tester plus facilement des cas spécifiques et donc observer de manière plus précise le fonctionnement de l'ordonnanceur par la suite. \\
@@ -197,15 +203,32 @@ fin pour
 
 \chapter{Simulateur d'ordonnanceur}
 	\section{Spécification de l’environnement}
-		Le programme final devra pouvoir être exécutable en ligne de commande.\\
+		Cette application s'incrit à la suite du générateur de tâches. Elle offre, après récupération des informations du fichier issus du générateur, la possibilité de vérifier l'ordonnançabilité d'un jeu de tâches fournie. Ceci nous permet de savoir si les contraintes temporelles sont respectées. 
+
+	La deuxième fonctionnalité de ce programme est d'offrir un environnement de simulation selon plusieurs politiques d'ordonnancements :
+	\begin{itemize}
+		\item pour les tâches périodiques : \textbf RM et \textbf EDF
+		\item pour les tâches apériodiques non critiques :  \textbf BG et \textbf TBS
+	\end{itemize}
+	Cet environnement, après simulation, fourni à l'utilisateur des résultats de performances relatifs à l'ordonnancement : 
+	\begin{itemize}
+		\item le nombre de commutations de contexte,
+		\item le nombre de préemptions
+		\item les temps de réponse des tâches apériodiques.
+	\end{itemize}
+	
+	A la suite de la simulation, le programme doit fournir un fichier de trace de la séquence d'ordonnancement. Ce fichier est au format "ktr" et est exploitable par l'outil Kiwi. 
+	Kiwi est un outil graphique développé à l'Université polytechnique de Valence en Espagne. Il permet, à partir d'un fichier texte normé, d'afficher un graphe d'ordonnancement. Nous détaillerons par la suite le contenu du fichier de trace mais il est important pour la suite de savoir que le fichier doit être remplit de manière chronologique.
 		
-		En entrée : le nom du fichier contenant le jeu de tâches périodiques et apériodiques pour lesquelles on veut simuler l'ordonnancement.\\
+	Le programme final devra pouvoir être exécutable en ligne de commande.\\
 		
-		En sortie : un ou plusieurs fichiers .ktr utilisable avec l'outil Kiwi\footnote{\Huge TODO présenter kiwi vite fait} et contenant la séquence d'ordonnancement. Le programme affichera également quelques résultats via la sortie standard.\\
+	En entrée : le nom du fichier contenant le jeu de tâches périodiques et apériodiques pour lesquelles on veut simuler l'ordonnancement.\\
+		
+	En sortie : un ou plusieurs fichiers .ktr utilisable avec l'outil Kiwi et contenant la séquence d'ordonnancement. Le programme affichera également quelques résultats via la sortie standard.\\
 		
 		Afin de faciliter la prise en main du programme, on proposera un menu succint présentant les différentes fonctionnalités qui s'offrent à l'utilisateur.
 	
-	\section{Specification du logiciel}
+	\section{Spécification du logiciel}
 		Pour les mêmes raisons que celles décrites dans le Chapitre \ref{sec:langage}, le langage utilisé est le C++.
 
 		\subsection{Fonctionnalité}
@@ -220,19 +243,30 @@ fin pour
 				Vérification de la syntaxe avec expression régulière + enregistrement des tâches et de leurs paramètres dans un modèle.
 			
 			\subsubsection{Analyse d'ordonnançabilité}
+				{\Huge TODO ajouter les tests pour les taches périodiques où Di < Pi}
 				On fait tous les calculs en même temps :
 				\begin{itemize}
-					\item Condition nécessaire pour l'ordonnançabilité du jeu de tâche avec RM ;
+					\item Condition nécessaire pour l'ordonnançabilité du jeu de tâches avec RM ;
 					\item Condition suffisante avec RM ;
 					\item Condition suffisante et nécessaire avec EDF.
 				\end{itemize}
 			
 			\subsubsection{Simulation d'ordonnancement}
+				
 			
+			\subsubsection{Ecriture du fichier de trace}
+				Pendant la simulation de l'ordonnancement, l'application génére les différentes lignes qui composent le fichier de trace exploitable par Kiwi. Ce fichier se décompose en 2 parties :
+					\begin{itemize}
+						\item Une entête contenant la déclaration des tâches et la durée d'ordonnancement (hyperpériode)
+						\item Les évènements concernants les tâches dans l'ordre chronologique.
+					\end{itemize}
 		\subsection{Decomposition fonctionnelle}
 
 	\section{Conception fonctionnelle}
-	
+		
+		\subsection{choix de représentation}
+			Nous avons choisi de représenter une temps par l'indice -1
+						
 		\subsection{Analyse du fichier d'entrée}
 				\paragraph{Post-condition :} 
 				\paragraph{Objectif :} 
@@ -306,8 +340,26 @@ ALGO TODO
 				\item EDF.
 			\end{itemize}
 			
-			Nous avons en premier lieu commencé par développer ces deux algorithmes sans tenir compte des tâches périodiques dans le but ensuite de les "patcher" avec nos algorithmes d'ordonnancement des tâches apériodiques (BG et TBS).
+			Nous avons en premier lieu commencé par développer ces deux algorithmes sans tenir compte des tâches apériodiques dans le but ensuite de les "patcher" avec nos algorithmes d'ordonnancement des tâches apériodiques (BG et TBS).
 			
+			
+			\subsubsection{poll_needed()}
+				\paragraph{Pré-condition :} 
+				\paragraph{Post-condition :} 
+				\paragraph{Objectif :} 
+				\paragraph{Algo :} 
+					\begin{verbatim}
+					
+					\end{verbatim}
+					
+			\subsubsection{MAJ_context()}
+				\paragraph{Pré-condition :} 
+				\paragraph{Post-condition :} 
+				\paragraph{Objectif :} 
+				\paragraph{Algo :} 
+					\begin{verbatim}
+					
+					\end{verbatim}
 			\subsubsection{Rate Monotonic}
 				\paragraph{Pré-condition :} 
 				\paragraph{Post-condition :} 
@@ -317,21 +369,35 @@ ALGO TODO
 Entrée : 
 Sortie :  
 
-
+//Initialisation du context : 
+	- Creation d'un tableau de taches périodiques par ordre de prio : tabPrioPeriodique
+	- Creation d'un tableau de tâches apériodiques par ordre de prio : tabPrioAperiodique
+	- Création d'un tableau qui contient la capacité restante de chaque tache : tabTpsRestant
 init_context()
+
 int t := 0
 int task_executed := -1
+bool tache_elue = false;
 
 tant que (t < getHyperPeriode())
 	
     Booleen need_to_poll = poll_needed()
 	
     si(need_to_poll)
-        
-        TODO : ALGO RM
-        
+        tache_elue = false
+        Pour taches dans tabPrioPeriodique
+        	si (tabTpsRestant[tache] >0 && tache_elue == false)
+        		task_executed = tache;
+        		tache_elue = true;
+        	Fin Si 
+        Fin Pour
+        // si Aucune tache n'a été choisie -> temps creux
+        Si tache_elue == false
+        	//temps_creux
+        Fin Si
     fsi
 	
+	tabTpsRestant[task_executed]--;
     maj_context()
     t++
 	
