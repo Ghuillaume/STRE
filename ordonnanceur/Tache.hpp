@@ -1,3 +1,9 @@
+/*******************************************************
+Nom ......... : Tache.hpp
+Role ........ : Défini des méthodes et des attributs partagés par les taches périodiques et apériodiques
+Auteur ...... : BONCORPS, CHARON, PAGES 
+********************************************************/
+
 #ifndef _TACHE_H_
 #define _TACHE_H_
 

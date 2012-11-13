@@ -1,3 +1,9 @@
+/*******************************************************
+Nom ......... : Conteneur.hpp
+Role ........ : Conteneur des taches Periodiques et Apériodiques
+Auteur ...... : BONCORPS, CHARON, PAGES 
+********************************************************/
+
 #ifndef _CONTENEUR_HPP_
 #define _CONTENEUR_HPP_
 

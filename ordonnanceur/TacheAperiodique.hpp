@@ -1,3 +1,9 @@
+/*******************************************************
+Nom ......... : TacheAperiodique.hpp
+Role ........ : défini les attributs et les méthodes applicables aux taches apériodiques
+Auteur ...... : BONCORPS, CHARON, PAGES 
+********************************************************/
+
 #ifndef _TACHEAPERIODIQUE_H_
 #define _TACHEAPERIODIQUE_H_
 
