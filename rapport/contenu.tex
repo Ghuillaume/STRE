@@ -16,16 +16,15 @@
 		\item Total Bandwith Server (TBS).
 	\end{itemize}
 	
-	Deux parties sont à identifer. Étant donné que l'ordonnanceur a besoin d'un jeu de tâches périodiques et/ou apériodiques comme base de travail, la première partie de ce projet sera de créer un générateur de tâches. L'autre partie concernera le simulateur en lui-même. Ces deux parties sont indépendantes, c'est-à-dire que le livrable final est composé de deux exécutables différents.\\
+	Deux parties sont à identifier. Étant donné que l'ordonnanceur a besoin d'un jeu de tâches périodiques et/ou apériodiques comme base de travail, la première partie de ce projet sera de créer un générateur de tâches. L'autre partie concernera le simulateur en lui-même. Ces deux parties sont indépendantes, c'est-à-dire que le livrable final est composé de deux exécutables différents.\\
 	
 	Le résultat final sera observable sous deux formes : un affichage à l'écran, et un fichier .ktr en sortie écrit selon la syntaxe acceptée par l'outil Kiwi, qui nous permettra de visualiser graphiquement l'ordonnancement des tâches.
-	
-			\begin{figure}
-				\centering
-				\includegraphics[scale=0.7]{intro_diag.png}
-				\caption{Résumé}
-			\end{figure}
-			\FloatBarrier
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[scale=0.55]{intro_diag.png}
+		\caption{Résumé}
+	\end{figure}
+	\FloatBarrier
 
 \chapter{Générateur de tâches}
 	\label{chap:1}
@@ -48,8 +47,9 @@
 			Nous avons opté pour le langage C++ pour réaliser ce projet car celui-ci possède un certain nombre d'avantages. Il s'agit d'un langage orienté objet très utilisé dans le monde et de nombreux outils libres sont disponibles pour l'utiliser (comme GCC pour la compilation par exemple). De plus, la documentation correspondante est très facilement accessible dans la littérature ou sur le web.
 		
 			Bien que le travail qui nous a été demandé ne requiert pas la maîtrise d'une programmation bas niveau, le langage C++ nous apparait en cohérence avec le thème abordé par le projet (les systèmes temps réel embarqués).
-
+\newpage
 		\subsection{Fonctionnalités}
+		
 			\begin{figure}
 				\centering
 				\includegraphics[scale=0.9]{img/schema_gen.png}
@@ -73,10 +73,6 @@
 
 			\subsubsection{Écriture dans un fichier}
 				Ce module a pour fonction d’écrire dans un fichier les données contenues dans un flux (= stream)  et calculées à partir des deux modules précédents de génération. L’intérêt de séparer ces fonctions est double : il est plus pratique de factoriser le code à travers une seule fonction d’écriture appelée par les différentes générations et cela facilite la maintenance.
-
-
-		\subsection{Décomposition fonctionnelle}
-			Une classe par type de génération 
 
 
 	\section{Conception fonctionnelle}
@@ -279,7 +275,7 @@ Finpour
 	\section{Spécification du logiciel}
 		Pour les mêmes raisons que celles décrites dans le Chapitre \ref{sec:langage}, le langage utilisé est le C++.
 
-		\subsection{Fonctionnalité}
+		\subsection{Fonctionnalités}
 			\begin{figure}
 				\centering
 				\includegraphics[scale=0.55]{ordo_fct_diag.png}
@@ -299,12 +295,29 @@ Finpour
 				\end{itemize}
 			
 			\subsubsection{Simulation d'ordonnancement}
-				Ceci permet, à partir du jeu de tâches contenue dans le fichier d'entrée, de simuler un ordonnancement selon un algorithme spécifique. Deux fonctions sont disponible : 
-				\begin{itemize}
-					\item Simulation selon RM
-					\item Simulation selon EDF
-				\end{itemize}
-				Ce choix est naturel dans la mesure où les algorithmes apériodiques s'appuient sur ceux des tâches périodiques.			
+
+				Avant même de commencer à réfléchir sur les algorithmes d'ordonnancement, nous avons réfléchi à la structure de ces algorithmes. Nous verrons dans la conclusion que ça n'était pas forcément la bonne solution, et qu'il aurait mieux valu extraire cette structure de l'algorithme d'ordonnancement.\\
+				
+				Premièrement, un ordonnanceur a besoin d'avoir plusieurs informations à propos des tâches qui lui demandent du temps d'exécution. Par exemple, l'algorithme EDF, qui élit une tâche selon son $Di$, doit bien entendu connaître le $Di$ des différentes tâches qui attendent leur exécution. Toutes ces informations dont ont besoin les algorithmes, et qui seront stockées dans différentes structures, devront être initialisées en tout début de fonction afin que l'ordonnanceur puisse s'en servir à sa guise plus tard. Nous appelerons toutes ces informations le \og contexte d'exécution \fg.
+				
+				Bien entendu, ça n'est pas à l'ordonnanceur de mettre à jour le contexte d'exécution. On réservera donc la fin de chaque fonction d'ordonnancement à la mise à jour de ces structures.
+				
+				Enfin, l'ordonnanceur ne doit pas être appelé à chaque unité de temps écoulée mais seulement : au réveil d'une tâche, à la fin de l'exécution d'une tâche, et au début d'une nouvelle période d'une tâche périodique.\\
+				
+				Voici la structure finale des algorithmes d'ordonnancement :
+				\begin{enumerate}
+					\item Initialisation du contexte d'exécution ;
+					\item Jusqu'à la fin de l'hyperpériode :
+					\begin{enumerate}
+						\item Vérifier si l'ordonnanceur doit être appelé ;
+						\item Si oui, exécuter l'algorithme d'ordonnancement ;
+						\item Affichage du résultat à l'écran ;
+						\item Mettre à jour le contexte d'exécution .
+					\end{enumerate}
+					\item Affichage des statistiques sur l'ordonnancement (nombre de changements de contexte, de préemptions, temps de réponse des tâches apériodiques) .
+				\end{enumerate}
+				
+				Une fois cette structure mise en place, il suffit simplement d'implémenter un algorithme d'ordonnancement qui va tout simplement retourner le numéro de la tâche qu'il a élue en utilisant les informations qui sont mises à disposition par le contexte d'exécution.
 			
 			\subsubsection{Ecriture du fichier de trace}
 				Pendant la simulation de l'ordonnancement, l'application génére les différentes lignes qui composent le fichier de trace exploitable par Kiwi. Ce fichier se décompose en 2 parties :
@@ -312,9 +325,13 @@ Finpour
 						\item Une entête contenant la déclaration des tâches et la durée d'ordonnancement (hyperpériode)
 						\item Les évènements concernants les tâches dans l'ordre chronologique.
 					\end{itemize}
+
 		\subsection{Decomposition fonctionnelle}
-		
+
 	\section{Conception fonctionnelle}
+		
+		\subsection{choix de représentation}
+			Nous avons choisi de représenter un temps creux par l'indice -1
 						
 		\subsection{Analyse du fichier d'entrée}
 				\paragraph{Post-condition :} 
@@ -443,6 +460,7 @@ Finsi
 			
 			
 			\subsubsection{poll\_needed}
+				\label{sec:algo_poll}
 				\paragraph{Pré-condition : un algo d'ordonnancement a été lancé} 
 				\paragraph{Post-condition :retourne un booléan qui informe du besoin d'élire un nouvelle tâche à exécuter} 
 				\paragraph{Objectif : Savoir si on doit élire une nouvelle tâche ou non} 
@@ -566,7 +584,7 @@ Finsi
 					\end{lstlisting}
 			\subsubsection{Rate Monotonic + Serveur}
 				\paragraph{Pré-condition : le fichier d'entrée a été parsé} 
-				\paragraph{Post-condition : les tâches ont été ordonnancé} 
+				\paragraph{Post-condition : les tâches ont été ordonnancées} 
 				\paragraph{Objectif : Simuler l'ordonnancement selon RM d'un jeu de tâches} 
 				\paragraph{Algo :} 
 					\begin{lstlisting}
@@ -618,7 +636,7 @@ Fintantque
 Entree : 
 Sortie :  
 
-
+//initialisation du contexte d'execution
 init_context()
 int t := 0
 int task_executed := -1
@@ -690,11 +708,41 @@ fin tant que
 				
 	\section{Réalisation}
 		\subsection{Choix d'implémentation des structures}
-	
+	'		
 		\subsection{Problèmes rencontrés}
 
 
 	\section{Tests}
 	
-\chapter*{Conclusion}
+\chapter{Conclusion}
+	\section{Problèmes rencontrés}
+		\subsection{Combiner l'aléatoire et le contrôle des valeurs générées}
+			\label{sec:pb_aleatoire}
+			Nous avons rencontré un problème purement algorithmique à propos de la génération aléatoire. En effet, notre objectif était de générer des nombre le plus aléatoirement possible, tout en contrôlant l'hyperperiode qui découle de ces nombres. Or, ces deux objectifs ne nous paraissaient pas totalement compatibles.\\
+		
+			Nous avons implémenté deux solutions. La première, celle qui est présenté précédemment, permet de contrôler l'hyperperiode. Le soucis de cette solution est que les $Pi$ générés ne sont pas totalement aléatoires, puisque ce sont uniquement des diviseurs de 100.\\
+		
+			Nous avons donc cherché à implémenté une autre solution permettant de générer des $Ci$ \emph{et} des $Pi$ totalement aléatoire. Après réflexion algorithmique, nous obtenions des chiffres très aléatoires et qui restent cohérents. Cependant les hyperperiodes indues étaient totalement irréalistes (souvent plusieurs centaines de milliers d'unités de temps). Nous avons donc décidé de retenir la première solution, tout en ayant à l'esprit qu'elle doive être améliorer dans une version future.\\
+			
+			Exemple de résultat obtenu avec la deuxième solution pour la génération de 5 tâches périodiques avec 75\% d'utilisation processeur, sous la forme $Ti: Ci,Pi,Di$ :
+			\begin{verbatim}
+				T1: 7,78,78
+				T2: 6,19,19
+				T3: 17,123,123
+				T4: 4,83,83
+				T5: 12,63,63
+			\end{verbatim}
+			Ce jeu de tâche nous donne une hyperpériode de 105 908 166 unités de temps, ce qui est absolument disproportionné.
+	
+	\section{Améliorations possibles}
+		\subsection{Fonction de génération aléatoire}
+			Comme nous l'avons vu dans la partie \ref{sec:pb_aleatoire}, nous avons rencontré un problème pour développer une fonction de génération aléatoire qui soit optimale. Une amélioration possible pour la suite serait de trouver une solution algorithmique permettant de combiner les avantages des deux méthodes : un résultat vraiment aléatoire, et une hyperpériode \emph{contrôlée}, c'est-à-dire raisonnable. Nous pensons qu'une hyperpériode raisonnable se définit approximativement entre 0 et 1000 au vu de l'objectif de l'application.
+			
+		\subsection{Factoriser les éléments redondants des algorithmes d'ordonnancement}
+			Nos fonctions d'ordonnancement ont un défaut : elles contiennent bien plus que l'algorithme d'ordonnancement qui leur correspond. Par exemple, dans la fonction RM(), il y a tout un tas d'initialisation et de calculs avant d'arriver au coeur de l'algorithme. De plus, les éléments algorithmiques extérieurs à l'ordonnancement sont similaires pour chacune des deux fonctions. Il serait donc intéressant de factoriser ces éléments en créant par exemple une fonction \emph{init\_context()} qui s'occupe d'initialiser toutes les variables et structures représentant le contexte d'éxecution, une fonction \emph{maj\_context()} pour mettre à jour ce contexte, ainsi qu'une fonction \emph{need\_to\_poll()}.\\
+			
+			Pour des raisons de lisibilité, nous avons d'ailleurs choisi de représenter ce découpage dans la description des algorithmes d'ordonnancement (partie \ref{sec:algo_poll}).
+			
+		\subsection{Ajout d'algorithmes}
+			Lorsque nous étions à mi-chemin dans l'avancement du projet, nous avions l'ambition d'ajouter quelques autres algorithmes d'ordonnancement afin d'enrichir notre application. Malheureusement, nous n'avons pas eu le temps d'aller plus loin. Nous proposons donc l'ajout de ces nouveaux algorithmes à la liste des améliorations possibles.
 
