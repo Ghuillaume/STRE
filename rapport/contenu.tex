@@ -6,7 +6,8 @@
 %        4) Definition de la réalisation 
 %        5) Réalisation 
 %        6) Tests
-\chapter{Introduction}
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
 
 	Le but de ce projet, qui nous a été confié dans le cadre des Travaux Pratiques de Systèmes Temps Réel Embarqués (Master ALMA 1), est de développer un simulateur d'ordonnanceur temps réel implémentant les algorithmes suivants :
 	\begin{itemize}
@@ -84,24 +85,24 @@
 			\textbf{Objectif :} Permettre de choisir entre la génération aléatoire et la génération controlée.
 			
 			\textbf{Algo :}
-			\begin{verbatim} 
-	Entrée : Int choix
+			\begin{lstlisting} 
+	Entree : Int choix
 	Sortie :  -
 
 Si (choix == 1 ) Alors
-   Lancer la génération controlée
+   Lancer la generation controlee
 Sinon
    Si (choix == 2) Alors
-	  Lancer la génération aléatoire 
+	  Lancer la generation aleatoire 
    Sinon
 	  Si (choix == 3) Alors
 	     Quitter le programme
 	  Sinon
 	     Afficher erreur de choix 
-	  FinSi
-   FinSi
-FinSi
-		\end{verbatim} 
+	  Finsi
+   Finsi
+Finsi
+		\end{lstlisting} 
 
 	\newpage
 	\subsection{Génération Aléatoire}
@@ -125,32 +126,32 @@ FinSi
 		    Toutes les données sont stockées dans 3 tableaux (un pour les Ci, un pour Pi, un pour Di). 
 
 		\textbf{Algo :}
-			\begin{verbatim}
-Entrée: Int nbTaches, Int factUtProcesseur
-Sortie : 3 Tableaux d’Int (pour les valeurs de Ci, Pi, Di). 
-indice du tableau = numéro de la tâche - 1..
+			\begin{lstlisting}
+Entree: Int nbTaches, Int factUtProcesseur
+Sortie : 3 Tableaux d Int (pour les valeurs de Ci, Pi, Di). 
+indice du tableau = numero de la tache - 1..
 
 TabCi[ nbTaches ], TabPi[ nbTaches ], TabDi[ nbTaches ]
 nbTachesRestantes = nbTaches - 1
 nbMax = factUtProcessus 
 
 /*
-On calcule la valeur maximale que peut prendre le nombre tiré aléatoirement :
-maximum = Up - somme des Ci/Pi précédents - nombre de taches restantes
+On calcule la valeur maximale que peut prendre le nombre tire aleatoirement :
+maximum = Up - somme des Ci/Pi precedents - nombre de taches restantes
 Ensuite, on tire au hasard une valeur allantDe 1 a cette valeur maximale.
 Exemple : maxT1 = 75 - 0 - 2
-	    randT1 = 32 (valeur calculée avec le pseudo-hasard)
+	    randT1 = 32 (valeur calculee avec le pseudo-hasard)
 	    maxT2 = 75 - 32 - 1
 	    randT2 = 18
 	    maxT3 = 75 - (32 + 18) - 0
 	    randT3 = 25
-Pour résumer, on obtient ici les Ci/Pi : 32, 18 et 25
+Pour resumer, on obtient ici les Ci/Pi : 32, 18 et 25
 */
 
 
 Pour i allantDe 0 a (nbTaches - 1)
    nbMaxLimite = nbMax - nbTachesRestantes
-   // le nombre aléatoire correspond a (Ci/Pi)
+   // le nombre aleatoire correspond a (Ci/Pi)
    nbAleatoire = nombre Aleatoire entre 1 et ce nombre maximum
 
 
@@ -159,16 +160,16 @@ Pour i allantDe 0 a (nbTaches - 1)
    tabPi[i] =100 / pgcd(nb\_genere,100)
    tabCi[i] = 100 / pgcd(nb\_genere,100)
 	        
-   /* On abaisse ensuite la limite pour le prochain tirage aléatoire afin de ne jamais dépasser la valeur de Up. */
+   /* On abaisse ensuite la limite pour le prochain tirage aleatoire afin de ne jamais depasser la valeur de Up. */
    limite\_maj = limite\_maj - nb\_genere
 Fin du pour
 
-// Pour la dernière tâche, on ne génère pas de valeur. On prend ce qu’il reste.
+// Pour la derniere tache, on ne genere pas de valeur. On prend ce qu il reste.
 nb\_genere = limite\_maj
 tabCi[ nbTaches - 1 ] = nb\_genere / pgcd(nb\_genere,100)
 tabPi[ nbTaches - 1 ] =100 / pgcd(nb\_genere,100)
 tabCi[ nbTaches - 1 ] = 100 / pgcd(nb\_genere,100)
-			\end{verbatim}
+			\end{lstlisting}
 
 	\subsection{Generation Controlée}  
 		\textbf{Pré-condition :} La génération controlée a été choisie.
@@ -178,42 +179,42 @@ tabCi[ nbTaches - 1 ] = 100 / pgcd(nb\_genere,100)
 		\textbf{Objectif :} Permettre à l’utilisateur de générer des tâches périodiques ou apériodiques en renseignant les différentes caractéristiques de chacune des tâches (Ci, Pi, Di) ou, respectivement, (ri, Ci).
 		
 		\textbf{Algo :} 
-			\begin{verbatim}
-Entrée : Int nbTaches
-Sortie :  3 Tableaux d’Int (pour les valeurs de Ci, Pi, Di). 
-indice du tableau = numéro de la tâche - 1 .
+			\begin{lstlisting}
+Entree : Int nbTaches
+Sortie :  3 Tableaux d Int (pour les valeurs de Ci, Pi, Di). 
+indice du tableau = numero de la tache - 1 .
 
-//génération des tâches périodiques
+//generation des taches periodiques
 lire(nbTachesPeriodiques)
 
 TabCiP[ nbTachesPeriodiques ], TabPiP[ nbTachesPeriodiques ], TabDiP[ nbTachesPeriodiques ]
 		
-Pour i allantDe 0 a (nbTachesPeriodiques - 1)
-	// on demande a l’utilisateur de renseigner les différentes valeurs ...
+Pour i allantDe 0 a (nbTachesPeriodiques - 1) Faire
+	// on demande a l utilisateur de renseigner les differentes valeurs ...
 	lire(CiP)
 	lire(PiP)
 	lire(DiP)        
-	// … et on les insére dans les tableaux respectifs
+	// ... et on les insere dans les tableaux respectifs
 	tabCiP[ i ] = CiP
 	tabPiP[ i ] = PiP
 	tabDiP[ i ] = DiP
-fin pour
+Finpour
 
-//génération des tâches Aperiodiques
+//generation des taches Aperiodiques
 lire(nbTachesAperiodiques)
 
 TabriA[ nbTachesAperiodiques ], TabCiA[ nbTachesAperiodiques ]
 		
-Pour i allantDe 0 a (nbTachesAperiodiques - 1)
-	// on demande a l’utilisateur de renseigner les différentes valeurs ...
+Pour i allantDe 0 a (nbTachesAperiodiques - 1) Faire
+	// on demande a l utilisateur de renseigner les differentes valeurs ...
 	lire(riA)
 	lire(CiA)        
-	// … et on les insére dans les tableaux respectifs
+	// ... et on les insere dans les tableaux respectifs
 	tabriA[ i ] = riA
 	tabCiA[ i ] = CiA
-fin pour
+Finpour
 
-			\end{verbatim}
+			\end{lstlisting}
 
 	\subsection{Ecriture du résultat obtenu}
 		\textbf{Pré-condition :} La génération (qu'elle soit contrôlée ou non) envoie un outputstream contenant les chaînes de caractère à écrire dans un fichier.
@@ -223,21 +224,21 @@ fin pour
 		\textbf{Objectif :} Enregistrer les données générées par le module précédent de manière pérenne dans un fichier.
 		
 		\textbf{Algo :}
-		\begin{verbatim}
-création du fichier
+		\begin{lstlisting}
+creation du fichier
 
 	outputstream ops = ""
-Pour i allantDe 0 a (nbTachesPeriodiques - 1)		
+Pour i allantDe 0 a (nbTachesPeriodiques - 1) Faire
 	ops << "T" << (i+1) << ": " << tabCiP[i] << "," << tabPiP[i] << "," << tabDiP[i] << endl
 Finpour
 
-Pour i allantDe 0 a (nbTachesAperiodiques - 1)
+Pour i allantDe 0 a (nbTachesAperiodiques - 1) Faire
 	ops << R" << (i+1) << ": " << tabriA[i] << "," << tabCiA[i] << endl
 Finpour
 
-écriture dans le fichier de ops
+ecriture dans le fichier de ops
   
-		\end{verbatim}
+		\end{lstlisting}
 
 \section{Réalisation}
 	\subsection{Choix d'implémentation des structures}
@@ -357,7 +358,7 @@ Finpour
 			\FloatBarrier
 						
 		\subsection{Analyse du fichier d'entrée}
-				\textbf{Pré-condition :} Le fichier spécifié existe et est lisible, et le conteneur peut accueillir de nouvelles tâches
+				\textbf{Pré-condition :} Le fichier spécifié existe et est lisible
 				
 				\textbf{Post-condition :} Le fichier est syntaxiquement valide et toutes les tâches ont été ajoutées au conteneur
 				
@@ -365,13 +366,16 @@ Finpour
 				
 				\textbf{Algo :} 
 					\begin{lstlisting}
-Tantque line = nextLine() faire
+	Entree : file fileIn ,  Conteneur conteneur
+	Sortie : conteneur
+	
+Tantque line = nextLine(fileIn) Faire
 	verifierSyntaxe(line);
 	
 	elements = eclater(line, ',')
-	Si commencePar(line, 'T')
+	Si commencePar(line, 'T') Alors
 		ajouterTachePeriodique(conteneur, elements[0], elements[1], elements[2])
-	Sinon si commencePar(line, 'R')
+	Sinon si commencePar(line, 'R') Alors
 		ajouterTacheAperiodique(conteneur, elements[0], elements[1])
 	Finsi
 Fintantque
@@ -391,11 +395,11 @@ Fintantque
 					\begin{lstlisting}
 U = 0
 
-Pour i de 0 a n faire
+Pour i de 0 a n Faire
 	U = U + Ci/Pi
 Finpour		
 
-Si U <= 1.0 alors
+Si U <= 1.0 Alors
 	afficher("On ne peut rien conclure")
 Sinon
 	afficher("Non-ordonnancable")
@@ -414,11 +418,11 @@ Finsi
 U = 0
 UBoundRM = $n * (2^{(1.0 / n)} - 1)$
 					
-Pour i de 0 a n faire
+Pour i de 0 a n Faire
 	U = U + Ci/Pi
 Finpour
 
-Si U <= UBoundRM alors
+Si U <= UBoundRM Alors
 	afficher("Ordonnancable")
 Sinon
 	afficher("On ne peut rien conclure")
@@ -438,34 +442,34 @@ egaliteDiPi = vrai
 superioritePiDi = vrai
 U = 0		
 			
-pour i de 0 a n faire
+Pour i de 0 a n Faire
     // Verifie si tous les Pi sont bien egaux aux Di
 	egaliteDiPi &= (Pi == Di) 
 	// idem pour Pi > Di
 	superioritePiDi &= (Pi > Di) 
 Finpour
 
-Si egaliteDiPi alors
+Si egaliteDiPi Alors
 	afficher "Test de condition necessaire et suffisante pour EDF : "
 
-    Pour i de 0 a n faire
+    Pour i de 0 a n Faire
 	    U = U + Ci/Pi
     Finpour
 	
-	Si (U <= 1.0) alors
+	Si (U <= 1.0) Alors
 		afficher "ordonnancable"
 	Sinon
 		afficher "non-ordonnancable"
 	Finsi
 	
-Sinon Si superioritePiDi alors
+Sinon Si superioritePiDi Alors
 	afficher "Test de condition suffisante pour EDF : "
     
-    Pour i de 0 a n faire
+    Pour i de 0 a n Faire
 	    U = U + Ci/Di
     Finpour
 	
-	Si (U <= 1.0) alors
+	Si (U <= 1.0) Alors
 		afficher "ordonnancable"
 	Sinon
 		afficher "on ne peut rien conclure"
@@ -486,12 +490,12 @@ Finsi
 					\begin{lstlisting}
 Up = 0
 
-Pour i de 0 a n faire
+Pour i de 0 a n Faire
     Up = Up + Ci/Pi
 Finpour
 					
 afficher "Test de condition necessaire et suffisante pour EDF-TBS : "
-Si (Up + Us <= 1.0) alors
+Si (Up + Us <= 1.0) Alors
 	afficher "ordonnancable"
 Sinon
 	afficher "non-ordonnancable"
@@ -524,20 +528,20 @@ Finsi
 		//verification du reveil d'une tache
 			//Taches Periodiques
 			
-			Pour tachePeriodique dans context
-				Si time = (date Reveil de tachePeriodique)
+			Pour tachePeriodique dans context Faire
+				Si time = (date Reveil de tachePeriodique) Alors
 					ajout de tachePeriodique dans tabPeriodiquesPretes
 					need_to_poll = true
 				Finsi
 			Finpour
 			
 			//Taches Aperiodiques
-			Si (un serveur de taches a ete specifie) 
-				Pour tacheAperiodique dans context
-					Si time = (date Reveil de tacheAperiodique)
+			Si (un serveur de taches a ete specifie) Alors
+				Pour tacheAperiodique dans context Faire
+					Si time = (date Reveil de tacheAperiodique) Alors
 						ajout de tacheAperiodique dans tabAperiodiquePretes
 						need_to_poll = true
-						Si (le serveur de tache aperiodique choisi est TBS)
+						Si (le serveur de tache aperiodique choisi est TBS) Alors
 							calcul de dk pour tacheAperiodique
 							stockage dans context
 						Finsi
@@ -547,11 +551,11 @@ Finsi
 			
 		//verification de la terminaison de la tache courante executee
 		
-		Si (la tache courante executee n'est PAS un temps creux)
-			Si (la capacite restante de tache courante executee = 0)
+		Si (la tache courante executee n'est PAS un temps creux) Alors
+			Si (la capacite restante de tache courante executee = 0) Alors
 				need_to_poll = true
 				//Suppression de la tache d'un des tableaux de taches pretes
-				Si (la tache courante executee est une tache Aperiodique)
+				Si (la tache courante executee est une tache Aperiodique) Alors
 					suppression de la tache de tabAperiodiquesPretes
 				Sinon
 					suppression de la tache de tabPeriodiquesPretes
@@ -584,14 +588,14 @@ Finsi
  		 
  context[ nbTaches ] [ 3 ]
  
- Pour i allantDe 0 a nbTachePeriodiques
+ Pour i allantDe 0 a nbTachePeriodiques Faire
  	context[i][0] = Ci de tachePeriodique_i
  	context[i][1] = Pi de tachePeriodique_i
  	context[i][2] = Di de tachePeriodique_i
  Finpour
  
- Si (il y a un serveur de precise)
- 	Pour i allantDe nbTachesPeriodiques a nbTaches
+ Si (il y a un serveur de precise) Alors
+ 	Pour i allantDe nbTachesPeriodiques a nbTaches Faire
  		context[i][0] = Ci de tacheAperiodique_i
  		context[i][1] = ri de tacheAperiodique_i
  		context[i][2] = 0 
@@ -609,16 +613,16 @@ Finsi
 				\textbf{Algo :} 
 					\begin{lstlisting}
 					
-Pour tachePeriodique dans context
-	//verification du depassement d'echeance
-	Si (time = (date echeance tachePeriodique) )
-		Si ( (capacite restante de tachePeriodique) > 0 )
+Pour tachePeriodique dans context Faire
+	//verification du depassement d'echeance Alors
+	Si (time = (date echeance tachePeriodique) ) Alors
+		Si ( (capacite restante de tachePeriodique) > 0 ) Alors
 			Message("Depassement d'echeance pour la tache : T" + tachePeriodique)
 			quitter
 		Finsi
 	Finsi
 	
-	Si (time = (date reveil de tachPeriodique) )
+	Si (time = (date reveil de tachPeriodique) ) Alors
 		capacite restante tachePeriodique = Ci de tachePeriodique
 		date de reveil tachePeriodique = date de reveil tachePeriodique + Pi de tachePeriodique
 		date echeance tachePeriodique = date echeance tachePeriodique + Di de tachePeriodique
@@ -626,11 +630,11 @@ Pour tachePeriodique dans context
 Finpour
 
 //Verification de depassement d'echeance pour les taches aperiodiques
-//Si serveur de taches aperiodiques est TBS
-	Si (serveur = TBS)
-		Pour tacheAperiodique dans context
-			Si (time = (deadline de tacheAperiodique) )
-				Si ( (capacite restante tacheAperiodique) > 0 )
+//Si serveur de taches aperiodiques est TBS Alors
+	Si (serveur = TBS) Alors
+		Pour tacheAperiodique dans context Faire
+			Si (time = (deadline de tacheAperiodique) ) Alors
+				Si ( (capacite restante tacheAperiodique) > 0 ) Alors
 					Message("Depassement d'echeance pour la tache : R" + tacheAperiodique)
 					quitter
 				Finsi
@@ -662,20 +666,20 @@ int t := 0
 int task_executed := -1
 bool tache_elue = false;
 
-Tantque (t < getHyperPeriode())
+Tantque (t < getHyperPeriode()) Faire
 	
     Booleen need_to_poll = poll_needed()
 	
-    Si(need_to_poll)
+    Si(need_to_poll) Alors
         tache_elue = false
-        Pour taches dans tabPrioPeriodique
-        	Si (tabTpsRestant[tache] >0 && tache_elue == false)
+        Pour taches dans tabPrioPeriodique Faire
+        	Si (tabTpsRestant[tache] >0 && tache_elue == false) Alors
         		task_executed = tache;
         		tache_elue = true;
         	Finsi 
         Finpour
         // si Aucune tache n'a ete choisie -> temps creux
-        Si tache_elue == false
+        Si tache_elue == false Alors
         	//temps_creux
         Finsi
     finsi
@@ -706,13 +710,13 @@ init_context()
 int t := 0
 int task_executed := -1
 
-Tantque (t < getHyperPeriode())
+Tantque (t < getHyperPeriode()) Faire
 	
 	Booleen need_to_poll = poll_needed()
 	
-	Si(need_to_poll)
-		Si (aucune tache periodique prete) 
-			Si (aucune tache aperiodique prete)
+	Si(need_to_poll) Alors
+		Si (aucune tache periodique prete)  Alors
+			Si (aucune tache aperiodique prete) Alors
 				temps_creux
 			Sinon
 				task_executed = Selection de la tache Aperiodique prete dont le ri est le plus petit
@@ -723,19 +727,19 @@ Tantque (t < getHyperPeriode())
 			
 			//election de la tache Periodique prete la plus prioritaire
 			
-			Pour tachePeriodiquePrete dans tabPeriodiquesPretes
-				Si ( deadlineProche > (prochaine date echeance tachePeriodiquePrete) )
+			Pour tachePeriodiquePrete dans tabPeriodiquesPretes Faire
+				Si ( deadlineProche > (prochaine date echeance tachePeriodiquePrete) ) Alors
 					deadlineProche = prochaine date echeance tachePeridiodiquePrete
 					task_executed = tachePeriodiquePrete
 				Sinon
-					Si ( deadlineProche = (prochaine date echeance tachePeriodiquePrete) )
+					Si ( deadlineProche = (prochaine date echeance tachePeriodiquePrete) ) Alors
 						//Conflit --> on compare les dates de reveil
-						Si ( ri_task_executed > ri_tacheAperiodiquePrete)
+						Si ( ri_task_executed > ri_tacheAperiodiquePrete) Alors
 							task_executed = tachePeriodiquePrete
 						Sinon
-							Si (ri_task_executed = ri_tacheAperiodiquePrete)
+							Si (ri_task_executed = ri_tacheAperiodiquePrete) Alors
 								// Conflit --> on compare les numeros de tache
-								Si (num_task_executed > num_tachePeriodiquePrete)
+								Si (num_task_executed > num_tachePeriodiquePrete) Alors
 									task_executed = tachePeriodiquePrete
 								Finsi
 							Finsi
@@ -745,14 +749,14 @@ Tantque (t < getHyperPeriode())
 			Finpour
 			
 			//election de la tache Aperiodique prete la plus prioritaire
-			Si (serveur == TBS)
-				Pour tacheAperiodiquePrete dans tabAperiodiquesPretes
-					Si ( (dk de tacheAperiodiquePrete) < deadlineProche )
+			Si (serveur == TBS) Alors
+				Pour tacheAperiodiquePrete dans tabAperiodiquesPretes Faire
+					Si ( (dk de tacheAperiodiquePrete) < deadlineProche ) Alors
 						//La tache Aperiodique est plus prioritaire
 						task_executed = tacheAperiodiquePrete
 					Sinon
-						Si ( (dk de tacheAperiodiquePrete) = deadlineProche )
-							Si ( (ri de tacheAperiodiquePrete) < (ri de task_executed) )
+						Si ( (dk de tacheAperiodiquePrete) = deadlineProche ) Alors
+							Si ( (ri de tacheAperiodiquePrete) < (ri de task_executed) ) Alors
 								task_executed = tacheAperiodiquePrete
 							Finsi
 						Finsi
@@ -779,8 +783,36 @@ fin tant que
 
 	\section{Tests}
 	
+\chapter{Notice utilisateur}
 
-\chapter*{Conclusion}
+	Vous disposez normalement des sources de l'application ainsi que des Makefile répartis dans deux répertoires : \emph{Generateur} et {Ordonnanceur}. L'application est en effet divisée en deux partie, l'une générant un jeu de tâche périodiques et apériodiques dans un fichier texte, l'autre simulant l'ordonnancement des tâches générées.
+
+	\section*{Étape 1 : compilation}
+		\texttt{\$ cd Generateur}
+		
+		\texttt{\$ make clean && make}
+		
+		\texttt{\$ cd ../Ordonnanceur}
+		
+		\texttt{\$ make clean && make}
+		
+	\section*{Étape 2 : génération de tâches}
+		
+		Placez-vous dans le répertoire Generateur et lancez l'exécutable : \verb+./Generateur [-f fichier.txt|-c nbTaches|-a nbTaches utilisationCPU]+. Les arguments ne sont pas obligatoires mais vous permettent de spécifier un certain nombre d'options qui vous seront sinon demandées à l'éxécution. Si le fichier de sortie n'est pas spécifié, les tâches seront créées dans le fichier \emph{jeuDeTaches.txt}.\\
+		
+		Il suffit ensuite de suivre l'exécution du programme. La génération aléatoire vous permet de générer un certain nombre de tâches sans vous soucier de leurs valeurs. Il vous faudra tout de même spécifier le nombre de tâches que vous souhaitez et le facteur d'utilisation processeur indu. Quant à la génération contrôlée, elle vous propose de spécifier vous-même les paramètres des tâches à créer.\\
+		
+		Une fois l'exécution terminée, vous pouvez ouvrir le fichier de sortie et le modifier. Attention toutefois, la syntaxe doit respecter la forme suivante, ou le fichier sera refusé par l'ordonnanceur : Ri: ri,Di \textbf{ou} Ti: Ci,Pi,Di avec une seule tâche par ligne. Vous pouvez également proposer votre propre fichier sans passer par le générateur.
+		
+		
+	\section*{Étape 3 : ordonnanceur}
+	
+		Placez-vous dans le répertoire contenant l'exécutable de l'ordonnanceur et lancez l'exécutable : \verb+./Ordonnanceur file.txt+. \emph{file.txt} est un argument obligatoire et correspond au fichier contenant les tâches que vous souhaitez ordonnancer. Il peut donc s'agir d'un fichier créé par le générateur, ou de votre propre fichier respectant la même syntaxe.\\
+		
+		Si votre fichier est correct, un menu s'affiche et vous propose d'effectuer plusieurs action. Il vous suffit de vous laisser guider. Les résultats de vos actions s'afficheront directement à l'écran, et un fichier .ktr sera créé à chaque fois que vous lancerez un algorithme d'ordonnancement. Ce fichier décrit l'ordonnancement des tâches et peut être ouvert avec l'outil Kiwi, permettant de visualiser graphiquement le résultat.
+	
+
+\chapter{Conclusion}
 %    Ce projet aura été l'occasion de mettre en application les savoirs acquis durant ce module (Fonctionnement des algorithmes, conditions d'ordonnançabilité, ...). De plus, cela nous a permis de réfléchir à des problématiques inhabituelles comme la génération pseudo-aléatoire de fractions ou plus simplement la gestion des tâches par l'ordonnanceur.
 %    En plus de tout ça, le projet nous a permis de nous exercer à écrire une spécification logicielle et à l'implémenter, à utiliser git et à utiliser le langage de programmation C++. 
 	\section{Problèmes rencontrés}
@@ -793,13 +825,13 @@ fin tant que
 			Nous avons donc cherché à implémenté une autre solution permettant de générer des $Ci$ \emph{et} des $Pi$ totalement aléatoire. Après réflexion algorithmique, nous obtenions des chiffres très aléatoires et qui restent cohérents. Cependant les hyperperiodes indues étaient totalement irréalistes (souvent plusieurs centaines de milliers d'unités de temps). Nous avons donc décidé de retenir la première solution, tout en ayant à l'esprit qu'elle doive être améliorer dans une version future.\\
 			
 			Exemple de résultat obtenu avec la deuxième solution pour la génération de 5 tâches périodiques avec 75\% d'utilisation processeur, sous la forme $Ti: Ci,Pi,Di$ :
-			\begin{verbatim}
+			\begin{lstlisting}
 				T1: 7,78,78
 				T2: 6,19,19
 				T3: 17,123,123
 				T4: 4,83,83
 				T5: 12,63,63
-			\end{verbatim}
+			\end{lstlisting}
 			Ce jeu de tâche nous donne une hyperpériode de 105 908 166 unités de temps, ce qui est absolument disproportionné.
 	
 	\section{Améliorations possibles}
