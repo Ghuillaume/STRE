@@ -43,6 +43,7 @@ int main(int argc, char** argv) {
 		
 		case 1:
 			//impossible d'ouvrir le fichier
+			cout << "\tFichier " << argv[1] << " impossible à ouvrir, program exiting" << endl;
 			return 1;
 		
 		case 2:
