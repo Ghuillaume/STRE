@@ -118,7 +118,7 @@ nbMax = factUtProcessus
 /*
 On calcule la valeur maximale que peut prendre le nombre tiré aléatoirement :
 maximum = Up - somme des Ci/Pi précédents - nombre de taches restantes
-Ensuite, on tire au hasard une valeur allant de 1 à cette valeur maximale.
+Ensuite, on tire au hasard une valeur allant de 1 a cette valeur maximale.
 Exemple : maxT1 = 75 - 0 - 2
 	    randT1 = 32 (valeur calculée avec le pseudo-hasard)
 	    maxT2 = 75 - 32 - 1
@@ -129,9 +129,9 @@ Pour résumer, on obtient ici les Ci/Pi : 32, 18 et 25
 */
 
 
-Pour i allant de 0 à (nbTaches - 1)
+Pour i allant de 0 a (nbTaches - 1)
    nbMaxLimite = nbMax - nbTachesRestantes
-   // le nombre aléatoire correspond à (Ci/Pi)
+   // le nombre aléatoire correspond a (Ci/Pi)
    nbAleatoire = nombre Aleatoire entre 1 et ce nombre maximum
 
 
@@ -154,26 +154,43 @@ tabCi[ nbTaches - 1 ] = 100 / pgcd(nb\_genere,100)
 	\subsection{Generation Controlée}  
 		\paragraph{Pré-condition :} La génération controlée a été choisie.
 		\paragraph{Post-condition :} Toutes les valeurs caractéristiques des tâches ont été générées en accord avec le paramétrage de l’utilisateur.
-		\paragraph{Objectif :} Permettre à l’utilisateur de générer des tâches périodiques ou apériodiques en renseignant les différentes caractéristiques de chacune des tâches (Ci, Pi, Di).
+		\paragraph{Objectif :} Permettre à l’utilisateur de générer des tâches périodiques ou apériodiques en renseignant les différentes caractéristiques de chacune des tâches (Ci, Pi, Di) ou, respectivement, (ri, Ci).
 		\paragraph{Algo :} 
 			\begin{verbatim}
 Entrée : Int nbTaches
 Sortie :  3 Tableaux d’Int (pour les valeurs de Ci, Pi, Di). 
 indice du tableau = numéro de la tâche - 1 .
 
+//génération des tâches périodiques
+lire(nbTachesPeriodiques)
 
-TabCi[ nbTaches ], TabPi[ nbTaches ], TabDi[ nbTaches ]
+TabCiP[ nbTachesPeriodiques ], TabPiP[ nbTachesPeriodiques ], TabDiP[ nbTachesPeriodiques ]
 		
-Pour i allant de 0 à (nbTaches - 1)
-	// on demande à l’utilisateur de renseigner les différentes valeurs ...
-	lire(Ci)
-	lire(Pi)
-	lire(Di)        
+Pour i allant de 0 a (nbTachesPeriodiques - 1)
+	// on demande a l’utilisateur de renseigner les différentes valeurs ...
+	lire(CiP)
+	lire(PiP)
+	lire(DiP)        
 	// … et on les insére dans les tableaux respectifs
-	tabCi[ i ] = Ci
-	tabPi[ i ] = Pi
-	tabDi[ i ] = Di
+	tabCiP[ i ] = CiP
+	tabPiP[ i ] = PiP
+	tabDiP[ i ] = DiP
 fin pour
+
+//génération des tâches Aperiodiques
+lire(nbTachesAperiodiques)
+
+TabriA[ nbTachesAperiodiques ], TabCiA[ nbTachesAperiodiques ]
+		
+Pour i allant de 0 a (nbTachesAperiodiques - 1)
+	// on demande a l’utilisateur de renseigner les différentes valeurs ...
+	lire(riA)
+	lire(CiA)        
+	// … et on les insére dans les tableaux respectifs
+	tabriA[ i ] = riA
+	tabCiA[ i ] = CiA
+fin pour
+
 			\end{verbatim}
 
 	\subsection{Ecriture du résultat obtenu}
@@ -181,9 +198,21 @@ fin pour
 		\paragraph{Post-condition :} L'écriture s'est bien déroulée : le fichier contient bien la chaîne.
 		\paragraph{Objectif :} Enregistrer les données générées par le module précédent de manière pérenne dans un fichier.
 		\paragraph{Algo :}
-		\Huge
-		TODO
-		\normalsize
+		\begin{verbatim}
+création du fichier
+
+	outputstream ops = ""
+Pour i allant de 0 a (nbTachesPeriodiques - 1)		
+	ops << "T" << (i+1) << ": " << tabCiP[i] << "," << tabPiP[i] << "," << tabDiP[i] << endl
+Fin Pour
+
+Pour i allant de 0 a (nbTachesAperiodiques - 1)
+	ops << R" << (i+1) << ": " << tabriA[i] << "," << tabCiA[i] << endl
+Fin Pour
+
+écriture dans le fichier de ops
+  
+		\end{verbatim}
 
 \section{Définition de la réalisation}
 	\Huge
@@ -282,14 +311,14 @@ ALGO TODO
 					\begin{lstlisting}
 U = 0
 					
-Pour i de 0 œàœ n faire
+Pour i de 0 a n faire
 	U = U + Ci/Pi
 Finpour		
 
 Si U <= 1.0 alors
 	afficher("On ne peut rien conclure")
 Sinon
-	afficher("Non-ordonnanœçœable")
+	afficher("Non-ordonnancable")
 Finsi
 					\end{lstlisting}
 			
@@ -302,12 +331,12 @@ Finsi
 U = 0
 UBoundRM = $n * (2^{(1.0 / n)} - 1)$
 					
-Pour i de 0 œàœ n faire
+Pour i de 0 a n faire
 	U = U + Ci/Pi
 Finpour
 
 Si U <= UBoundRM alors
-	afficher("Ordonnanœçœable")
+	afficher("Ordonnancable")
 Sinon
 	afficher("On ne peut rien conclure")
 Finsi
@@ -323,35 +352,35 @@ egaliteDiPi = vrai
 superioritePiDi = vrai
 U = 0		
 			
-pour i de 0 œàœ n faire
-    œ// Vérifie si tous les Pi sont bien égaux aux Diœ
+pour i de 0 a n faire
+    // Verifie si tous les Pi sont bien egaux aux Di
 	egaliteDiPi &= (Pi == Di) 
 	// idem pour Pi > Di
 	superioritePiDi &= (Pi > Di) 
 Finpour
 
 Si egaliteDiPi alors
-	afficher "Test de condition nœéœcessaire et suffisante pour EDF : "
+	afficher "Test de condition necessaire et suffisante pour EDF : "
 
-    Pour i de 0 œàœ n faire
+    Pour i de 0 a n faire
 	    U = U + Ci/Pi
     Finpour
 	
 	Si (U <= 1.0) alors
-		afficher "ordonnanœçœable"
+		afficher "ordonnancable"
 	Sinon
-		afficher "non-ordonnanœçœable"
+		afficher "non-ordonnancable"
 	Finsi
 	
 Sinon Si superioritePiDi alors
 	afficher "Test de condition suffisante pour EDF : "
     
-    Pour i de 0 œàœ n faire
+    Pour i de 0 a n faire
 	    U = U + Ci/Di
     Finpour
 	
 	Si (U <= 1.0) alors
-		afficher "ordonnanœçœable"
+		afficher "ordonnancable"
 	Sinon
 		afficher "on ne peut rien conclure"
 	Finsi
@@ -378,36 +407,141 @@ ALGO TODO
 			Nous avons en premier lieu commencé par développer ces deux algorithmes sans tenir compte des tâches apériodiques dans le but ensuite de les "patcher" avec nos algorithmes d'ordonnancement des tâches apériodiques (BG et TBS).
 			
 			
-			\subsubsection{poll_needed()}
-				\paragraph{Pré-condition :} 
-				\paragraph{Post-condition :} 
-				\paragraph{Objectif :} 
+			\subsubsection{poll\_needed}
+				\paragraph{Pré-condition : un algo d'ordonnancement a été lancé} 
+				\paragraph{Post-condition :retourne un booléan qui informe du besoin du besoin d'élire un nouvelle tâche à exécuter} 
+				\paragraph{Objectif : Savoir si on doit élire une nouvelle tâche ou non} 
 				\paragraph{Algo :} 
 					\begin{verbatim}
 					
+	bool need_to_poll = false;
+	//Ordonnanceur appele que si reveil ou terminaison de tâche
+		//verification du reveil d'une tache
+			//Taches Periodiques
+			
+			Pour tachePeriodique dans context
+				Si time = (date Reveil de tachePeriodique)
+					ajout de tachePeriodique dans tabPeriodiquesPretes
+					need_to_poll = true
+				Fin Si
+			Fin Pour
+			
+			//Taches Aperiodiques
+			Si (un serveur de taches a ete specifie) 
+				Pour tacheAperiodique dans context
+					Si time = (date Reveil de tacheAperiodique)
+						ajout de tacheAperiodique dans tabAperiodiquePretes
+						need_to_poll = true
+						Si (le serveur de tache aperiodique choisi est TBS)
+							calcul de dk pour tacheAperiodique
+							stockage dans context
+						Fin Si
+					Fin Si
+				Fin Pour
+			Fin Si
+			
+		//verification de la terminaison de la tache courante executee
+		
+		Si (la tache courante executee n'est PAS un temps creux)
+			Si (la capacite restante de tache courante executee = 0)
+				need_to_poll = true
+				//Suppression de la tache d'un des tableaux de tâches prêtes
+				Si (la tache courante executee est une tache Aperiodique)
+					suppression de la tache de tabAperiodiquesPretes
+				Sinon
+					suppression de la tache de tabPeriodiquesPretes
+				Fin Si
+		
+			Fin Si
+		Fin Si
+		
+		retourne need_to_poll
+				
 					\end{verbatim}
+				
+			\subsubsection{init\_context}
+				\paragraph{Pré-condition :} 
+				\paragraph{Post-condition :} 
+				\paragraph{Objectif :} 
+				\paragraph{Algo :} 
+					\begin{verbatim}
+
+//Initialisation du context : 
+ 	- creation d'un tableau contenant toutes les taches (taches periodiques puis taches aperiodiques)
+ 	- le tableau context est un tableau de 3 case de large et nbTaches de long
+ 	- pour les taches periodiques :
+ 		. indice -> Capacite restant | prochaine date de reveil | prochaine date echeance
+ 	- pour les taches aperiodiques : 
+ 		. indice -> Capacite restante | date de reveil | date echeance ( si TBS sinon 0)
+ 		 
+ context[ nbTaches ] [ 3 ]
+ 
+ Pour i allant de 0 a nbTachePeriodiques
+ 	context[i][0] = Ci de tachePeriodique_i
+ 	context[i][1] = Pi de tachePeriodique_i
+ 	context[i][2] = Di de tachePeriodique_i
+ Fin Pour
+ 
+ Si (il y a un serveur de precise)
+ 	Pour i allant de nbTachesPeriodiques a nbTaches
+ 		context[i][0] = Ci de tacheAperiodique_i
+ 		context[i][1] = ri de tacheAperiodique_i
+ 		context[i][2] = 0 
+ 	Fin Pour
+ Fin Si
+					\end{verbatim}			
 					
-			\subsubsection{MAJ_context()}
+			\subsubsection{MAJ\_context}
 				\paragraph{Pré-condition :} 
 				\paragraph{Post-condition :} 
 				\paragraph{Objectif :} 
 				\paragraph{Algo :} 
 					\begin{verbatim}
 					
+Pour tachePeriodique dans context
+	//verification du depassement d'echeance
+	Si (time = (date echeance tachePeriodique) )
+		Si ( (capacite restante de tachePeriodique) > 0 )
+			Message("Depassement d'echeance pour la tache : T" + tachePeriodique)
+			quitter
+		Fin Si
+	Fin Si
+	
+	Si (time = (date reveil de tachPeriodique) )
+		capacite restante tachePeriodique = Ci de tachePeriodique
+		date de reveil tachePeriodique = date de reveil tachePeriodique + Pi de tachePeriodique
+		date echeance tachePeriodique = date echeance tachePeriodique + Di de tachePeriodique
+	Fin Si
+Fin Pour
+
+//Verification de depassement d'echeance pour les taches aperiodiques
+//Si serveur de taches aperiodiques est TBS
+	Si (serveur = TBS)
+		Pour tacheAperiodique dans context
+			Si (time = (deadline de tacheAperiodique) )
+				Si ( (capacite restante tacheAperiodique) > 0 )
+					Message("Depassement d'echeance pour la tache : R" + tacheAperiodique)
+					quitter
+				Fin Si
+			Fin Si
+		Fin Pour
+	Fin Si
+Fin Si
+		
 					\end{verbatim}
-			\subsubsection{Rate Monotonic}
+			\subsubsection{Rate Monotonic + Serveur}
 				\paragraph{Pré-condition :} 
 				\paragraph{Post-condition :} 
 				\paragraph{Objectif :} 
 				\paragraph{Algo :} 
 					\begin{verbatim}
-Entrée : 
+Entree : 
 Sortie :  
 
 //Initialisation du context : 
-	- Creation d'un tableau de taches périodiques par ordre de prio : tabPrioPeriodique
-	- Creation d'un tableau de tâches apériodiques par ordre de prio : tabPrioAperiodique
-	- Création d'un tableau qui contient la capacité restante de chaque tache : tabTpsRestant
+	- Creation d'un tableau de taches periodiques par ordre de prio : tabPrioPeriodique
+	- Creation d'un tableau de tâches aperiodiques par ordre de prio : tabPrioAperiodique
+	- Creation d'un tableau qui contient la capacite restante de chaque tache : tabTpsRestant
 init_context()
 
 int t := 0
@@ -426,7 +560,7 @@ tant que (t < getHyperPeriode())
         		tache_elue = true;
         	Fin Si 
         Fin Pour
-        // si Aucune tache n'a été choisie -> temps creux
+        // si Aucune tache n'a ete choisie -> temps creux
         Si tache_elue == false
         	//temps_creux
         Fin Si
@@ -440,14 +574,14 @@ fin tant que
 					\end{verbatim}
 					
 					
-			\subsubsection{Earliest Deadline First}
+			\subsubsection{Earliest Deadline First + Serveur}
 			
 				\paragraph{Pré-condition :} 
 				\paragraph{Post-condition :} 
 				\paragraph{Objectif :} 
 				\paragraph{Algo :} 
 					\begin{verbatim}
-Entrée : 
+Entree : 
 Sortie :  
 
 
@@ -460,13 +594,62 @@ tant que (t < getHyperPeriode())
 	Booleen need_to_poll = poll_needed()
 	
 	si(need_to_poll)
-		
-		TODO : ALGO EDF
-		
-	fsi
+		Si (aucune tache periodique prete) 
+			Si (aucune tache aperiodique prete)
+				temps_creux
+			Sinon
+				task_executed = Selection de la tache Aperiodique prete dont le ri est le plus petit
+			Fin Si
+		Sinon
+			deadlineProche = hyperperiode
+			task_executed = temps_creux
+			
+			//election de la tache Periodique prete la plus prioritaire
+			
+			Pour tachePeriodiquePrete dans tabPeriodiquesPretes
+				Si ( deadlineProche > (prochaine date echeance tachePeriodiquePrete) )
+					deadlineProche = prochaine date echeance tachePeridiodiquePrete
+					task_executed = tachePeriodiquePrete
+				Sinon
+					Si ( deadlineProche = (prochaine date echeance tachePeriodiquePrete) )
+						//Conflit --> on compare les dates de reveil
+						Si ( ri_task_executed > ri_tacheAperiodiquePrete)
+							task_executed = tachePeriodiquePrete
+						Sinon
+							Si (ri_task_executed = ri_tacheAperiodiquePrete)
+								// Conflit --> on compare les numeros de tache
+								Si (num_task_executed > num_tachePeriodiquePrete)
+									task_executed = tachePeriodiquePrete
+								Fin Si
+							Fin Si
+						Fin Si
+					Fin Si
+				Fin Si
+			Fin Pour
+			
+			//election de la tache Aperiodique prete la plus prioritaire
+			Si (serveur == TBS)
+				Pour tacheAperiodiquePrete dans tabAperiodiquesPretes
+					Si ( (dk de tacheAperiodiquePrete) < deadlineProche )
+						//La tache Aperiodique est plus prioritaire
+						task_executed = tacheAperiodiquePrete
+					Sinon
+						Si ( (dk de tacheAperiodiquePrete) = deadlineProche )
+							Si ( (ri de tacheAperiodiquePrete) < (ri de task_executed) )
+								task_executed = tacheAperiodiquePrete
+							Fin Si
+						Fin Si
+					Fin Si
+				Fin Pour
+			Fin Si
+		Fin Si
+	Fin Si
 	
-	maj_context()
+	Capacite_restante de task_executed--
 	t++
+	
+	MAJ_context()
+	
 	
 fin tant que
 					\end{verbatim}

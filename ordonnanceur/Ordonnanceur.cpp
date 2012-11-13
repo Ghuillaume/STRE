@@ -246,8 +246,8 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 	// Parcours des tâches périodiques pour les mettre dans cette matrice
 	for(int i = 0 ; i < nbTachesP ; i++) {
 		context[i][0] = tachesP.at(i)->getCi();
-		context[i][1] = tachesP.at(i)->getDi();	
-		context[i][2] = tachesP.at(i)->getPi();
+		context[i][1] = tachesP.at(i)->getPi();	
+		context[i][2] = tachesP.at(i)->getDi();
 		this->traceur->declarationTache(i, tachesP[i]->formatKTR());
 	}
 	
@@ -337,7 +337,7 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 		//remplissage du tableau des tâches prêtes
 		for(int i = 0 ; i < nbTachesP ; i++) {
 			 
-			int ri = context[i][2] - tachesP[i]->getPi();
+			int ri = context[i][1] - tachesP[i]->getPi();
 			if(ri == t) {// correspond au réveil d'une tâche périodique
 				this->traceur->reveil(t,i);
 				need_to_poll = true;
@@ -381,18 +381,18 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 				}
 			}
 			else {
-				deadlineProche = context[tabTachesPretes[0]][1];
+				deadlineProche = context[tabTachesPretes[0]][2];
 				task_executed = tabTachesPretes[0];
 				if(tabTachesPretes.size() != 1) {
 					for(int i = 1 ; i < tabTachesPretes.size() ; i++) {
-						if(context[tabTachesPretes[i]][1] < deadlineProche) {
-							deadlineProche = context[tabTachesPretes[i]][1];
+						if(context[tabTachesPretes[i]][2] < deadlineProche) {
+							deadlineProche = context[tabTachesPretes[i]][2];
 							task_executed = tabTachesPretes[i];
 						}
-						else if(context[tabTachesPretes[i]][1] == deadlineProche) {
+						else if(context[tabTachesPretes[i]][2] == deadlineProche) {
 							
-							int  riP = context[tabTachesPretes[i]][2] - tachesP[tabTachesPretes[i]]->getPi();
-							int ritask_executed = context[task_executed][2] - tachesP[task_executed]->getPi();
+							int  riP = context[tabTachesPretes[i]][1] - tachesP[tabTachesPretes[i]]->getPi();
+							int ritask_executed = context[task_executed][1] - tachesP[task_executed]->getPi();
 							if(riP < ritask_executed) {
 								task_executed = tabTachesPretes[i];
 							}
@@ -411,7 +411,7 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 							task_executed = tabTachesApPretes.front();
 						}
 						else if (context[tabTachesApPretes.front()][2] == deadlineProche) {
-							int ritask_executed = context[task_executed][2] - tachesP[task_executed]->getPi();
+							int ritask_executed = context[task_executed][1] - tachesP[task_executed]->getPi();
 							if(context[tabTachesApPretes.front()][1] < ritask_executed) {
 								task_executed = tabTachesApPretes.front();
 							}
@@ -481,7 +481,7 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 		for(int i = 0 ; i < nbTachesP ; i++) {
 		
 			// Si la deadline de la tache a été passée, on charge en mémoire la deadline suivante
-			if(context[i][1] == t) {
+			if(context[i][2] == t) {
 			// Si, alors que la deadline a été passée, et que Ci n'est pas égal à zéro, alors le système n'est pas ordonnançable
 				if(context[i][0] > 0) {
 					cout << "ERREUR FATALE : la tâche T" << i << " n'a pas pu terminer son exécution. Arrêt du système" << endl;
@@ -489,10 +489,10 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 				}
 				this->traceur->dateEcheance(t,i);
 			} 
-			if(context[i][2] == t) {
+			if(context[i][1] == t) {
 				context[i][0] = tachesP.at(i)->getCi(); // réinitialisation du temps d'exécution restant
-				context[i][1] = t + tachesP.at(i)->getDi();
-				context[i][2] = t + tachesP.at(i)->getPi();		
+				context[i][1] = t + tachesP.at(i)->getPi();
+				context[i][2] = t + tachesP.at(i)->getDi();		
 			}
 		}
 		
