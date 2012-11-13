@@ -48,8 +48,9 @@
 			Nous avons opté pour le langage C++ pour réaliser ce projet car celui-ci possède un certain nombre d'avantages. Il s'agit d'un langage orienté objet très utilisé dans le monde et de nombreux outils libres sont disponibles pour l'utiliser (comme GCC pour la compilation par exemple). De plus, la documentation correspondante est très facilement accessible dans la littérature ou sur le web.
 		
 			Bien que le travail qui nous a été demandé ne requiert pas la maîtrise d'une programmation bas niveau, le langage C++ nous apparait en cohérence avec le thème abordé par le projet (les systèmes temps réel embarqués).
-
+\newpage
 		\subsection{Fonctionnalités}
+		
 			\begin{figure}
 				\centering
 				\includegraphics[scale=0.9]{img/schema_gen.png}
@@ -306,7 +307,6 @@ ecriture dans le fichier de ops
 				Une fois la syntaxe vérifiée, il est très aisé de travailler le fichier ligne par ligne pour en extraire les informations nécessaires grâce aux fonctions sur les \emph{string}. Chacune des tâches sera ajouter à un Conteneur de tâches qui sera ensuite passé à l'ordonnanceur pour que celui-ci puisse travailler dessus.
 			
 			\subsubsection{Analyse d'ordonnançabilité}
-				{\Huge TODO ajouter les tests pour les taches périodiques où $D_i < P_i$}
 				On fait tous les calculs en même temps :
 				\begin{itemize}
 					\item Condition nécessaire pour l'ordonnançabilité du jeu de tâches avec RM ;
@@ -315,6 +315,7 @@ ecriture dans le fichier de ops
 				\end{itemize}
 		
 			\subsubsection{Simulation d'ordonnancement}
+
 				Avant même de commencer à réfléchir sur les algorithmes d'ordonnancement, nous avons réfléchi à la structure de ces algorithmes. Nous verrons dans la conclusion que ça n'était pas forcément la bonne solution, et qu'il aurait mieux valu extraire cette structure de l'algorithme d'ordonnancement.\\
 				
 				Premièrement, un ordonnanceur a besoin d'avoir plusieurs informations à propos des tâches qui lui demandent du temps d'exécution. Par exemple, l'algorithme EDF, qui élit une tâche selon son $D_i$, doit bien entendu connaître le $D_i$ des différentes tâches qui attendent leur exécution. Toutes ces informations dont ont besoin les algorithmes, et qui seront stockées dans différentes structures, devront être initialisées en tout début de fonction afin que l'ordonnanceur puisse s'en servir à sa guise plus tard. Nous appelerons toutes ces informations le \og contexte d'exécution \fg.
@@ -337,7 +338,6 @@ ecriture dans le fichier de ops
 				\end{enumerate}
 				
 				Une fois cette structure mise en place, il suffit simplement d'implémenter un algorithme d'ordonnancement qui va tout simplement retourner le numéro de la tâche qu'il a élue en utilisant les informations qui sont mises à disposition par le contexte d'exécution.
-				
 			
 			\subsubsection{Ecriture du fichier de trace}
 				Pendant la simulation de l'ordonnancement, l'application génére les différentes lignes qui composent le fichier de trace exploitable par Kiwi. Ce fichier se décompose en 2 parties :
@@ -345,6 +345,8 @@ ecriture dans le fichier de ops
 						\item Une entête contenant la déclaration des tâches et la durée d'ordonnancement (hyperpériode)
 						\item Les évènements concernants les tâches dans l'ordre chronologique.
 					\end{itemize}
+
+		\subsection{Decomposition fonctionnelle}
 
 	\section{Conception fonctionnelle}
 		
@@ -514,6 +516,7 @@ Finsi
 			
 			\subsubsection{poll\_needed}
 				\label{sec:algo_poll}
+
 				\textbf{Pré-condition : un algo d'ordonnancement a été lancé} 
 				
 				\textbf{Post-condition :retourne un booléan qui informe du besoin du besoin d'élire un nouvelle tâche à exécuter} 
@@ -660,7 +663,6 @@ Sortie :
 	- Creation d'un tableau de taches periodiques par ordre de prio : tabPrioPeriodique
 	- Creation d'un tableau de taches aperiodiques par ordre de prio : tabPrioAperiodique
 	- Creation d'un tableau qui contient la capacite restante de chaque tache : tabTpsRestant
-init_context()
 
 int t := 0
 int task_executed := -1
@@ -705,7 +707,7 @@ Fintantque
 Entree : 
 Sortie :  
 
-
+//initialisation du contexte d'execution
 init_context()
 int t := 0
 int task_executed := -1

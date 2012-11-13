@@ -1,3 +1,9 @@
+/*******************************************************
+Nom ......... : main.cpp
+Role ........ : fonction principale de l'ordonnanceur
+Auteur ...... : BONCORPS, CHARON, PAGES 
+********************************************************/
+
 #include "common.h"
 
 #include "Parseur.hpp"
