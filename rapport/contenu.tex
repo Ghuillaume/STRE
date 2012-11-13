@@ -205,11 +205,11 @@ création du fichier
 	outputstream ops = ""
 Pour i allant de 0 a (nbTachesPeriodiques - 1)		
 	ops << "T" << (i+1) << ": " << tabCiP[i] << "," << tabPiP[i] << "," << tabDiP[i] << endl
-Fin Pour
+Finpour
 
 Pour i allant de 0 a (nbTachesAperiodiques - 1)
 	ops << R" << (i+1) << ": " << tabriA[i] << "," << tabCiA[i] << endl
-Fin Pour
+Finpour
 
 écriture dans le fichier de ops
   
@@ -421,7 +421,7 @@ Finsi
 				\paragraph{Post-condition :retourne un booléan qui informe du besoin du besoin d'élire un nouvelle tâche à exécuter} 
 				\paragraph{Objectif : Savoir si on doit élire une nouvelle tâche ou non} 
 				\paragraph{Algo :} 
-					\begin{verbatim}
+					\begin{lstlisting}
 					
 	bool need_to_poll = false;
 	//Ordonnanceur appele que si reveil ou terminaison de tâche
@@ -432,8 +432,8 @@ Finsi
 				Si time = (date Reveil de tachePeriodique)
 					ajout de tachePeriodique dans tabPeriodiquesPretes
 					need_to_poll = true
-				Fin Si
-			Fin Pour
+				Finsi
+			Finpour
 			
 			//Taches Aperiodiques
 			Si (un serveur de taches a ete specifie) 
@@ -444,10 +444,10 @@ Finsi
 						Si (le serveur de tache aperiodique choisi est TBS)
 							calcul de dk pour tacheAperiodique
 							stockage dans context
-						Fin Si
-					Fin Si
-				Fin Pour
-			Fin Si
+						Finsi
+					Finsi
+				Finpour
+			Finsi
 			
 		//verification de la terminaison de la tache courante executee
 		
@@ -459,21 +459,21 @@ Finsi
 					suppression de la tache de tabAperiodiquesPretes
 				Sinon
 					suppression de la tache de tabPeriodiquesPretes
-				Fin Si
+				Finsi
 		
-			Fin Si
-		Fin Si
+			Finsi
+		Finsi
 		
 		retourne need_to_poll
 				
-					\end{verbatim}
+					\end{lstlisting}
 				
 			\subsubsection{init\_context}
 				\paragraph{Pré-condition :} 
 				\paragraph{Post-condition :} 
 				\paragraph{Objectif :} 
 				\paragraph{Algo :} 
-					\begin{verbatim}
+					\begin{lstlisting}
 
 //Initialisation du context : 
  	- creation d'un tableau contenant toutes les taches (taches periodiques puis taches aperiodiques)
@@ -489,23 +489,23 @@ Finsi
  	context[i][0] = Ci de tachePeriodique_i
  	context[i][1] = Pi de tachePeriodique_i
  	context[i][2] = Di de tachePeriodique_i
- Fin Pour
+ Finpour
  
  Si (il y a un serveur de precise)
  	Pour i allant de nbTachesPeriodiques a nbTaches
  		context[i][0] = Ci de tacheAperiodique_i
  		context[i][1] = ri de tacheAperiodique_i
  		context[i][2] = 0 
- 	Fin Pour
- Fin Si
-					\end{verbatim}			
+ 	Finpour
+ Finsi
+					\end{lstlisting}			
 					
 			\subsubsection{MAJ\_context}
 				\paragraph{Pré-condition :} 
 				\paragraph{Post-condition :} 
 				\paragraph{Objectif :} 
 				\paragraph{Algo :} 
-					\begin{verbatim}
+					\begin{lstlisting}
 					
 Pour tachePeriodique dans context
 	//verification du depassement d'echeance
@@ -513,15 +513,15 @@ Pour tachePeriodique dans context
 		Si ( (capacite restante de tachePeriodique) > 0 )
 			Message("Depassement d'echeance pour la tache : T" + tachePeriodique)
 			quitter
-		Fin Si
-	Fin Si
+		Finsi
+	Finsi
 	
 	Si (time = (date reveil de tachPeriodique) )
 		capacite restante tachePeriodique = Ci de tachePeriodique
 		date de reveil tachePeriodique = date de reveil tachePeriodique + Pi de tachePeriodique
 		date echeance tachePeriodique = date echeance tachePeriodique + Di de tachePeriodique
-	Fin Si
-Fin Pour
+	Finsi
+Finpour
 
 //Verification de depassement d'echeance pour les taches aperiodiques
 //Si serveur de taches aperiodiques est TBS
@@ -531,19 +531,19 @@ Fin Pour
 				Si ( (capacite restante tacheAperiodique) > 0 )
 					Message("Depassement d'echeance pour la tache : R" + tacheAperiodique)
 					quitter
-				Fin Si
-			Fin Si
-		Fin Pour
-	Fin Si
-Fin Si
+				Finsi
+			Finsi
+		Finpour
+	Finsi
+Finsi
 		
-					\end{verbatim}
+					\end{lstlisting}
 			\subsubsection{Rate Monotonic + Serveur}
 				\paragraph{Pré-condition :} 
 				\paragraph{Post-condition :} 
 				\paragraph{Objectif :} 
 				\paragraph{Algo :} 
-					\begin{verbatim}
+					\begin{lstlisting}
 Entree : 
 Sortie :  
 
@@ -557,30 +557,30 @@ int t := 0
 int task_executed := -1
 bool tache_elue = false;
 
-tant que (t < getHyperPeriode())
+Tantque (t < getHyperPeriode())
 	
     Booleen need_to_poll = poll_needed()
 	
-    si(need_to_poll)
+    Si(need_to_poll)
         tache_elue = false
         Pour taches dans tabPrioPeriodique
-        	si (tabTpsRestant[tache] >0 && tache_elue == false)
+        	Si (tabTpsRestant[tache] >0 && tache_elue == false)
         		task_executed = tache;
         		tache_elue = true;
-        	Fin Si 
-        Fin Pour
+        	Finsi 
+        Finpour
         // si Aucune tache n'a ete choisie -> temps creux
         Si tache_elue == false
         	//temps_creux
-        Fin Si
-    fsi
+        Finsi
+    finsi
 	
 	tabTpsRestant[task_executed]--;
     maj_context()
     t++
 	
-fin tant que
-					\end{verbatim}
+Fintantque
+					\end{lstlisting}
 					
 					
 			\subsubsection{Earliest Deadline First + Serveur}
@@ -589,7 +589,7 @@ fin tant que
 				\paragraph{Post-condition :} 
 				\paragraph{Objectif :} 
 				\paragraph{Algo :} 
-					\begin{verbatim}
+					\begin{lstlisting}
 Entree : 
 Sortie :  
 
@@ -598,17 +598,17 @@ init_context()
 int t := 0
 int task_executed := -1
 
-tant que (t < getHyperPeriode())
+Tantque (t < getHyperPeriode())
 	
 	Booleen need_to_poll = poll_needed()
 	
-	si(need_to_poll)
+	Si(need_to_poll)
 		Si (aucune tache periodique prete) 
 			Si (aucune tache aperiodique prete)
 				temps_creux
 			Sinon
 				task_executed = Selection de la tache Aperiodique prete dont le ri est le plus petit
-			Fin Si
+			Finsi
 		Sinon
 			deadlineProche = hyperperiode
 			task_executed = temps_creux
@@ -629,12 +629,12 @@ tant que (t < getHyperPeriode())
 								// Conflit --> on compare les numeros de tache
 								Si (num_task_executed > num_tachePeriodiquePrete)
 									task_executed = tachePeriodiquePrete
-								Fin Si
-							Fin Si
-						Fin Si
-					Fin Si
-				Fin Si
-			Fin Pour
+								Finsi
+							Finsi
+						Finsi
+					Finsi
+				Finsi
+			Finpour
 			
 			//election de la tache Aperiodique prete la plus prioritaire
 			Si (serveur == TBS)
@@ -646,13 +646,13 @@ tant que (t < getHyperPeriode())
 						Si ( (dk de tacheAperiodiquePrete) = deadlineProche )
 							Si ( (ri de tacheAperiodiquePrete) < (ri de task_executed) )
 								task_executed = tacheAperiodiquePrete
-							Fin Si
-						Fin Si
-					Fin Si
-				Fin Pour
-			Fin Si
-		Fin Si
-	Fin Si
+							Finsi
+						Finsi
+					Finsi
+				Finpour
+			Finsi
+		Finsi
+	Finsi
 	
 	Capacite_restante de task_executed--
 	t++
@@ -661,7 +661,7 @@ tant que (t < getHyperPeriode())
 	
 	
 fin tant que
-					\end{verbatim}
+					\end{lstlisting}
 				
 	\section{Réalisation}
 		\subsection{Choix d'implémentation des structures}
