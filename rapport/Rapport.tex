@@ -22,41 +22,25 @@
 
 \include{garde}
 
-\pagestyle{fancy}												% Permet de dire qu'on veut afficher les headers, on peut le mettre plus tard
-\fancyhf{}	 													% On dégage tout ce qui existe déjà
-\lhead[]{TITRE}		% Haut-gauche
-\rhead[]{\leftmark}												% Haut-droite
-\lfoot[]{NOM}										% Bas-gauche
-\cfoot[]{\textbf{\thepage}}										% Bas-centre
-\rfoot[]{FORMATION}										% Bas-droite
-\renewcommand{\headrulewidth}{0.2pt}							% Taille du trait du header & footer
-
-%\setlength{\baselineskip}{1.5em}								% Espace interligne
-%\setlength{\parskip}{0pt}										% Espace interparagraphe
-
 \lstset{
 	tabsize=4,
 	keywordstyle=\color{blue},          
 	commentstyle=\color{dkgreen},     
 	stringstyle=\color{mauve},
-	morekeywords={Entree,Sortie,Pour,Faire,Si,Sinon,Alors,Finpour,Finsi,afficher,dans,Tantque, Fintantque,retourne, allantDe}
+	morekeywords={Entree,Sortie,Pour,Faire,Si,Sinon,Alors,Finpour,Finsi,afficher,dans,Tantque, Fintantque,retourne, allantDe},
+	breaklines=true
 }
  
 
 \begin{document}
 
 	\pagestyle{plain}
-	\pagenumbering{Roman}\setcounter{page}{1}					% Définir le style des numéros de page et initialisation du compteur
 	
 	\maketitle													% Création de la page de garde
+	\pagenumbering{arabic}
 	 
 	\thispagestyle{empty}
-	\newpage
-	\strut      % Permet d'avoir une page blanche non numérotée
-	\newpage
 
-	% Abstract avec numérotation
-	%\include{Introduction}
 
 	\renewcommand{\contentsname}{Sommaire}  % Renomme la table des matières
 	\setcounter{tocdepth}{2} 								% Définir la profondeur de la table des matières
@@ -65,7 +49,7 @@
 		\protect\setlength{\parskip}{0pt}					% Définir le saut de paragraphe dans la TDM
 	}
 	\tableofcontents\thispagestyle{plain}					% Table des matières
-	\pagenumbering{arabic} \setcounter{page}{5} 
+	%\pagenumbering{arabic}
 
 	\begin{onehalfspace}
 		%inclure le contenu
