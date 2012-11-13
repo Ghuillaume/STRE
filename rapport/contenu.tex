@@ -64,11 +64,11 @@
 
 			\subsubsection{Génération aléatoire de tâches}
 				Le premier type de génération permet de générer automatiquement des tâches. L'utilisateur devra renseigner le nombre de tâches périodiques et apériodiques à générer ainsi que le pourcentage d'utilisation du CPU. Ceci permet de générer des fichiers de test aléatoire qui seront visualisable par la suite.\\
-				Lors de la génération, le système calcule les différentes valeurs caractéristiques des tâches périodiques (Ci, Pi, Di) et des tâches apériodiques (ri, Ci) en accord avec le pourcentage d'utilisation du CPU. 
+				Lors de la génération, le système calcule les différentes valeurs caractéristiques des tâches périodiques ($Ci$, $Pi$, $Di$) et des tâches apériodiques ($ri$, $Ci$) en accord avec le pourcentage d'utilisation du CPU. 
 
 			\subsubsection{Génération contrôlée de tâches}
 				Le deuxième type de génération fait appel à l'utilisateur pour renseigner chacune des valeurs de chaque tâche. De cette manière, l'utilisateur va pouvoir tester plus facilement des cas spécifiques et donc observer de manière plus précise le fonctionnement de l'ordonnanceur par la suite. \\
-				Lors de la génération, pour toutes les tâches périodiques il devra renseigner les Ci, Pi et Di, c'est-à-dire respectivement les durées d'exécution maximales, les périodes d'activation et le délai critique). Dans le cas où il y a aussi des tâches apériodiques, il devra renseigner aussi ri (la date de réveil) et Ci.
+				Lors de la génération, pour toutes les tâches périodiques il devra renseigner les $Ci$, $Pi$ et $Di$, c'est-à-dire respectivement les durées d'exécution maximales, les périodes d'activation et le délai critique). Dans le cas où il y a aussi des tâches apériodiques, il devra renseigner aussi $ri$ (la date de réveil) et $Ci$.
 
 			\subsubsection{Écriture dans un fichier}
 				Ce module a pour fonction d’écrire dans un fichier les données contenues dans un flux (= stream)  et calculées à partir des deux modules précédents de génération. L’intérêt de séparer ces fonctions est double : il est plus pratique de factoriser le code à travers une seule fonction d’écriture appelée par les différentes générations et cela facilite la maintenance.
@@ -77,10 +77,13 @@
 	\section{Conception fonctionnelle}
 
 		\subsection{Choix du mode}
-			\paragraph{Pré-condition :} Le programme vient d’être lancé.
-			\paragraph{Post-condition :} Un choix valide a été effectué.
-			\paragraph{Objectif :} Permettre de choisir entre la génération aléatoire et la génération controlée.
-			\paragraph{Algo :}
+			\textbf{Pré-condition :} Le programme vient d’être lancé.
+			
+			\textbf{Post-condition :} Un choix valide a été effectué.
+			
+			\textbf{Objectif :} Permettre de choisir entre la génération aléatoire et la génération controlée.
+			
+			\textbf{Algo :}
 			\begin{verbatim} 
 	Entrée : Int choix
 	Sortie :  -
@@ -102,11 +105,11 @@ FinSi
 
 	\newpage
 	\subsection{Génération Aléatoire}
-		\paragraph{Pré-condition :} La génération aléatoire a été choisie.
-		\paragraph{Post-condition :} Toutes les valeurs caractéristiques des tâches ont été générées en accord avec le paramétrage de l’utilisateur.
+		\textbf{Pré-condition :} La génération aléatoire a été choisie.
+		
+		\textbf{Post-condition :} Toutes les valeurs caractéristiques des tâches ont été générées en accord avec le paramétrage de l’utilisateur.
 
-
-		\paragraph{Objectif :} Générer aléatoirement les caractéristiques (Ci,Pi,Di) d’un nombre de tâches (determiné par l’utilisateur) en accord avec un facteur d’utilisation du processeur (déterminé lui aussi par l’utilisateur).
+		\textbf{Objectif :} Générer aléatoirement les caractéristiques (Ci,Pi,Di) d’un nombre de tâches (determiné par l’utilisateur) en accord avec un facteur d’utilisation du processeur (déterminé lui aussi par l’utilisateur).
 		Ex : pour trois taches et facteur = 75\% \\ 
 
 
@@ -121,7 +124,7 @@ FinSi
 
 		    Toutes les données sont stockées dans 3 tableaux (un pour les Ci, un pour Pi, un pour Di). 
 
-		\paragraph{Algo :}
+		\textbf{Algo :}
 			\begin{verbatim}
 Entrée: Int nbTaches, Int factUtProcesseur
 Sortie : 3 Tableaux d’Int (pour les valeurs de Ci, Pi, Di). 
@@ -168,10 +171,13 @@ tabCi[ nbTaches - 1 ] = 100 / pgcd(nb\_genere,100)
 			\end{verbatim}
 
 	\subsection{Generation Controlée}  
-		\paragraph{Pré-condition :} La génération controlée a été choisie.
-		\paragraph{Post-condition :} Toutes les valeurs caractéristiques des tâches ont été générées en accord avec le paramétrage de l’utilisateur.
-		\paragraph{Objectif :} Permettre à l’utilisateur de générer des tâches périodiques ou apériodiques en renseignant les différentes caractéristiques de chacune des tâches (Ci, Pi, Di) ou, respectivement, (ri, Ci).
-		\paragraph{Algo :} 
+		\textbf{Pré-condition :} La génération controlée a été choisie.
+		
+		\textbf{Post-condition :} Toutes les valeurs caractéristiques des tâches ont été générées en accord avec le paramétrage de l’utilisateur.
+		
+		\textbf{Objectif :} Permettre à l’utilisateur de générer des tâches périodiques ou apériodiques en renseignant les différentes caractéristiques de chacune des tâches (Ci, Pi, Di) ou, respectivement, (ri, Ci).
+		
+		\textbf{Algo :} 
 			\begin{verbatim}
 Entrée : Int nbTaches
 Sortie :  3 Tableaux d’Int (pour les valeurs de Ci, Pi, Di). 
@@ -210,10 +216,13 @@ fin pour
 			\end{verbatim}
 
 	\subsection{Ecriture du résultat obtenu}
-		\paragraph{Pré-condition :} La génération (qu'elle soit contrôlée ou non) envoie un outputstream contenant les chaînes de caractère à écrire dans un fichier.
-		\paragraph{Post-condition :} L'écriture s'est bien déroulée : le fichier contient bien la chaîne.
-		\paragraph{Objectif :} Enregistrer les données générées par le module précédent de manière pérenne dans un fichier.
-		\paragraph{Algo :}
+		\textbf{Pré-condition :} La génération (qu'elle soit contrôlée ou non) envoie un outputstream contenant les chaînes de caractère à écrire dans un fichier.
+		
+		\textbf{Post-condition :} L'écriture s'est bien déroulée : le fichier contient bien la chaîne.
+		
+		\textbf{Objectif :} Enregistrer les données générées par le module précédent de manière pérenne dans un fichier.
+		
+		\textbf{Algo :}
 		\begin{verbatim}
 création du fichier
 
@@ -275,7 +284,7 @@ Finpour
 		Pour les mêmes raisons que celles décrites dans le Chapitre \ref{sec:langage}, le langage utilisé est le C++.
 
 		\subsection{Fonctionnalités}
-			\begin{figure}
+			\begin{figure}[!h]
 				\centering
 				\includegraphics[scale=0.55]{ordo_fct_diag.png}
 				\caption{Diagramme des fonctionnalités}
@@ -283,7 +292,16 @@ Finpour
 			\FloatBarrier
 			
 			\subsubsection{Parsage du fichier d'entrée}
-				Vérification de la syntaxe avec expression régulière + enregistrement des tâches et de leurs paramètres dans un modèle.
+				Bien que le fichier en entrée soit, dans le cas général, un fichier écrit par notre générateur de tâche et donc normalement correct, nous ne sommes pas à l'abris de voir arriver en entrée un fichier corrompu. Soit par l'utilisateur lui-même, soit de n'importe quel autre moyen que ce soit. De plus, la syntaxe du fichier en entrée est relativement simple, ce qui permet à un utilisateur lambda de créer son propre fichier sans passer par notre générateur de tâches.
+				
+				Sachant que le fichier sera parsé suivant le \emph{pattern} de spécification des tâches utilisé par notre générateur, il est indispensable de vérifier la bonne syntaxe du fichier avant de récupérer quoi que ce soit. Cette vérification est effectuée grâce à une expression régulière représentant toutes les syntaxes possible pour une ligne du fichier. Dans les faits, cette \emph{Regex} est divisée en deux :
+				\begin{itemize}
+					\item Pour les tâches périodiques : \verb|^T[0-9]+: [0-9]+,[0-9]+,[0-9]+$| ;
+					\item Pour les tâches apériodiques : \verb|^R[0-9]+: [0-9]+,[0-9]+$| .
+				\end{itemize}
+				Chacune des lignes du fichier doit donc respecter soit l'une, soit l'autre expression régulière.\\
+				
+				Une fois la syntaxe vérifiée, il est très aisé de travailler le fichier ligne par ligne pour en extraire les informations nécessaires grâce aux fonctions sur les \emph{string}. Chacune des tâches sera ajouter à un Conteneur de tâches qui sera ensuite passé à l'ordonnanceur pour que celui-ci puisse travailler dessus.
 			
 			\subsubsection{Analyse d'ordonnançabilité}
 				{\Huge TODO ajouter les tests pour les taches périodiques où Di < Pi}
@@ -293,7 +311,7 @@ Finpour
 					\item Condition suffisante avec RM ;
 					\item Condition suffisante et nécessaire avec EDF.
 				\end{itemize}
-			
+		
 			\subsubsection{Simulation d'ordonnancement}
 				Avant même de commencer à réfléchir sur les algorithmes d'ordonnancement, nous avons réfléchi à la structure de ces algorithmes. Nous verrons dans la conclusion que ça n'était pas forcément la bonne solution, et qu'il aurait mieux valu extraire cette structure de l'algorithme d'ordonnancement.\\
 				
@@ -328,28 +346,50 @@ Finpour
 
 	\section{Conception fonctionnelle}
 		
-		\subsection{choix de représentation}
-			Nous avons choisi de représenter un temps creux par l'indice -1
+		\subsection{Conteneur}
+			Comme nous l'avons vu, les tâches qui sont spécifiées dans le fichier en entrée doivent être stockées dans un conteneur pour que l'ordonnanceur puisse travailler dessus. Voici donc la manière dont nous avons décidé de concevoir notre conteneur de tâches :
+			\begin{figure}[!h]
+				\centering
+				\includegraphics[scale=0.55]{conteneur_diag.png}
+				\caption{Diagramme de classes du conteneur de tâches}
+			\end{figure}
+			\FloatBarrier
 						
 		\subsection{Analyse du fichier d'entrée}
-				\paragraph{Post-condition :} 
-				\paragraph{Objectif :} 
-				\paragraph{Algo :} 
-					\begin{verbatim}
-ALGO TODO
-					\end{verbatim}
+				\textbf{Pré-condition :} Le fichier spécifié existe et est lisible, et le conteneur peut accueillir de nouvelles tâches
+				
+				\textbf{Post-condition :} Le fichier est syntaxiquement valide et toutes les tâches ont été ajoutées au conteneur
+				
+				\textbf{Objectif :} Ajouter toutes les tâches spécifiées par le fichier dans le conteneur
+				
+				\textbf{Algo :} 
+					\begin{lstlisting}
+Tantque line = nextLine() faire
+	verifierSyntaxe(line);
+	
+	elements = eclater(line, ',')
+	Si commencePar(line, 'T')
+		ajouterTachePeriodique(conteneur, elements[0], elements[1], elements[2])
+	Sinon si commencePar(line, 'R')
+		ajouterTacheAperiodique(conteneur, elements[0], elements[1])
+	Finsi
+Fintantque
+					\end{lstlisting}
 		
 		
 		\subsection{Analyse d'ordonnançabilité}
 			
 			\subsubsection{Condition nécessaire RM}
-				\paragraph{Pré-condition :} $n$ représente le nombre de tâches périodiques.
-				\paragraph{Post-condition :} Soit c'est non-ordonnançable, soit on ne peut rien conclure.
-				\paragraph{Objectif :} Vérifier les conditions d'ordonnançabilité nécessaires pour l'algorithme RM.
-				\paragraph{Algo :} 
+				\textbf{Pré-condition :} $n$ représente le nombre de tâches périodiques.
+				
+				\textbf{Post-condition :} Soit c'est non-ordonnançable, soit on ne peut rien conclure.
+				
+				\textbf{Objectif :} Vérifier les conditions d'ordonnançabilité nécessaires pour l'algorithme RM.
+				
+				\textbf{Algo :} 
 					\begin{lstlisting}
 U = 0
-					
+
 Pour i de 0 a n faire
 	U = U + Ci/Pi
 Finpour		
@@ -362,10 +402,13 @@ Finsi
 					\end{lstlisting}
 			
 			\subsubsection{Condition suffisante RM}
-				\paragraph{Pré-condition :} $n$ représente le nombre de tâches périodiques.
-				\paragraph{Post-condition :} Soit c'est ordonnançable, soit on ne peut rien conclure.
-				\paragraph{Objectif :} Vérifier les conditions d'ordonnançabilité suffisantes pour l'algorithme RM.
-				\paragraph{Algo :} 
+				\textbf{Pré-condition :} $n$ représente le nombre de tâches périodiques.
+				
+				\textbf{Post-condition :} Soit c'est ordonnançable, soit on ne peut rien conclure.
+				
+				\textbf{Objectif :} Vérifier les conditions d'ordonnançabilité suffisantes pour l'algorithme RM.
+				
+				\textbf{Algo :} 
 					\begin{lstlisting}[mathescape]
 U = 0
 UBoundRM = $n * (2^{(1.0 / n)} - 1)$
@@ -382,10 +425,13 @@ Finsi
 					\end{lstlisting}
 			
 			\subsubsection{Condition nécessaire et suffisante EDF}
-				\paragraph{Pré-condition :} $n$ représente le nombre de tâches périodiques et il n'y a pas de tâches apériodiques.
-				\paragraph{Post-condition :} On obtient une réponse binaire : le système est ordonnançable ou non.
-				\paragraph{Objectif :} Vérifier les conditions d'ordonnançabilité nécessaires et suffisantes pour l'algorithme EDF.
-				\paragraph{Algo :} 
+				\textbf{Pré-condition :} $n$ représente le nombre de tâches périodiques et il n'y a pas de tâches apériodiques.
+				
+				\textbf{Post-condition :} On obtient une réponse binaire : le système est ordonnançable ou non.
+				
+				\textbf{Objectif :} Vérifier les conditions d'ordonnançabilité nécessaires et suffisantes pour l'algorithme EDF.
+				
+				\textbf{Algo :} 
 					\begin{lstlisting}[mathescape]
 egaliteDiPi = vrai					
 superioritePiDi = vrai
@@ -429,9 +475,13 @@ Finsi
 					\end{lstlisting}
 					
 			\subsubsection{Condition nécessaire et suffisante EDF-TBS}
-				\paragraph{Pré-condition :} $n$ représente le nombre de tâches périodiques et Us est .
-				\paragraph{Post-condition :} On obtient une réponse binaire : le système est ordonnançable ou non.
-				\paragraph{Objectif :} Vérifier les conditions d'ordonnançabilité nécessaires et suffisantes pour l'algorithme EDF.
+				\textbf{Pré-condition :} $n$ représente le nombre de tâches périodiques et Us est .
+				
+				\textbf{Post-condition :} On obtient une réponse binaire : le système est ordonnançable ou non.
+				
+				\textbf{Objectif :} Vérifier les conditions d'ordonnançabilité nécessaires et suffisantes pour l'algorithme EDF.
+				
+				\textbf{Algo :}
 					\begin{lstlisting}
 U = 0
 
@@ -459,10 +509,13 @@ Finsi
 			
 			\subsubsection{poll\_needed}
 				\label{sec:algo_poll}
-				\paragraph{Pré-condition : un algo d'ordonnancement a été lancé} 
-				\paragraph{Post-condition :retourne un booléan qui informe du besoin du besoin d'élire un nouvelle tâche à exécuter} 
-				\paragraph{Objectif : Savoir si on doit élire une nouvelle tâche ou non} 
-				\paragraph{Algo :} 
+				\textbf{Pré-condition : un algo d'ordonnancement a été lancé} 
+				
+				\textbf{Post-condition :retourne un booléan qui informe du besoin du besoin d'élire un nouvelle tâche à exécuter} 
+				
+				\textbf{Objectif : Savoir si on doit élire une nouvelle tâche ou non} 
+				
+				\textbf{Algo :} 
 					\begin{lstlisting}
 					
 	bool need_to_poll = false;
@@ -511,10 +564,13 @@ Finsi
 					\end{lstlisting}
 				
 			\subsubsection{init\_context}
-				\paragraph{Pré-condition :} 
-				\paragraph{Post-condition :} 
-				\paragraph{Objectif :} 
-				\paragraph{Algo :} 
+				\textbf{Pré-condition :} 
+				
+				\textbf{Post-condition :} 
+				
+				\textbf{Objectif :} 
+				
+				\textbf{Algo :} 
 					\begin{lstlisting}
 
 //Initialisation du context : 
@@ -543,10 +599,13 @@ Finsi
 					\end{lstlisting}			
 					
 			\subsubsection{MAJ\_context}
-				\paragraph{Pré-condition :} 
-				\paragraph{Post-condition :} 
-				\paragraph{Objectif :} 
-				\paragraph{Algo :} 
+				\textbf{Pré-condition :} 
+				
+				\textbf{Post-condition :} 
+				
+				\textbf{Objectif :} 
+				
+				\textbf{Algo :} 
 					\begin{lstlisting}
 					
 Pour tachePeriodique dans context
@@ -581,10 +640,13 @@ Finsi
 		
 					\end{lstlisting}
 			\subsubsection{Rate Monotonic + Serveur}
-				\paragraph{Pré-condition :} 
-				\paragraph{Post-condition :} 
-				\paragraph{Objectif :} 
-				\paragraph{Algo :} 
+				\textbf{Pré-condition :} 
+				
+				\textbf{Post-condition :} 
+				
+				\textbf{Objectif :} 
+				
+				\textbf{Algo :} 
 					\begin{lstlisting}
 Entree : 
 Sortie :  
@@ -627,10 +689,13 @@ Fintantque
 					
 			\subsubsection{Earliest Deadline First + Serveur}
 			
-				\paragraph{Pré-condition :} 
-				\paragraph{Post-condition :} 
-				\paragraph{Objectif :} 
-				\paragraph{Algo :} 
+				\textbf{Pré-condition :} 
+				
+				\textbf{Post-condition :} 
+				
+				\textbf{Objectif :} 
+				
+				\textbf{Algo :} 
 					\begin{lstlisting}
 Entree : 
 Sortie :  
