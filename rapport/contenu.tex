@@ -291,7 +291,6 @@ Finpour
 				Vérification de la syntaxe avec expression régulière + enregistrement des tâches et de leurs paramètres dans un modèle.
 			
 			\subsubsection{Analyse d'ordonnançabilité}
-				{\Huge TODO ajouter les tests pour les taches périodiques où Di < Pi}
 				On fait tous les calculs en même temps :
 				\begin{itemize}
 					\item Condition nécessaire pour l'ordonnançabilité du jeu de tâches avec RM ;
@@ -300,7 +299,12 @@ Finpour
 				\end{itemize}
 			
 			\subsubsection{Simulation d'ordonnancement}
-				
+				Ceci permet, à partir du jeu de tâches contenue dans le fichier d'entrée, de simuler un ordonnancement selon un algorithme spécifique. Deux fonctions sont disponible : 
+				\begin{itemize}
+					\item Simulation selon RM
+					\item Simulation selon EDF
+				\end{itemize}
+				Ce choix est naturel dans la mesure où les algorithmes apériodiques s'appuient sur ceux des tâches périodiques.			
 			
 			\subsubsection{Ecriture du fichier de trace}
 				Pendant la simulation de l'ordonnancement, l'application génére les différentes lignes qui composent le fichier de trace exploitable par Kiwi. Ce fichier se décompose en 2 parties :
@@ -309,11 +313,8 @@ Finpour
 						\item Les évènements concernants les tâches dans l'ordre chronologique.
 					\end{itemize}
 		\subsection{Decomposition fonctionnelle}
-
-	\section{Conception fonctionnelle}
 		
-		\subsection{choix de représentation}
-			Nous avons choisi de représenter une temps par l'indice -1
+	\section{Conception fonctionnelle}
 						
 		\subsection{Analyse du fichier d'entrée}
 				\paragraph{Post-condition :} 
@@ -443,7 +444,7 @@ Finsi
 			
 			\subsubsection{poll\_needed}
 				\paragraph{Pré-condition : un algo d'ordonnancement a été lancé} 
-				\paragraph{Post-condition :retourne un booléan qui informe du besoin du besoin d'élire un nouvelle tâche à exécuter} 
+				\paragraph{Post-condition :retourne un booléan qui informe du besoin d'élire un nouvelle tâche à exécuter} 
 				\paragraph{Objectif : Savoir si on doit élire une nouvelle tâche ou non} 
 				\paragraph{Algo :} 
 					\begin{lstlisting}
@@ -494,9 +495,9 @@ Finsi
 					\end{lstlisting}
 				
 			\subsubsection{init\_context}
-				\paragraph{Pré-condition :} 
-				\paragraph{Post-condition :} 
-				\paragraph{Objectif :} 
+				\paragraph{Pré-condition : un algorithme d'ordonnancement a été lancé} 
+				\paragraph{Post-condition : le contexte d'exécution des tâches a été initialisé} 
+				\paragraph{Objectif : initialiser le contexte d'exécution des tâches} 
 				\paragraph{Algo :} 
 					\begin{lstlisting}
 
@@ -526,9 +527,9 @@ Finsi
 					\end{lstlisting}			
 					
 			\subsubsection{MAJ\_context}
-				\paragraph{Pré-condition :} 
-				\paragraph{Post-condition :} 
-				\paragraph{Objectif :} 
+				\paragraph{Pré-condition : le contexte a été initialisé} 
+				\paragraph{Post-condition : le contexte a été mis à jour} 
+				\paragraph{Objectif :mise à jour du contexte d'exécution} 
 				\paragraph{Algo :} 
 					\begin{lstlisting}
 					
@@ -564,9 +565,9 @@ Finsi
 		
 					\end{lstlisting}
 			\subsubsection{Rate Monotonic + Serveur}
-				\paragraph{Pré-condition :} 
-				\paragraph{Post-condition :} 
-				\paragraph{Objectif :} 
+				\paragraph{Pré-condition : le fichier d'entrée a été parsé} 
+				\paragraph{Post-condition : les tâches ont été ordonnancé} 
+				\paragraph{Objectif : Simuler l'ordonnancement selon RM d'un jeu de tâches} 
 				\paragraph{Algo :} 
 					\begin{lstlisting}
 Entree : 
@@ -576,7 +577,6 @@ Sortie :
 	- Creation d'un tableau de taches periodiques par ordre de prio : tabPrioPeriodique
 	- Creation d'un tableau de taches aperiodiques par ordre de prio : tabPrioAperiodique
 	- Creation d'un tableau qui contient la capacite restante de chaque tache : tabTpsRestant
-init_context()
 
 int t := 0
 int task_executed := -1
