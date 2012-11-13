@@ -1,3 +1,9 @@
+/*******************************************************
+Nom ......... : main.cpp
+Role ........ : fonction principale du générateur
+Auteur ...... : BONCORPS, CHARON, PAGES 
+********************************************************/
+
 #include "GenerateurAleatoire.h"
 #include "GenerateurControlee.h"
 
