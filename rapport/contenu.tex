@@ -6,7 +6,8 @@
 %        4) Definition de la réalisation 
 %        5) Réalisation 
 %        6) Tests
-
+\chapter*{Introduction}
+	Ceci est une intro. Hello world!
 
 \chapter{Générateur de tâches}
 	\label{chap:1}
@@ -214,13 +215,10 @@ Fin Pour
   
 		\end{verbatim}
 
-\section{Définition de la réalisation}
-	\Huge
-	TODO
-	\normalsize
-
 \section{Réalisation}
-	\subsection{Répartition des tâches}
+	\subsection{Choix d'implémentation des structures}
+	
+	\subsection{Problèmes rencontrés}
 
 \section{Tests}
 
@@ -390,11 +388,22 @@ Finsi
 					\end{lstlisting}
 					
 			\subsubsection{Condition nécessaire et suffisante EDF-TBS}
-				\paragraph{Post-condition :} 
-				\paragraph{Objectif :} 
-				\paragraph{Algo :} 
+				\paragraph{Pré-condition :} $n$ représente le nombre de tâches périodiques et Us est .
+				\paragraph{Post-condition :} On obtient une réponse binaire : le système est ordonnançable ou non.
+				\paragraph{Objectif :} Vérifier les conditions d'ordonnançabilité nécessaires et suffisantes pour l'algorithme EDF.
 					\begin{lstlisting}
-ALGO TODO
+U = 0
+
+Pour i de 0 a n faire
+    U = U + Ci/Pi
+Finpour
+					
+afficher "Test de condition nécessaire et suffisante pour EDF-TBS : "
+Si (Up + Us <= 1.0) alors
+	afficher "ordonnançable"
+Sinon
+	afficher "non-ordonnançable"
+Finsi
 					\end{lstlisting}
 	
 		\subsection{Simulation d'ordonnancement}
@@ -654,10 +663,13 @@ tant que (t < getHyperPeriode())
 fin tant que
 					\end{verbatim}
 				
-
-	\section{Définition de la réalisation}
-
 	\section{Réalisation}
+		\subsection{Choix d'implémentation des structures}
+	
+		\subsection{Problèmes rencontrés}
+
 
 	\section{Tests}
+	
+\chapter*{Conclusion}
 
