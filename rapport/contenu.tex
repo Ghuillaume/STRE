@@ -121,7 +121,7 @@ nbMax = factUtProcessus
 /*
 On calcule la valeur maximale que peut prendre le nombre tiré aléatoirement :
 maximum = Up - somme des Ci/Pi précédents - nombre de taches restantes
-Ensuite, on tire au hasard une valeur allant de 1 a cette valeur maximale.
+Ensuite, on tire au hasard une valeur allantDe 1 a cette valeur maximale.
 Exemple : maxT1 = 75 - 0 - 2
 	    randT1 = 32 (valeur calculée avec le pseudo-hasard)
 	    maxT2 = 75 - 32 - 1
@@ -132,7 +132,7 @@ Pour résumer, on obtient ici les Ci/Pi : 32, 18 et 25
 */
 
 
-Pour i allant de 0 a (nbTaches - 1)
+Pour i allantDe 0 a (nbTaches - 1)
    nbMaxLimite = nbMax - nbTachesRestantes
    // le nombre aléatoire correspond a (Ci/Pi)
    nbAleatoire = nombre Aleatoire entre 1 et ce nombre maximum
@@ -169,7 +169,7 @@ lire(nbTachesPeriodiques)
 
 TabCiP[ nbTachesPeriodiques ], TabPiP[ nbTachesPeriodiques ], TabDiP[ nbTachesPeriodiques ]
 		
-Pour i allant de 0 a (nbTachesPeriodiques - 1)
+Pour i allantDe 0 a (nbTachesPeriodiques - 1)
 	// on demande a l’utilisateur de renseigner les différentes valeurs ...
 	lire(CiP)
 	lire(PiP)
@@ -185,7 +185,7 @@ lire(nbTachesAperiodiques)
 
 TabriA[ nbTachesAperiodiques ], TabCiA[ nbTachesAperiodiques ]
 		
-Pour i allant de 0 a (nbTachesAperiodiques - 1)
+Pour i allantDe 0 a (nbTachesAperiodiques - 1)
 	// on demande a l’utilisateur de renseigner les différentes valeurs ...
 	lire(riA)
 	lire(CiA)        
@@ -205,11 +205,11 @@ fin pour
 création du fichier
 
 	outputstream ops = ""
-Pour i allant de 0 a (nbTachesPeriodiques - 1)		
+Pour i allantDe 0 a (nbTachesPeriodiques - 1)		
 	ops << "T" << (i+1) << ": " << tabCiP[i] << "," << tabPiP[i] << "," << tabDiP[i] << endl
 Finpour
 
-Pour i allant de 0 a (nbTachesAperiodiques - 1)
+Pour i allantDe 0 a (nbTachesAperiodiques - 1)
 	ops << R" << (i+1) << ": " << tabriA[i] << "," << tabCiA[i] << endl
 Finpour
 
@@ -232,8 +232,8 @@ Finpour
 
 	La deuxième fonctionnalité de ce programme est d'offrir un environnement de simulation selon plusieurs politiques d'ordonnancements :
 	\begin{itemize}
-		\item pour les tâches périodiques : \textbf RM et \textbf EDF
-		\item pour les tâches apériodiques non critiques :  \textbf BG et \textbf TBS
+		\item pour les tâches périodiques : \textbf{RM} et \textbf{EDF}
+		\item pour les tâches apériodiques non critiques :  \textbf{BG} et \textbf{TBS}
 	\end{itemize}
 	Cet environnement, après simulation, fourni à l'utilisateur des résultats de performances relatifs à l'ordonnancement : 
 	\begin{itemize}
@@ -426,7 +426,7 @@ Finsi
 					\begin{lstlisting}
 					
 	bool need_to_poll = false;
-	//Ordonnanceur appele que si reveil ou terminaison de tâche
+	//Ordonnanceur appele que si reveil ou terminaison de tache
 		//verification du reveil d'une tache
 			//Taches Periodiques
 			
@@ -456,7 +456,7 @@ Finsi
 		Si (la tache courante executee n'est PAS un temps creux)
 			Si (la capacite restante de tache courante executee = 0)
 				need_to_poll = true
-				//Suppression de la tache d'un des tableaux de tâches prêtes
+				//Suppression de la tache d'un des tableaux de taches pretes
 				Si (la tache courante executee est une tache Aperiodique)
 					suppression de la tache de tabAperiodiquesPretes
 				Sinon
@@ -487,14 +487,14 @@ Finsi
  		 
  context[ nbTaches ] [ 3 ]
  
- Pour i allant de 0 a nbTachePeriodiques
+ Pour i allantDe 0 a nbTachePeriodiques
  	context[i][0] = Ci de tachePeriodique_i
  	context[i][1] = Pi de tachePeriodique_i
  	context[i][2] = Di de tachePeriodique_i
  Finpour
  
  Si (il y a un serveur de precise)
- 	Pour i allant de nbTachesPeriodiques a nbTaches
+ 	Pour i allantDe nbTachesPeriodiques a nbTaches
  		context[i][0] = Ci de tacheAperiodique_i
  		context[i][1] = ri de tacheAperiodique_i
  		context[i][2] = 0 
@@ -551,7 +551,7 @@ Sortie :
 
 //Initialisation du context : 
 	- Creation d'un tableau de taches periodiques par ordre de prio : tabPrioPeriodique
-	- Creation d'un tableau de tâches aperiodiques par ordre de prio : tabPrioAperiodique
+	- Creation d'un tableau de taches aperiodiques par ordre de prio : tabPrioAperiodique
 	- Creation d'un tableau qui contient la capacite restante de chaque tache : tabTpsRestant
 init_context()
 
