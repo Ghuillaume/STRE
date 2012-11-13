@@ -250,7 +250,8 @@ Finpour
 		Nous avons donc cherché à implémenté une autre solution permettant de générer des $Ci$ \emph{et} des $Pi$ totalement aléatoire. Après réflexion algorithmique, nous obtenions des chiffres très aléatoires et qui restent cohérents. Cependant les hyperperiodes indues étaient totalement irréalistes (souvent plusieurs centaines de milliers d'unités de temps). Nous avons donc décidé de retenir la première solution, tout en ayant à l'esprit qu'elle doive être améliorer dans une version future.
 
 \section{Tests}
-
+    \subsection{Test de la génération aléatoire}
+    \subsection{Test de la génération controlée}
 
 
 \chapter{Simulateur d'ordonnanceur}
@@ -483,10 +484,10 @@ Finsi
 				
 				\textbf{Algo :}
 					\begin{lstlisting}
-U = 0
+Up = 0
 
 Pour i de 0 a n faire
-    U = U + Ci/Pi
+    Up = Up + Ci/Pi
 Finpour
 					
 afficher "Test de condition necessaire et suffisante pour EDF-TBS : "
@@ -778,7 +779,10 @@ fin tant que
 
 	\section{Tests}
 	
-\chapter{Conclusion}
+
+\chapter*{Conclusion}
+%    Ce projet aura été l'occasion de mettre en application les savoirs acquis durant ce module (Fonctionnement des algorithmes, conditions d'ordonnançabilité, ...). De plus, cela nous a permis de réfléchir à des problématiques inhabituelles comme la génération pseudo-aléatoire de fractions ou plus simplement la gestion des tâches par l'ordonnanceur.
+%    En plus de tout ça, le projet nous a permis de nous exercer à écrire une spécification logicielle et à l'implémenter, à utiliser git et à utiliser le langage de programmation C++. 
 	\section{Problèmes rencontrés}
 		\subsection{Combiner l'aléatoire et le contrôle des valeurs générées}
 			\label{sec:pb_aleatoire}
@@ -809,4 +813,3 @@ fin tant que
 			
 		\subsection{Ajout d'algorithmes}
 			Lorsque nous étions à mi-chemin dans l'avancement du projet, nous avions l'ambition d'ajouter quelques autres algorithmes d'ordonnancement afin d'enrichir notre application. Malheureusement, nous n'avons pas eu le temps d'aller plus loin. Nous proposons donc l'ajout de ces nouveaux algorithmes à la liste des améliorations possibles.
-
