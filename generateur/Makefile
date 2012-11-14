@@ -10,4 +10,4 @@ GenerateurControlee: GenerateurControlee.cpp GenerateurControlee.hpp
 	$(CXX) -c GenerateurControlee.cpp -o GenerateurControlee.o
 	
 clean:
-	-rm *.o
+	-rm *.o Generateur

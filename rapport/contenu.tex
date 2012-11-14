@@ -121,10 +121,8 @@
 	
 \chapter{Analyse du problème}
 	\section{Le générateur de tâches}
-		Dans le cadre de ce mini-projet, les principales difficultés concernent la génération pseudo-aléatoire de fonctions. En effet, il ne s'agit pas réellement d'une génération aléatoire puisqu'en plus de l'incapacité des ordinateur de générer du hasard, le résultat attendu doit être borné et facilement manipulable.Par exemple, nous ne souhaitons pas ce genre de fraction :
-%frac{48}{193}
- car cela donnera des hyperpériodes trop grandes et difficilement manipulables avec kiwi mais plutôt de ce genre :
-% \frac{3}{5}. 
+		Dans le cadre de ce mini-projet, les principales difficultés concernent la génération pseudo-aléatoire de fonctions. En effet, il ne s'agit pas réellement d'une génération aléatoire puisqu'en plus de l'incapacité des ordinateur de générer du hasard, le résultat attendu doit être borné et facilement manipulable.Par exemple, nous ne souhaitons pas de fractions comme ${48 \over 193}$ car cela donnerait des hyperpériodes trop grandes, donc difficilement manipulables avec kiwi mais plutôt de ce genre : ${3 \over 5}$.
+		Le reste du logiciel propose des fonctionnalités basiques : l'utilisateur n'a qu'à rentrer les données lui-même ou à fournir au logiciel directement le fichier qui sera utilisé par l'ordonnanceur par la suite, ce qui n'implique aucun traitement.
 
 	\section{L'ordonnanceur}
 		Après que les tâches aient été crées, un autre problème se pose : comment peut-on ordonnancer les tâches de manière automatique afin de simuler un véritable ordonnanceur ? Pour cela, on identifie deux types d'algorithmes possibles : ceux qui prennent en compte uniquement les tâches périodiques et ceux qui premettent de gérer aussi les tâches apériodiques. Ici, nous allons nous intéresser uniquement aux alogorithmes RM, EDF, BG et TBS.
