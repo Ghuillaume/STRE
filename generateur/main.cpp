@@ -48,46 +48,7 @@ int main(int argc, char** argv) {
 		else {
 			cout << "erreur";
 		}
-	}
-/*	else if (argc == 3) {
-		string arg1 = argv[1];
-		string arg2 = argv[2];
-		
-		if (arg1.compare("-f") == 0) {
-			//fichier en entrée : rien a faire 
-			FILE * pFile;
-			pFile = fopen (argv[2] , "r");
-			if (pFile == NULL){
-				string error_msg = "Erreur lors de l'ouverture du fichier \""
-				  + arg2 + "\". Peut-être n'existe-il pas ?";
-				  cout << error_msg << endl;
-			} 
-			else {
-				fclose (pFile);
-				cout << "Nothing to do." << endl;
-				exit(0);
-			}
-		}
-		else if (arg1.compare("-c") == 0) {
-			//generation Controlee
-			GenerateurControlee genCtr(atoi(arg2.c_str()),);
-		}
-		
-		else {
-			cout << "Arguments incorrects.\n" << USAGE << endl;
-		}
 	}	
-	else if (argc == 4) {
-		string arg1 = argv[1];
-		string arg2 = argv[2];
-		string arg3 = argv[3];
-		
-		if (arg1.compare("-a") == 0) {
-			GenerateurAleatoire genAlea(atoi(arg2.c_str()),atoi(arg3.c_str()));
-		}
-		else 
-			cout << "Arguments incorrects.\n" << USAGE << endl;
-	}*/		
 	else
 		cout << "Arguments incorrects.\n" << USAGE << endl;
 }
