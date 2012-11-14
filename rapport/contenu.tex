@@ -388,7 +388,7 @@ Pour i de 0 a n Faire
 	U = U + Ci/Pi
 Finpour		
 
-Si U <= 1.0 Alors
+Si U <= 1 Alors
 	afficher("On ne peut rien conclure")
 Sinon
 	afficher("Non-ordonnancable")
@@ -407,7 +407,7 @@ Finsi
 				\textbf{Algo :} 
 					\begin{lstlisting}[mathescape]
 U = 0
-UBoundRM = $n * (2^{(1.0 / n)} - 1)$
+UBoundRM = $n * (2^{(1 / n)} - 1)$
 					
 Pour i de 0 a n Faire
 	U = U + Ci/Pi
@@ -420,7 +420,7 @@ Sinon
 Finsi
 					\end{lstlisting}
 					
-					Le test de la condition suffisante de RM est plus complexe, il nécessite de calculer aussi \\ $U_{BoundRM}$ = $n * (2^{(1.0 / n)} - 1)$. Ensuite, il suffit de vérifier ça : \[ U = \sum_{i=1}^{n} {Ci \over Pi}  \le U_{BoundRM} \]
+					Le test de la condition suffisante de RM est plus complexe, il nécessite de calculer aussi \\ $U_{BoundRM}$ = $n (2^{1 \over n} - 1)$. Ensuite, il suffit de vérifier ça : \[ U = \sum_{i=1}^{n} {Ci \over Pi}  \le U_{BoundRM} \]
 			
 			\subsubsection{Condition nécessaire et suffisante EDF}
 				\textbf{Pré-condition :} $n$ représente le nombre de tâches périodiques et il n'y a pas de tâches apériodiques.
@@ -478,7 +478,7 @@ Finsi
 					
 					
 			\subsubsection{Condition nécessaire et suffisante EDF-TBS}
-				\textbf{Pré-condition :} $n$ représente le nombre de tâches périodiques et Us est la largeur de bande CPU allouée au serveur.
+				\textbf{Pré-condition :} $n$ représente le nombre de tâches périodiques et $U_s$ est la largeur de bande CPU allouée au serveur.
 				
 				\textbf{Post-condition :} On obtient une réponse binaire : le système est ordonnançable ou non.
 				
@@ -493,12 +493,15 @@ Pour i de 0 a n Faire
 Finpour
 					
 afficher "Test de condition necessaire et suffisante pour EDF-TBS : "
-Si (Up + Us <= 1.0) Alors
+Si (Up + Us <= 1) Alors
 	afficher "ordonnancable"
 Sinon
 	afficher "non-ordonnancable"
 Finsi
 					\end{lstlisting}
+					
+					Pour vérifier la condition nécessaire et suffisante de TBS, il est juste nécessaire de tester $U_p + U_s \le 1 $.
+					
 	
 		\subsection{Simulation d'ordonnancement}
 			Le simulateur d'ordonnancement est découpé en deux algorithmes principaux :
