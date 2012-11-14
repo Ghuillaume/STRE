@@ -5,8 +5,6 @@ Ordonnanceur::Ordonnanceur(Conteneur* conteneur, Traceur* traceur) : conteneur(c
 }
 
 Ordonnanceur::~Ordonnanceur() {
-	delete traceur;
-	delete conteneur;
 }
 
 int Ordonnanceur::RM(int serveur) {
