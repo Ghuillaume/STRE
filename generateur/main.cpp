@@ -28,12 +28,21 @@ int main(int argc, char** argv) {
 			// Generation Aleatoire
 			cout << endl << endl << "Nombre de Taches Periodiques: ";
 			cin >> nbTachesP;
+			if(nbTachesP == 0) {
+				cout << "ATTENTION : l'application doit générer au moins une tache périodique" << endl;
+				exit(0);
+			}
 			cout << "Pourcentage d'Utilisation du CPU (periodique): ";
 			cin >> utCPUP;
 			cout << endl << endl << "Nombre de Taches Aperiodiques: ";
 			cin >> nbTachesA;
-			cout << "Pourcentage d'Utilisation du CPU (aperiodique): ";
-			cin >> utCPUA;
+			if(nbTachesA != 0) {
+				cout << "Pourcentage d'Utilisation du CPU (aperiodique): ";
+				cin >> utCPUA;
+			}
+			else {
+				utCPUA = 0;
+			}
 			
 			GenerateurAleatoire genAl(nbTachesP,nbTachesA,utCPUP,utCPUA);
 		}
@@ -41,6 +50,10 @@ int main(int argc, char** argv) {
 			// Generation Controlee
 			cout << endl << endl << "Nombre de Taches Periodiques: ";
 			cin >> nbTachesP;
+			if(nbTachesP == 0) {
+				cout << "ATTENTION : l'application doit générer au moins une tache périodique" << endl;
+				exit(0);
+			}
 			cout << endl << endl << "Nombre de Taches Aperiodiques: ";
 			cin >> nbTachesA;
 			GenerateurControlee genContr(nbTachesP,nbTachesA);

@@ -5,6 +5,8 @@ Ordonnanceur::Ordonnanceur(Conteneur* conteneur, Traceur* traceur) : conteneur(c
 }
 
 Ordonnanceur::~Ordonnanceur() {
+	delete traceur;
+	delete conteneur;
 }
 
 int Ordonnanceur::RM(int serveur) {
@@ -206,16 +208,18 @@ int Ordonnanceur::RM(int serveur) {
 		}
 	}
 	
-	cout << endl << "Temps de réponses :" << endl;
-	for(unsigned int i = 0 ; i < tabTpsReponse.size() ; i++) {
-		if(tabTpsReponse[i] > 0)
-			cout << "\tR" << tabPrioriteAperiodique[i]->getNum() << " : " << tabTpsReponse[i] << endl;
-		else
-			cout << "\tR" << tabPrioriteAperiodique[i]->getNum() << " : " << "Tâche non terminée sur l'hyperperiode" << endl;
+	if (serveur == BG) {
+		cout << endl << "Temps de réponses :" << endl;
+		for(unsigned int i = 0 ; i < tabTpsReponse.size() ; i++) {
+			if(tabTpsReponse[i] > 0)
+				cout << "\tR" << tabPrioriteAperiodique[i]->getNum() << " : " << tabTpsReponse[i] << endl;
+			else
+				cout << "\tR" << tabPrioriteAperiodique[i]->getNum() << " : " << "Tâche non terminée sur l'hyperperiode" << endl;
+		}
 	}
-	
+		
 	cout << endl << nb_commutation << " changements de contextes, et " << nb_preemption << " préemptions." << endl << endl;
-	
+
 	return 0;
 }
 
@@ -257,7 +261,6 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 		else {
 			this->traceur->declarationTache(numTacheA,"TBS");
 		}
-		// TODO : classer les tâches apériodique par ordre de Ri
 		// Parcours des tâches apériodiques pour les mettre dans la matrice
 		for(int i = nbTachesP ; i < nbTaches ; i++) {
 			context[i][0] = tachesA.at(i-nbTachesP)->getCi();
@@ -289,11 +292,6 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 	while( t < hyperPeriode ) {
 	
 		task_executed_before = task_executed;
-	
-		// Affichage du contexte pour debuggage
-		/*cout << "\t\tN\tExec\tDeadline" << endl;
-		for(int i = 0 ; i < nbTaches ; i++)
-			cout << "\t\tT" << i+1 << "\t" << context[i][0] << "\t" << context[i][1] << endl;*/
 		
 		// On vérifie si l'ordonnanceur doit élire une tâche (seulement si une tache se réveille ou se termine)
 		// Une tache se réveille si t=0 (toutes les tâches se réveillent à t=0 dans le tp) ou si on est sur sa deadline
@@ -525,14 +523,15 @@ int Ordonnanceur::EDF(int serveur, int bandePassanteTBS) {
 	
 	cout << "UTC total: " << totalUTC << endl;	
 	
-	cout << endl << "Temps de réponses :" << endl;
-	for(unsigned int i = 0 ; i < tabTpsReponse.size() ; i++) {
-		if(tabTpsReponse[i] > 0)
-			cout << "\tR" << tachesA[i]->getNum() << " : " << tabTpsReponse[i] << endl;
-		else
-			cout << "\tR" << tachesA[i]->getNum() << " : " << "Tâche non terminée sur l'hyperperiode" << endl;
+	if(serveur != NO_SERV) {
+		cout << endl << "Temps de réponses :" << endl;
+		for(unsigned int i = 0 ; i < tabTpsReponse.size() ; i++) {
+			if(tabTpsReponse[i] > 0)
+				cout << "\tR" << tachesA[i]->getNum() << " : " << tabTpsReponse[i] << endl;
+			else
+				cout << "\tR" << tachesA[i]->getNum() << " : " << "Tâche non terminée sur l'hyperperiode" << endl;
+		}
 	}
-	
 	cout << endl << nb_commutation << " changements de contextes, et " << nb_preemption << " préemptions." << endl;
 	return 0;
 }

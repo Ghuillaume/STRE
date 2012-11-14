@@ -108,7 +108,7 @@
 				\end{itemize}
 		
 			\subsection{Simulation d'ordonnancement}
-			
+				
 			\subsection{Ecriture du fichier de trace}
 				Pendant la simulation de l'ordonnancement, l'application génére les différentes lignes qui composent le fichier de trace exploitable par Kiwi. Ce fichier se décompose en 2 parties :
 					\begin{itemize}
@@ -168,7 +168,7 @@
 	\section{Générateur}
 		\subsection{Choix du mode}
 			\textbf{Pré-condition :} Le programme vient d’être lancé.
-			
+
 			\textbf{Post-condition :} Un choix valide a été effectué.
 			
 			\textbf{Objectif :} Permettre de choisir entre la génération aléatoire et la génération controlée.
@@ -498,78 +498,73 @@ Finsi
 			\subsubsection{poll\_needed}
 				\label{sec:algo_poll}
 
-				\textbf{Pré-condition : un algo d'ordonnancement a été lancé} 
+				\textbf{Pré-condition :} un algo d'ordonnancement a été lancé
 				
-				\textbf{Post-condition :retourne un booléan qui informe du besoin du besoin d'élire un nouvelle tâche à exécuter} 
+				\textbf{Post-condition :}retourne un booléan qui informe du besoin du besoin d'élire un nouvelle tâche à exécuter
 				
-				\textbf{Objectif : Savoir si on doit élire une nouvelle tâche ou non} 
+				\textbf{Objectif :} Savoir si on doit élire une nouvelle tâche ou non
 				
 				\textbf{Algo :} 
 					\begin{lstlisting}
 					
 	bool need_to_poll = false;
-	//Ordonnanceur appele que si reveil ou terminaison de tache
-		//verification du reveil d'une tache
-			//Taches Periodiques
-			
-			Pour tachePeriodique dans context Faire
-				Si time = (date Reveil de tachePeriodique) Alors
-					ajout de tachePeriodique dans tabPeriodiquesPretes
-					need_to_poll = true
-				Finsi
-			Finpour
-			
-			//Taches Aperiodiques
-			Si (un serveur de taches a ete specifie) Alors
-				Pour tacheAperiodique dans context Faire
-					Si time = (date Reveil de tacheAperiodique) Alors
-						ajout de tacheAperiodique dans tabAperiodiquePretes
-						need_to_poll = true
-						Si (le serveur de tache aperiodique choisi est TBS) Alors
-							calcul de dk pour tacheAperiodique
-							stockage dans context
-						Finsi
-					Finsi
-				Finpour
-			Finsi
-			
-		//verification de la terminaison de la tache courante executee
-		
-		Si (la tache courante executee n'est PAS un temps creux) Alors
-			Si (la capacite restante de tache courante executee = 0) Alors
+	
+	//verification du reveil d'une tache Periodique
+		Pour tachePeriodique dans context Faire
+			Si time = (date Reveil de tachePeriodique) Alors
+				ajout de tachePeriodique dans listePeriodiquesPretes
 				need_to_poll = true
-				//Suppression de la tache d'un des tableaux de taches pretes
-				Si (la tache courante executee est une tache Aperiodique) Alors
-					suppression de la tache de tabAperiodiquesPretes
-				Sinon
-					suppression de la tache de tabPeriodiquesPretes
-				Finsi
-		
 			Finsi
-		Finsi
+		Finpour
 		
-		retourne need_to_poll
+	//verification du reveil d'une tache nAperiodiques
+	Si (un serveur de taches a ete specifie) Alors
+		Pour tacheAperiodique dans context Faire
+			Si time = (date Reveil de tacheAperiodique) Alors
+				ajout de tacheAperiodique dans listeAperiodiquePretes
+				need_to_poll = true
+				Si (le serveur de tache aperiodique choisi est TBS) Alors
+					calcul de dk pour tacheAperiodique
+					stockage dans context
+				Finsi
+			Finsi
+		Finpour
+	Finsi
+			
+	//verification de la terminaison de la tache courante executee
+	Si (la tache courante executee n'est PAS un temps creux) Alors
+		Si (la capacite restante de tache courante executee = 0) Alors
+			need_to_poll = true
+			Si (la tache courante executee est une tache Aperiodique) Alors
+				suppression de la tache de listeAperiodiquesPretes
+			Sinon
+				suppression de la tache de listePeriodiquesPretes
+			Finsi
+	
+		Finsi
+	Finsi
+		
+	retourne need_to_poll
 				
 					\end{lstlisting}
 				
 			\subsubsection{init\_context}
-				\textbf{Pré-condition :} 
+				\textbf{Pré-condition :} un algo d'ordonnancement a été lancé
 				
-				\textbf{Post-condition :} 
+				\textbf{Post-condition : }le context d'exécution des taches a été initialisé
 				
-				\textbf{Objectif :} 
-				
+				\textbf{Objectif : }initialiser le contexte d'exécution des taches (prochain reveil de tache, prochaine deadline, capacite restante)
+				 \begin{itemize}
+				 	\item creation d'un tableau contenant toutes les taches (taches periodiques puis taches aperiodiques)
+ 				 	\item le tableau context est un tableau de 3 case de large et nbTaches de long
+ 				 	\item pour les taches periodiques :
+ 		. 				\item[] indice -> Capacite restant | prochaine date de reveil | prochaine date echeance
+ 					\item pour les taches aperiodiques : 
+ 						\item[] indice -> Capacite restante | date de reveil | date echeance ( si TBS sinon 0)
+				\end{itemize}
 				\textbf{Algo :} 
 					\begin{lstlisting}
-
-//Initialisation du context : 
- 	- creation d'un tableau contenant toutes les taches (taches periodiques puis taches aperiodiques)
- 	- le tableau context est un tableau de 3 case de large et nbTaches de long
- 	- pour les taches periodiques :
- 		. indice -> Capacite restant | prochaine date de reveil | prochaine date echeance
- 	- pour les taches aperiodiques : 
- 		. indice -> Capacite restante | date de reveil | date echeance ( si TBS sinon 0)
- 		 
+ 
  context[ nbTaches ] [ 3 ]
  
  Pour i allantDe 0 a nbTachePeriodiques Faire
@@ -588,17 +583,17 @@ Finsi
 					\end{lstlisting}			
 					
 			\subsubsection{MAJ\_context}
-				\textbf{Pré-condition :} 
+				\textbf{Pré-condition : }le contexte à été initialisé
 				
-				\textbf{Post-condition :} 
+				\textbf{Post-condition : }le contexte a été mis a jour 
 				
-				\textbf{Objectif :} 
+				\textbf{Objectif : }mettre a jour le contexte pour faire état des reveils de taches et vérifier le dépassement d'échéance 
 				
 				\textbf{Algo :} 
 					\begin{lstlisting}
-					
+								
 Pour tachePeriodique dans context Faire
-	//verification du depassement d'echeance Alors
+	//verification du depassement d'echeance 
 	Si (time = (date echeance tachePeriodique) ) Alors
 		Si ( (capacite restante de tachePeriodique) > 0 ) Alors
 			Message("Depassement d'echeance pour la tache : T" + tachePeriodique)
@@ -614,31 +609,28 @@ Pour tachePeriodique dans context Faire
 Finpour
 
 //Verification de depassement d'echeance pour les taches aperiodiques
-//Si serveur de taches aperiodiques est TBS Alors
-	Si (serveur = TBS) Alors
-		Pour tacheAperiodique dans context Faire
-			Si (time = (deadline de tacheAperiodique) ) Alors
-				Si ( (capacite restante tacheAperiodique) > 0 ) Alors
-					Message("Depassement d'echeance pour la tache : R" + tacheAperiodique)
-					quitter
-				Finsi
+Si (serveur = TBS) Alors
+	Pour tacheAperiodique dans context Faire
+		Si (time = (deadline de tacheAperiodique) ) Alors
+			Si ( (capacite restante tacheAperiodique) > 0 ) Alors
+				Message("Depassement d'echeance pour la tache : R" + tacheAperiodique)
+				quitter
 			Finsi
-		Finpour
-	Finsi
+		Finsi
+	Finpour
 Finsi
-		
 					\end{lstlisting}
 			\subsubsection{Rate Monotonic + Serveur}
-				\textbf{Pré-condition :} 
+				\textbf{Pré-condition :} le conteneur contient des taches \& RM a été choisi
 				
-				\textbf{Post-condition :} 
+				\textbf{Post-condition :} une séquence d'ordonnancement est délivrée
 				
-				\textbf{Objectif :} 
+				\textbf{Objectif :} Simuler un ordonnancement temps reel selon RM
 				
 				\textbf{Algo :} 
 					\begin{lstlisting}
-Entree : 
-Sortie :  
+Entree : Le conteneur de tache & un serveur si il y a des taches aperiodiques
+Sortie : Affichage de l'ordonnancement
 
 //Initialisation du context : 
 	- Creation d'un tableau de taches periodiques par ordre de prio : tabPrioPeriodique
@@ -650,9 +642,8 @@ int task_executed := -1
 bool tache_elue = false;
 
 Tantque (t < getHyperPeriode()) Faire
-	
     Booleen need_to_poll = poll_needed()
-	
+    
     Si(need_to_poll) Alors
         tache_elue = false
         Pour taches dans tabPrioPeriodique Faire
@@ -661,9 +652,8 @@ Tantque (t < getHyperPeriode()) Faire
         		tache_elue = true;
         	Finsi 
         Finpour
-        // si Aucune tache n'a ete choisie -> temps creux
         Si tache_elue == false Alors
-        	//temps_creux
+        	//temps_creux ou selection d'une tache apriodique
         Finsi
     finsi
 	
@@ -677,24 +667,22 @@ Fintantque
 					
 			\subsubsection{Earliest Deadline First + Serveur}
 			
-				\textbf{Pré-condition :} 
+				\textbf{Pré-condition :} Le conteneur contient des taches \& EDF a été choisi
 				
-				\textbf{Post-condition :} 
+				\textbf{Post-condition :} une séquence d'ordonnancement est délivrée
 				
-				\textbf{Objectif :} 
+				\textbf{Objectif :} Simuler un ordonnancement temps reel selon EDF
 				
 				\textbf{Algo :} 
-					\begin{lstlisting}
-Entree : 
-Sortie :  
+					\begin{lstlisting}[mathescape]
+Entree : le conteneur de tache & un serveur si il y a des taches aperiodiques
+Sortie :  Affichage de l'ordonnancement
 
-//initialisation du contexte d'execution
 init_context()
 int t := 0
 int task_executed := -1
 
 Tantque (t < getHyperPeriode()) Faire
-	
 	Booleen need_to_poll = poll_needed()
 	
 	Si(need_to_poll) Alors
@@ -709,7 +697,6 @@ Tantque (t < getHyperPeriode()) Faire
 			task_executed = temps_creux
 			
 			//election de la tache Periodique prete la plus prioritaire
-			
 			Pour tachePeriodiquePrete dans tabPeriodiquesPretes Faire
 				Si ( deadlineProche > (prochaine date echeance tachePeriodiquePrete) ) Alors
 					deadlineProche = prochaine date echeance tachePeridiodiquePrete
@@ -735,7 +722,6 @@ Tantque (t < getHyperPeriode()) Faire
 			Si (serveur == TBS) Alors
 				Pour tacheAperiodiquePrete dans tabAperiodiquesPretes Faire
 					Si ( (dk de tacheAperiodiquePrete) < deadlineProche ) Alors
-						//La tache Aperiodique est plus prioritaire
 						task_executed = tacheAperiodiquePrete
 					Sinon
 						Si ( (dk de tacheAperiodiquePrete) = deadlineProche ) Alors
@@ -749,7 +735,7 @@ Tantque (t < getHyperPeriode()) Faire
 		Finsi
 	Finsi
 	
-	Capacite_restante de task_executed--
+	Capacite_restante de task_executed$--$
 	t++
 	
 	MAJ_context()

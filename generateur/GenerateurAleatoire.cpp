@@ -7,7 +7,9 @@ GenerateurAleatoire::GenerateurAleatoire(int nbTachesP,int nbTachesA,int utCPUP,
 	tabriA_ = Tableau(nbTachesA);
 	tabCiA_ = Tableau(nbTachesA);
 	this->generationPeriodique();
-	this->generationAperiodique();
+	if(nbTachesA_ != 0) {
+		this->generationAperiodique();
+	}
 	this->ecritureFichier();
 }
 GenerateurAleatoire::~GenerateurAleatoire() {
