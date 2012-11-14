@@ -7,7 +7,7 @@ Auteur ...... : BONCORPS, CHARON, PAGES
 #ifndef GENERATEUR_ALEATOIRE_H
 #define GENERATEUR_ALEATOIRE_H
 
-#define FILEOUT jeuDeTaches.txt
+#define FILEOUT "jeuDeTaches.txt"
 
 #include <fstream>
 #include <iostream>

@@ -3,6 +3,5 @@ faire un ctrl+F des todo sur tout le code
 
 Rapport :
 	- ajouter des liens d'ancrage aux références (ref -> label)
-	- revoir toute l'organisation du rapport (faire ça selon ce qu'il y a de marqué dans le sujet)
 	- Y a pas mal de texte dans les environnements lstlisting (le code), il faudrait l'enlever ! si besoin de texte pour décrire l'algo, le foutre en dehors !!
 	- faire un ctrl+F des TODO sur le rapport
