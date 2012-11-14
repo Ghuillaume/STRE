@@ -108,29 +108,6 @@
 				\end{itemize}
 		
 			\subsection{Simulation d'ordonnancement}
-
-				Avant même de commencer à réfléchir sur les algorithmes d'ordonnancement, nous avons réfléchi à la structure de ces algorithmes. Nous verrons dans la conclusion que ça n'était pas forcément la bonne solution, et qu'il aurait mieux valu extraire cette structure de l'algorithme d'ordonnancement.\\
-				
-				Premièrement, un ordonnanceur a besoin d'avoir plusieurs informations à propos des tâches qui lui demandent du temps d'exécution. Par exemple, l'algorithme EDF, qui élit une tâche selon son $D_i$, doit bien entendu connaître le $D_i$ des différentes tâches qui attendent leur exécution. Toutes ces informations dont ont besoin les algorithmes, et qui seront stockées dans différentes structures, devront être initialisées en tout début de fonction afin que l'ordonnanceur puisse s'en servir à sa guise plus tard. Nous appelerons toutes ces informations le \og contexte d'exécution \fg.
-				
-				Bien entendu, ça n'est pas à l'ordonnanceur de mettre à jour le contexte d'exécution. On réservera donc la fin de chaque fonction d'ordonnancement à la mise à jour de ces structures.
-				
-				Enfin, l'ordonnanceur ne doit pas être appelé à chaque unité de temps écoulée mais seulement : au réveil d'une tâche, à la fin de l'exécution d'une tâche, et au début d'une nouvelle période d'une tâche périodique.\\
-				
-				Voici la structure finale des algorithmes d'ordonnancement :
-				\begin{enumerate}
-					\item Initialisation du contexte d'exécution ;
-					\item Jusqu'à la fin de l'hyperpériode :
-					\begin{enumerate}
-						\item Vérifier si l'ordonnanceur doit être appelé ;
-						\item Si oui, exécuter l'algorithme d'ordonnancement ;
-						\item Affichage du résultat à l'écran ;
-						\item Mettre à jour le contexte d'exécution .
-					\end{enumerate}
-					\item Affichage des statistiques sur l'ordonnancement (nombre de changements de contexte, de préemptions, temps de réponse des tâches apériodiques) .
-				\end{enumerate}
-				
-				Une fois cette structure mise en place, il suffit simplement d'implémenter un algorithme d'ordonnancement qui va tout simplement retourner le numéro de la tâche qu'il a élue en utilisant les informations qui sont mises à disposition par le contexte d'exécution.
 			
 			\subsection{Ecriture du fichier de trace}
 				Pendant la simulation de l'ordonnancement, l'application génére les différentes lignes qui composent le fichier de trace exploitable par Kiwi. Ce fichier se décompose en 2 parties :
@@ -143,6 +120,42 @@
 	
 	
 \chapter{Analyse du problème}
+	\section{Le générateur de tâches}
+		Dans le cadre de ce mini-projet, les principales difficultés concernent la génération pseudo-aléatoire de fonctions. En effet, il ne s'agit pas réellement d'une génération aléatoire puisqu'en plus de l'incapacité des ordinateur de générer du hasard, le résultat attendu doit être borné et facilement manipulable.Par exemple, nous ne souhaitons pas ce genre de fraction :
+%frac{48}{193}
+ car cela donnera des hyperpériodes trop grandes et difficilement manipulables avec kiwi mais plutôt de ce genre :
+% \frac{3}{5}. 
+
+	\section{L'ordonnanceur}
+		Après que les tâches aient été crées, un autre problème se pose : comment peut-on ordonnancer les tâches de manière automatique afin de simuler un véritable ordonnanceur ? Pour cela, on identifie deux types d'algorithmes possibles : ceux qui prennent en compte uniquement les tâches périodiques et ceux qui premettent de gérer aussi les tâches apériodiques. Ici, nous allons nous intéresser uniquement aux alogorithmes RM, EDF, BG et TBS.
+		
+		Pour unifier le fonctionnement de tous les algorithmes, il convient alors de fédérer les manières de représenter les tâches en mémoire afin de ne pas reparser le fichier à chaque ordonnancement. Pour pouvoir appeler à la suite les algorithmes, nous avons opté pour la solution de créer un objet conteneur qui sauvegardera des objets tâche apériodique et périodique dans des vecteurs afin d'y accéder facilement.
+		Les objets tâches comportent les attributs spécifiques Ci, Pi et Di ou ri et Ci en fonction de leur type. De cette manière, en utilisant des accesseurs, il sera facile de récupérer les diverses informations sur les tâches pour construire la politique d'ordonancement et effectuer les tests de conditions d'ordonnançabilité.
+
+		Avant même de commencer à réfléchir sur les algorithmes d'ordonnancement, nous avons réfléchi à la structure de ces algorithmes. Nous verrons dans la conclusion que ça n'était pas forcément la bonne solution, et qu'il aurait mieux valu extraire cette structure de l'algorithme d'ordonnancement.\\
+		
+		Premièrement, un ordonnanceur a besoin d'avoir plusieurs informations à propos des tâches qui lui demandent du temps d'exécution. Par exemple, l'algorithme EDF, qui élit une tâche selon son $D_i$, doit bien entendu connaître le $D_i$ des différentes tâches qui attendent leur exécution. Toutes ces informations dont ont besoin les algorithmes, et qui seront stockées dans différentes structures, devront être initialisées en tout début de fonction afin que l'ordonnanceur puisse s'en servir à sa guise plus tard. Nous appelerons toutes ces informations le \og contexte d'exécution \fg.
+		
+		Bien entendu, ça n'est pas à l'ordonnanceur de mettre à jour le contexte d'exécution. On réservera donc la fin de chaque fonction d'ordonnancement à la mise à jour de ces structures.
+		
+		Enfin, l'ordonnanceur ne doit pas être appelé à chaque unité de temps écoulée mais seulement : au réveil d'une tâche, à la fin de l'exécution d'une tâche, et au début d'une nouvelle période d'une tâche périodique.\\
+		
+		Voici la structure finale des algorithmes d'ordonnancement :
+		\begin{enumerate}
+			\item Initialisation du contexte d'exécution ;
+			\item Jusqu'à la fin de l'hyperpériode :
+			\begin{enumerate}
+				\item Vérifier si l'ordonnanceur doit être appelé ;
+				\item Si oui, exécuter l'algorithme d'ordonnancement ;
+				\item Affichage du résultat à l'écran ;
+				\item Mettre à jour le contexte d'exécution .
+			\end{enumerate}
+			\item Affichage des statistiques sur l'ordonnancement (nombre de changements de contexte, de préemptions, temps de réponse des tâches apériodiques) .
+		\end{enumerate}
+		
+		Une fois cette structure mise en place, il suffit simplement d'implémenter un algorithme d'ordonnancement qui va tout simplement retourner le numéro de la tâche qu'il a élue en utilisant les informations qui sont mises à disposition par le contexte d'exécution.
+
+
 
 
 \chapter{Présentation de la solution}
