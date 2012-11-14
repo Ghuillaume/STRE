@@ -1,11 +1,3 @@
-%﻿1) Spécification de l’environnement 
-%        2) Specification du logiciel : Generation Controlée
-%                2.1 Fonctionnalité
-%                2.2 Decompo fonctionnelle
-%        3) Conception fonctionnelle
-%        4) Definition de la réalisation 
-%        5) Réalisation 
-%        6) Tests
 \chapter*{Introduction}
 \addcontentsline{toc}{chapter}{Introduction}
 
@@ -27,57 +19,140 @@
 	\end{figure}
 	\FloatBarrier
 
-\chapter{Générateur de tâches}
-	\label{chap:1}
-	
-	\section{Spécification de l’environnement}
-	
-	Cette application offre la possibilité de créer un fichier contenant un jeu de tâches (périodiques et apériodiques non critiques).
-	Dans un premier temps, le programme permet de générer manuellement ce jeu de tâche en offrant une interface minimaliste.
-	Dans un deuxième temps, il est possible de générer automatiquement ce fichier en fournissant des contraintes à respecter pour les tâches périodiques et apériodiques.
-	
-	
-	Lorsque le programme est lancé, l’utilisateur doit choisir le mode de génération. Il rentre les données nécessaires au bon déroulement du mode. Le programme crée un fichier qui contient le résultat de la génération de tâches.
 
-
-	\section{Spécification du logiciel}
-
-		\subsection{Explication du choix du langage}
+\chapter{Cahier des charges}
 	
-			\label{sec:langage}
-			Nous avons opté pour le langage C++ pour réaliser ce projet car celui-ci possède un certain nombre d'avantages. Il s'agit d'un langage orienté objet très utilisé dans le monde et de nombreux outils libres sont disponibles pour l'utiliser (comme GCC pour la compilation par exemple). De plus, la documentation correspondante est très facilement accessible dans la littérature ou sur le web.
+	\section{Générateur}
+		Cette application offre la possibilité de créer un fichier contenant un jeu de tâches (périodiques et apériodiques non critiques).
+		Dans un premier temps, le programme permet de générer manuellement ce jeu de tâche en offrant une interface minimaliste.
+		Dans un deuxième temps, il est possible de générer automatiquement ce fichier en fournissant des contraintes à respecter pour les tâches périodiques et apériodiques.
+	
+	
+		Lorsque le programme est lancé, l’utilisateur doit choisir le mode de génération. Il rentre les données nécessaires au bon déroulement du mode. Le programme crée un fichier qui contient le résultat de la génération de tâches.
 		
-			Bien que le travail qui nous a été demandé ne requiert pas la maîtrise d'une programmation bas niveau, le langage C++ nous apparait en cohérence avec le thème abordé par le projet (les systèmes temps réel embarqués).
-\newpage
-		\subsection{Fonctionnalités}
-		
-			\begin{figure}
+			\begin{figure}[!h]
 				\centering
 				\includegraphics[scale=0.9]{img/schema_gen.png}
 				\caption{Fonctionnement et modules du générateur.}
 			\end{figure}
 			\FloatBarrier
 		    
-			\subsubsection{Choix du mode}
+			\subsection{Choix du mode}
 				Dans ce premier module, on choisit le mode d’utilisation du logiciel en fonction de ce que souhaite l’utilisateur. Pour cela, il peut soit renseigner sous forme d’arguments les différentes données, soit en sélectionnant dans le menu ses préférences. \\
 
 				Parmi les choix qui lui sont offerts, on retrouve les cas présentés dans le sujet du projet (génération aléatoire ou contrôlée et tâches périodiques ou non) mais aussi la possibilité de renseigner un fichier contenant déjà toutes les informations sur les tâches. Dans le premier cas, l’utilisateur devra renseigner ensuite le nombre de tâches concernées tandis que dans l’autre cas, le fichier ne sera pas interprété et ce programme s’arrêtera.
 
 
-			\subsubsection{Génération aléatoire de tâches}
+			\subsection{Génération aléatoire de tâches}
 				Le premier type de génération permet de générer automatiquement des tâches. L'utilisateur devra renseigner le nombre de tâches périodiques et apériodiques à générer ainsi que le pourcentage d'utilisation du CPU. Ceci permet de générer des fichiers de test aléatoire qui seront visualisable par la suite.\\
 				Lors de la génération, le système calcule les différentes valeurs caractéristiques des tâches périodiques ($C_i$, $P_i$, $D_i$) et des tâches apériodiques ($r_i$, $C_i$) en accord avec le pourcentage d'utilisation du CPU. 
 
-			\subsubsection{Génération contrôlée de tâches}
+			\subsection{Génération contrôlée de tâches}
 				Le deuxième type de génération fait appel à l'utilisateur pour renseigner chacune des valeurs de chaque tâche. De cette manière, l'utilisateur va pouvoir tester plus facilement des cas spécifiques et donc observer de manière plus précise le fonctionnement de l'ordonnanceur par la suite. \\
 				Lors de la génération, pour toutes les tâches périodiques il devra renseigner les $C_i$, $P_i$ et $D_i$, c'est-à-dire respectivement les durées d'exécution maximales, les périodes d'activation et le délai critique). Dans le cas où il y a aussi des tâches apériodiques, il devra renseigner aussi $r_i$ (la date de réveil) et $C_i$.
 
-			\subsubsection{Écriture dans un fichier}
+			\subsection{Écriture dans un fichier}
 				Ce module a pour fonction d’écrire dans un fichier les données contenues dans un flux (= stream)  et calculées à partir des deux modules précédents de génération. L’intérêt de séparer ces fonctions est double : il est plus pratique de factoriser le code à travers une seule fonction d’écriture appelée par les différentes générations et cela facilite la maintenance.
+	
+	\section{Ordonnanceur}
+		Cette application s'incrit à la suite du générateur de tâches. Elle offre, après récupération des informations du fichier issus du générateur, la possibilité de vérifier l'ordonnançabilité d'un jeu de tâches fournie. Ceci nous permet de savoir si les contraintes temporelles sont respectées. 
+
+		La deuxième fonctionnalité de ce programme est d'offrir un environnement de simulation selon plusieurs politiques d'ordonnancements :
+		\begin{itemize}
+			\item pour les tâches périodiques : \textbf{RM} et \textbf{EDF}
+			\item pour les tâches apériodiques non critiques :  \textbf{BG} et \textbf{TBS}
+		\end{itemize}
+		Cet environnement, après simulation, fourni à l'utilisateur des résultats de performances relatifs à l'ordonnancement : 
+		\begin{itemize}
+			\item le nombre de commutations de contexte,
+			\item le nombre de préemptions
+			\item les temps de réponse des tâches apériodiques.
+		\end{itemize}
+	
+		A la suite de la simulation, le programme doit fournir un fichier de trace de la séquence d'ordonnancement. Ce fichier est au format \og ktr \fg et est exploitable par l'outil Kiwi. 
+		Kiwi est un outil graphique développé à l'Université polytechnique de Valence en Espagne. Il permet, à partir d'un fichier texte normé, d'afficher un graphe d'ordonnancement. Nous détaillerons par la suite le contenu du fichier de trace mais il est important pour la suite de savoir que le fichier doit être remplit de manière chronologique.
+		
+		Le programme final devra pouvoir être exécutable en ligne de commande.\\
+		
+		En entrée : le nom du fichier contenant le jeu de tâches périodiques et apériodiques pour lesquelles on veut simuler l'ordonnancement.\\
+		
+		En sortie : un ou plusieurs fichiers .ktr utilisable avec l'outil Kiwi et contenant la séquence d'ordonnancement. Le programme affichera également quelques résultats via la sortie standard.\\
+	
+		Afin de faciliter la prise en main du programme, on proposera un menu succint présentant les différentes fonctionnalités qui s'offrent à l'utilisateur.
+		
+			\begin{figure}[!h]
+				\centering
+				\includegraphics[scale=0.55]{ordo_fct_diag.png}
+				\caption{Diagramme des fonctionnalités}
+			\end{figure}
+			\FloatBarrier
+			
+			\subsection{Parsage du fichier d'entrée}
+				Bien que le fichier en entrée soit, dans le cas général, un fichier écrit par notre générateur de tâche et donc normalement correct, nous ne sommes pas à l'abris de voir arriver en entrée un fichier corrompu. Soit par l'utilisateur lui-même, soit de n'importe quel autre moyen que ce soit. De plus, la syntaxe du fichier en entrée est relativement simple, ce qui permet à un utilisateur lambda de créer son propre fichier sans passer par notre générateur de tâches.
+				
+				Sachant que le fichier sera parsé suivant le \emph{pattern} de spécification des tâches utilisé par notre générateur, il est indispensable de vérifier la bonne syntaxe du fichier avant de récupérer quoi que ce soit. Cette vérification est effectuée grâce à une expression régulière représentant toutes les syntaxes possible pour une ligne du fichier. Dans les faits, cette \emph{Regex} est divisée en deux :
+				\begin{itemize}
+					\item Pour les tâches périodiques : \verb|^T[0-9]+: [0-9]+,[0-9]+,[0-9]+$| ;
+					\item Pour les tâches apériodiques : \verb|^R[0-9]+: [0-9]+,[0-9]+$| .
+				\end{itemize}
+				Chacune des lignes du fichier doit donc respecter soit l'une, soit l'autre expression régulière.\\
+				
+				Une fois la syntaxe vérifiée, il est très aisé de travailler le fichier ligne par ligne pour en extraire les informations nécessaires grâce aux fonctions sur les \emph{string}. Chacune des tâches sera ajouter à un Conteneur de tâches qui sera ensuite passé à l'ordonnanceur pour que celui-ci puisse travailler dessus.
+			
+			\subsection{Analyse d'ordonnançabilité}
+				On fait tous les calculs en même temps :
+				\begin{itemize}
+					\item Condition nécessaire pour l'ordonnançabilité du jeu de tâches avec RM ;
+					\item Condition suffisante avec RM ;
+					\item Condition suffisante et nécessaire avec EDF.
+				\end{itemize}
+		
+			\subsection{Simulation d'ordonnancement}
+
+				Avant même de commencer à réfléchir sur les algorithmes d'ordonnancement, nous avons réfléchi à la structure de ces algorithmes. Nous verrons dans la conclusion que ça n'était pas forcément la bonne solution, et qu'il aurait mieux valu extraire cette structure de l'algorithme d'ordonnancement.\\
+				
+				Premièrement, un ordonnanceur a besoin d'avoir plusieurs informations à propos des tâches qui lui demandent du temps d'exécution. Par exemple, l'algorithme EDF, qui élit une tâche selon son $D_i$, doit bien entendu connaître le $D_i$ des différentes tâches qui attendent leur exécution. Toutes ces informations dont ont besoin les algorithmes, et qui seront stockées dans différentes structures, devront être initialisées en tout début de fonction afin que l'ordonnanceur puisse s'en servir à sa guise plus tard. Nous appelerons toutes ces informations le \og contexte d'exécution \fg.
+				
+				Bien entendu, ça n'est pas à l'ordonnanceur de mettre à jour le contexte d'exécution. On réservera donc la fin de chaque fonction d'ordonnancement à la mise à jour de ces structures.
+				
+				Enfin, l'ordonnanceur ne doit pas être appelé à chaque unité de temps écoulée mais seulement : au réveil d'une tâche, à la fin de l'exécution d'une tâche, et au début d'une nouvelle période d'une tâche périodique.\\
+				
+				Voici la structure finale des algorithmes d'ordonnancement :
+				\begin{enumerate}
+					\item Initialisation du contexte d'exécution ;
+					\item Jusqu'à la fin de l'hyperpériode :
+					\begin{enumerate}
+						\item Vérifier si l'ordonnanceur doit être appelé ;
+						\item Si oui, exécuter l'algorithme d'ordonnancement ;
+						\item Affichage du résultat à l'écran ;
+						\item Mettre à jour le contexte d'exécution .
+					\end{enumerate}
+					\item Affichage des statistiques sur l'ordonnancement (nombre de changements de contexte, de préemptions, temps de réponse des tâches apériodiques) .
+				\end{enumerate}
+				
+				Une fois cette structure mise en place, il suffit simplement d'implémenter un algorithme d'ordonnancement qui va tout simplement retourner le numéro de la tâche qu'il a élue en utilisant les informations qui sont mises à disposition par le contexte d'exécution.
+			
+			\subsection{Ecriture du fichier de trace}
+				Pendant la simulation de l'ordonnancement, l'application génére les différentes lignes qui composent le fichier de trace exploitable par Kiwi. Ce fichier se décompose en 2 parties :
+					\begin{itemize}
+						\item Une entête contenant la déclaration des tâches et la durée d'ordonnancement (hyperpériode)
+						\item Les évènements concernants les tâches dans l'ordre chronologique.
+					\end{itemize}
+
+	
+	
+	
+\chapter{Analyse du problème}
 
 
-	\section{Conception fonctionnelle}
-
+\chapter{Présentation de la solution}
+	\section{Explication du choix du langage}
+		\label{sec:langage}
+		Nous avons opté pour le langage C++ pour réaliser ce projet car celui-ci possède un certain nombre d'avantages. Il s'agit d'un langage orienté objet très utilisé dans le monde et de nombreux outils libres sont disponibles pour l'utiliser (comme GCC pour la compilation par exemple). De plus, la documentation correspondante est très facilement accessible dans la littérature ou sur le web.
+	
+		Bien que le travail qui nous a été demandé ne requiert pas la maîtrise d'une programmation bas niveau, le langage C++ nous apparait en cohérence avec le thème abordé par le projet (les systèmes temps réel embarqués).
+		
+	\section{Générateur}
 		\subsection{Choix du mode}
 			\textbf{Pré-condition :} Le programme vient d’être lancé.
 			
@@ -106,13 +181,13 @@ Finsi
 		\end{lstlisting} 
 
 	\newpage
-	\subsection{Génération Aléatoire}
-		\textbf{Pré-condition :} La génération aléatoire a été choisie.
+		\subsection{Génération Aléatoire}
+			\textbf{Pré-condition :} La génération aléatoire a été choisie.
 		
-		\textbf{Post-condition :} Toutes les valeurs caractéristiques des tâches ont été générées en accord avec le paramétrage de l’utilisateur.
+			\textbf{Post-condition :} Toutes les valeurs caractéristiques des tâches ont été générées en accord avec le paramétrage de l’utilisateur.
 
-		\textbf{Objectif :} Générer aléatoirement les caractéristiques ($C_i$,$P_i$,$D_i$) d’un nombre de tâches (determiné par l’utilisateur) en accord avec un facteur d’utilisation du processeur (déterminé lui aussi par l’utilisateur).
-		Ex : pour trois taches et facteur = 75\% \\ 
+			\textbf{Objectif :} Générer aléatoirement les caractéristiques ($C_i$,$P_i$,$D_i$) d’un nombre de tâches (determiné par l’utilisateur) en accord avec un facteur d’utilisation du processeur (déterminé lui aussi par l’utilisateur).
+			Ex : pour trois taches et facteur = 75\% \\ 
 
 
 		    Tirage aléatoire de trois nombres ( 35, 25, 15) dont la somme vaut 75. \\
@@ -126,7 +201,7 @@ Finsi
 
 		    Toutes les données sont stockées dans 3 tableaux (un pour les $C_i$, un pour $P_i$, un pour $D_i$). 
 
-		\textbf{Algo :}
+			\textbf{Algo :}
 			\begin{lstlisting}
 Entree: Int nbTaches, Int factUtProcesseur
 Sortie : 3 Tableaux d Int (pour les valeurs de Ci, Pi, Di). 
@@ -172,14 +247,14 @@ tabPi[ nbTaches - 1 ] =100 / pgcd(nb\_genere,100)
 tabCi[ nbTaches - 1 ] = 100 / pgcd(nb\_genere,100)
 			\end{lstlisting}
 
-	\subsection{Generation Controlée}  
-		\textbf{Pré-condition :} La génération controlée a été choisie.
+		\subsection{Generation Controlée}  
+			\textbf{Pré-condition :} La génération controlée a été choisie.
 		
-		\textbf{Post-condition :} Toutes les valeurs caractéristiques des tâches ont été générées en accord avec le paramétrage de l’utilisateur.
+			\textbf{Post-condition :} Toutes les valeurs caractéristiques des tâches ont été générées en accord avec le paramétrage de l’utilisateur.
 		
-		\textbf{Objectif :} Permettre à l’utilisateur de générer des tâches périodiques ou apériodiques en renseignant les différentes caractéristiques de chacune des tâches ($C_i$, $P_i$, $D_i$) ou, respectivement, ($r_i$, $C_i$).
+			\textbf{Objectif :} Permettre à l’utilisateur de générer des tâches périodiques ou apériodiques en renseignant les différentes caractéristiques de chacune des tâches ($C_i$, $P_i$, $D_i$) ou, respectivement, ($r_i$, $C_i$).
 		
-		\textbf{Algo :} 
+			\textbf{Algo :} 
 			\begin{lstlisting}
 Entree : Int nbTaches
 Sortie :  3 Tableaux d Int (pour les valeurs de Ci, Pi, Di). 
@@ -217,15 +292,15 @@ Finpour
 
 			\end{lstlisting}
 
-	\subsection{Ecriture du résultat obtenu}
-		\textbf{Pré-condition :} La génération (qu'elle soit contrôlée ou non) envoie un outputstream contenant les chaînes de caractère à écrire dans un fichier.
+		\subsection{Ecriture du résultat obtenu}
+			\textbf{Pré-condition :} La génération (qu'elle soit contrôlée ou non) envoie un outputstream contenant les chaînes de caractère à écrire dans un fichier.
 		
-		\textbf{Post-condition :} L'écriture s'est bien déroulée : le fichier contient bien la chaîne.
+			\textbf{Post-condition :} L'écriture s'est bien déroulée : le fichier contient bien la chaîne.
 		
-		\textbf{Objectif :} Enregistrer les données générées par le module précédent de manière pérenne dans un fichier.
+			\textbf{Objectif :} Enregistrer les données générées par le module précédent de manière pérenne dans un fichier.
 		
-		\textbf{Algo :}
-		\begin{lstlisting}
+			\textbf{Algo :}
+			\begin{lstlisting}
 creation du fichier
 
 	outputstream ops = ""
@@ -240,116 +315,9 @@ Finpour
 ecriture dans le fichier de ops
   
 		\end{lstlisting}
-
-\section{Réalisation}
-	\subsection{Choix d'implémentation des structures}
 	
-	\subsection{Problèmes rencontrés}
-		Nous avons rencontré un problème purement algorithmique à propos de la génération aléatoire. En effet, notre objectif était de générer des nombre le plus aléatoirement possible, tout en contrôlant l'hyperperiode qui découle de ces nombres. Or, ces deux objectifs ne nous paraissaient pas totalement compatibles.\\
-		
-		Nous avons implémenté deux solutions. La première, celle qui est présenté précédemment, permet de contrôler l'hyperperiode. Le soucis de cette solution est que les $P_i$ générés ne sont pas totalement aléatoires, puisque ce sont uniquement des diviseurs de 100.\\
-		
-		Nous avons donc cherché à implémenté une autre solution permettant de générer des $C_i$ \emph{et} des $P_i$ totalement aléatoire. Après réflexion algorithmique, nous obtenions des chiffres très aléatoires et qui restent cohérents. Cependant les hyperperiodes indues étaient totalement irréalistes (souvent plusieurs centaines de milliers d'unités de temps). Nous avons donc décidé de retenir la première solution, tout en ayant à l'esprit qu'elle doive être améliorer dans une version future.
-
-\section{Tests}
-    \subsection{Test de la génération aléatoire}
-    \subsection{Test de la génération controlée}
-
-
-\chapter{Simulateur d'ordonnanceur}
-	\section{Spécification de l’environnement}
-		Cette application s'incrit à la suite du générateur de tâches. Elle offre, après récupération des informations du fichier issus du générateur, la possibilité de vérifier l'ordonnançabilité d'un jeu de tâches fournie. Ceci nous permet de savoir si les contraintes temporelles sont respectées. 
-
-	La deuxième fonctionnalité de ce programme est d'offrir un environnement de simulation selon plusieurs politiques d'ordonnancements :
-	\begin{itemize}
-		\item pour les tâches périodiques : \textbf{RM} et \textbf{EDF}
-		\item pour les tâches apériodiques non critiques :  \textbf{BG} et \textbf{TBS}
-	\end{itemize}
-	Cet environnement, après simulation, fourni à l'utilisateur des résultats de performances relatifs à l'ordonnancement : 
-	\begin{itemize}
-		\item le nombre de commutations de contexte,
-		\item le nombre de préemptions
-		\item les temps de réponse des tâches apériodiques.
-	\end{itemize}
 	
-	A la suite de la simulation, le programme doit fournir un fichier de trace de la séquence d'ordonnancement. Ce fichier est au format \og ktr \fg et est exploitable par l'outil Kiwi. 
-	Kiwi est un outil graphique développé à l'Université polytechnique de Valence en Espagne. Il permet, à partir d'un fichier texte normé, d'afficher un graphe d'ordonnancement. Nous détaillerons par la suite le contenu du fichier de trace mais il est important pour la suite de savoir que le fichier doit être remplit de manière chronologique.
-		
-	Le programme final devra pouvoir être exécutable en ligne de commande.\\
-		
-	En entrée : le nom du fichier contenant le jeu de tâches périodiques et apériodiques pour lesquelles on veut simuler l'ordonnancement.\\
-		
-	En sortie : un ou plusieurs fichiers .ktr utilisable avec l'outil Kiwi et contenant la séquence d'ordonnancement. Le programme affichera également quelques résultats via la sortie standard.\\
-		
-		Afin de faciliter la prise en main du programme, on proposera un menu succint présentant les différentes fonctionnalités qui s'offrent à l'utilisateur.
-	
-	\section{Spécification du logiciel}
-		Pour les mêmes raisons que celles décrites dans le Chapitre \ref{sec:langage}, le langage utilisé est le C++.
-
-		\subsection{Fonctionnalités}
-			\begin{figure}[!h]
-				\centering
-				\includegraphics[scale=0.55]{ordo_fct_diag.png}
-				\caption{Diagramme des fonctionnalités}
-			\end{figure}
-			\FloatBarrier
-			
-			\subsubsection{Parsage du fichier d'entrée}
-				Bien que le fichier en entrée soit, dans le cas général, un fichier écrit par notre générateur de tâche et donc normalement correct, nous ne sommes pas à l'abris de voir arriver en entrée un fichier corrompu. Soit par l'utilisateur lui-même, soit de n'importe quel autre moyen que ce soit. De plus, la syntaxe du fichier en entrée est relativement simple, ce qui permet à un utilisateur lambda de créer son propre fichier sans passer par notre générateur de tâches.
-				
-				Sachant que le fichier sera parsé suivant le \emph{pattern} de spécification des tâches utilisé par notre générateur, il est indispensable de vérifier la bonne syntaxe du fichier avant de récupérer quoi que ce soit. Cette vérification est effectuée grâce à une expression régulière représentant toutes les syntaxes possible pour une ligne du fichier. Dans les faits, cette \emph{Regex} est divisée en deux :
-				\begin{itemize}
-					\item Pour les tâches périodiques : \verb|^T[0-9]+: [0-9]+,[0-9]+,[0-9]+$| ;
-					\item Pour les tâches apériodiques : \verb|^R[0-9]+: [0-9]+,[0-9]+$| .
-				\end{itemize}
-				Chacune des lignes du fichier doit donc respecter soit l'une, soit l'autre expression régulière.\\
-				
-				Une fois la syntaxe vérifiée, il est très aisé de travailler le fichier ligne par ligne pour en extraire les informations nécessaires grâce aux fonctions sur les \emph{string}. Chacune des tâches sera ajouter à un Conteneur de tâches qui sera ensuite passé à l'ordonnanceur pour que celui-ci puisse travailler dessus.
-			
-			\subsubsection{Analyse d'ordonnançabilité}
-				On fait tous les calculs en même temps :
-				\begin{itemize}
-					\item Condition nécessaire pour l'ordonnançabilité du jeu de tâches avec RM ;
-					\item Condition suffisante avec RM ;
-					\item Condition suffisante et nécessaire avec EDF.
-				\end{itemize}
-		
-			\subsubsection{Simulation d'ordonnancement}
-
-				Avant même de commencer à réfléchir sur les algorithmes d'ordonnancement, nous avons réfléchi à la structure de ces algorithmes. Nous verrons dans la conclusion que ça n'était pas forcément la bonne solution, et qu'il aurait mieux valu extraire cette structure de l'algorithme d'ordonnancement.\\
-				
-				Premièrement, un ordonnanceur a besoin d'avoir plusieurs informations à propos des tâches qui lui demandent du temps d'exécution. Par exemple, l'algorithme EDF, qui élit une tâche selon son $D_i$, doit bien entendu connaître le $D_i$ des différentes tâches qui attendent leur exécution. Toutes ces informations dont ont besoin les algorithmes, et qui seront stockées dans différentes structures, devront être initialisées en tout début de fonction afin que l'ordonnanceur puisse s'en servir à sa guise plus tard. Nous appelerons toutes ces informations le \og contexte d'exécution \fg.
-				
-				Bien entendu, ça n'est pas à l'ordonnanceur de mettre à jour le contexte d'exécution. On réservera donc la fin de chaque fonction d'ordonnancement à la mise à jour de ces structures.
-				
-				Enfin, l'ordonnanceur ne doit pas être appelé à chaque unité de temps écoulée mais seulement : au réveil d'une tâche, à la fin de l'exécution d'une tâche, et au début d'une nouvelle période d'une tâche périodique.\\
-				
-				Voici la structure finale des algorithmes d'ordonnancement :
-				\begin{enumerate}
-					\item Initialisation du contexte d'exécution ;
-					\item Jusqu'à la fin de l'hyperpériode :
-					\begin{enumerate}
-						\item Vérifier si l'ordonnanceur doit être appelé ;
-						\item Si oui, exécuter l'algorithme d'ordonnancement ;
-						\item Affichage du résultat à l'écran ;
-						\item Mettre à jour le contexte d'exécution .
-					\end{enumerate}
-					\item Affichage des statistiques sur l'ordonnancement (nombre de changements de contexte, de préemptions, temps de réponse des tâches apériodiques) .
-				\end{enumerate}
-				
-				Une fois cette structure mise en place, il suffit simplement d'implémenter un algorithme d'ordonnancement qui va tout simplement retourner le numéro de la tâche qu'il a élue en utilisant les informations qui sont mises à disposition par le contexte d'exécution.
-			
-			\subsubsection{Ecriture du fichier de trace}
-				Pendant la simulation de l'ordonnancement, l'application génére les différentes lignes qui composent le fichier de trace exploitable par Kiwi. Ce fichier se décompose en 2 parties :
-					\begin{itemize}
-						\item Une entête contenant la déclaration des tâches et la durée d'ordonnancement (hyperpériode)
-						\item Les évènements concernants les tâches dans l'ordre chronologique.
-					\end{itemize}
-
-		\subsection{Decomposition fonctionnelle}
-
-	\section{Conception fonctionnelle}
-		
+	\section{Ordonnanceur}
 		\subsection{Conteneur}
 			Comme nous l'avons vu, les tâches qui sont spécifiées dans le fichier en entrée doivent être stockées dans un conteneur pour que l'ordonnanceur puisse travailler dessus. Voici donc la manière dont nous avons décidé de concevoir notre conteneur de tâches :
 			\begin{figure}[!h]
@@ -776,20 +744,13 @@ Tantque (t < getHyperPeriode()) Faire
 	
 fin tant que
 					\end{lstlisting}
-				
-	\section{Réalisation}
-		\subsection{Choix d'implémentation des structures}
-		
-		\subsection{Problèmes rencontrés}
 
 
-	\section{Tests}
-	
 \chapter{Notice utilisateur}
 
 	Vous disposez normalement des sources de l'application ainsi que des Makefile répartis dans deux répertoires : \emph{Generateur} et {Ordonnanceur}. L'application est en effet divisée en deux partie, l'une générant un jeu de tâche périodiques et apériodiques dans un fichier texte, l'autre simulant l'ordonnancement des tâches générées.
 
-	\section*{Étape 1 : compilation}
+	\section{Étape 1 : compilation}
 		\texttt{\$ cd Generateur}
 		
 		\texttt{\$ make clean \&\& make}
@@ -798,7 +759,7 @@ fin tant que
 		
 		\texttt{\$ make clean \&\& make}
 		
-	\section*{Étape 2 : génération de tâches}
+	\section{Étape 2 : génération de tâches}
 		
 		Placez-vous dans le répertoire Generateur et lancez l'exécutable :\\
 		\verb+./Generateur [-f fichier.txt|-c nbTaches|-a nbTaches utilisationCPU]+.\\
@@ -809,12 +770,16 @@ fin tant que
 		Une fois l'exécution terminée, vous pouvez ouvrir le fichier de sortie et le modifier. Attention toutefois, la syntaxe doit respecter la forme suivante, ou le fichier sera refusé par l'ordonnanceur : $R_i: r_i,D_i$ \textbf{ou} $Ti: C_i,P_i,D_i$ avec une seule tâche par ligne. Vous pouvez également proposer votre propre fichier sans passer par le générateur.
 		
 		
-	\section*{Étape 3 : ordonnanceur}
+	\section{Étape 3 : ordonnanceur}
 	
 		Placez-vous dans le répertoire contenant l'exécutable de l'ordonnanceur et lancez l'exécutable : \verb+./Ordonnanceur file.txt+. \emph{file.txt} est un argument obligatoire et correspond au fichier contenant les tâches que vous souhaitez ordonnancer. Il peut donc s'agir d'un fichier créé par le générateur, ou de votre propre fichier respectant la même syntaxe.\\
 		
 		Si votre fichier est correct, un menu s'affiche et vous propose d'effectuer plusieurs action. Il vous suffit de vous laisser guider. Les résultats de vos actions s'afficheront directement à l'écran, et un fichier .ktr sera créé à chaque fois que vous lancerez un algorithme d'ordonnancement. Ce fichier décrit l'ordonnancement des tâches et peut être ouvert avec l'outil Kiwi, permettant de visualiser graphiquement le résultat.
-	
+
+
+\chapter{Jeux d'essai}
+{\Huge TODO }
+
 
 \chapter{Conclusion}
 %    Ce projet aura été l'occasion de mettre en application les savoirs acquis durant ce module (Fonctionnement des algorithmes, conditions d'ordonnançabilité, ...). De plus, cela nous a permis de réfléchir à des problématiques inhabituelles comme la génération pseudo-aléatoire de fractions ou plus simplement la gestion des tâches par l'ordonnanceur.
