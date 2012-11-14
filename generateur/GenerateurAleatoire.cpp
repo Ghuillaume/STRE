@@ -1,4 +1,4 @@
-#include "GenerateurAleatoire.h"
+#include "GenerateurAleatoire.hpp"
 
 GenerateurAleatoire::GenerateurAleatoire(int nbTachesP,int nbTachesA,int utCPUP, int utCPUA) : nbTachesP_(nbTachesP), nbTachesA_(nbTachesA), hyperPeriode_(0), utCPUP_(utCPUP), utCPUA_(utCPUA) {
 	tabCiP_ = Tableau(nbTachesP);

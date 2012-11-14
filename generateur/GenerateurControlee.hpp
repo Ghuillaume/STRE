@@ -8,7 +8,7 @@ Auteur ...... : BONCORPS, CHARON, PAGES
 #define GENERATEUR_CONTROLEE_H
 
 
-#define FILEOUT jeuDeTaches.txt
+#define FILEOUT "jeuDeTaches.txt"
 
 #include <string>
 #include <iostream>

@@ -4,8 +4,8 @@ Role ........ : fonction principale du générateur
 Auteur ...... : BONCORPS, CHARON, PAGES 
 ********************************************************/
 
-#include "GenerateurAleatoire.h"
-#include "GenerateurControlee.h"
+#include "GenerateurAleatoire.hpp"
+#include "GenerateurControlee.hpp"
 
 using namespace std;
 int main(int argc, char** argv) {

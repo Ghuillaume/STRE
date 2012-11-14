@@ -1,4 +1,4 @@
-#include "GenerateurControlee.h"
+#include "GenerateurControlee.hpp"
 
 GenerateurControlee::GenerateurControlee(int nbTachesP, int nbTachesA) : nbTachesP_(nbTachesP), nbTachesA_(nbTachesA) {
 	tabCiP_ = Tableau(nbTachesP);
