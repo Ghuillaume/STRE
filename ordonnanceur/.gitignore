@@ -3,4 +3,5 @@
 *.o
 ordonnanceur
 *.pro
-
+*.ktr
+Ordonnanceur
