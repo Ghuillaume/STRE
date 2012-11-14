@@ -6,9 +6,11 @@ Conteneur::Conteneur() {
 }
 
 Conteneur::~Conteneur() {
-	/*for(int i = 0 ; i < listeTP_->size() ; i++)
-		delete listeTP_[i];
-	listeTP_.erase(listeTP_.begin(),listeTP_.end());*/
+	listeTP_->erase(listeTP_->begin(),listeTP_->end());
+	delete listeTP_;
+	
+	listeTA_->erase(listeTA_->begin(),listeTA_->end());
+	delete listeTA_;
 }
 
 void Conteneur::addTacheP(int num, int Ci, int Pi, int Di) {

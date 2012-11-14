@@ -54,7 +54,7 @@ int main(int argc, char** argv) {
 	}
 	
 	Traceur* traceur = new Traceur();
-	Ordonnanceur* ordo = new Ordonnanceur(conteneur,traceur);
+	Ordonnanceur* ordo = new Ordonnanceur(conteneur, traceur);
 	int rtn = mkdir("Traces",S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 	
 	char action;
@@ -130,5 +130,10 @@ int main(int argc, char** argv) {
 		cout << endl << endl;
 	
 	}
+	
+	delete parser;
+	delete ordo;
+	delete traceur;
+	delete conteneur;
 
 }

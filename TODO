@@ -1,8 +1,6 @@
 
 Rapport :
-	- ajouter des liens d'ancrage aux références (ref -> label)
 	- Y a pas mal de texte dans les environnements lstlisting (le code), il faudrait l'enlever ! si besoin de texte pour décrire l'algo, le foutre en dehors !!
-	- faire un ctrl+F des TODO sur le rapport
 	- fiare les destructeur
 	- jeu de test
 	
