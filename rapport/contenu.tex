@@ -394,6 +394,8 @@ Sinon
 	afficher("Non-ordonnancable")
 Finsi
 					\end{lstlisting}
+					
+					Pour la condition nécessaire de RM, on vérifie juste la véracité de cette formule : \[ U = \sum_{i=1}^{n} {Ci \over Pi}  \le 1 \]
 			
 			\subsubsection{Condition suffisante RM}
 				\textbf{Pré-condition :} $n$ représente le nombre de tâches périodiques.
@@ -417,6 +419,8 @@ Sinon
 	afficher("On ne peut rien conclure")
 Finsi
 					\end{lstlisting}
+					
+					Le test de la condition suffisante de RM est plus complexe, il nécessite de calculer aussi \\ $U_{BoundRM}$ = $n * (2^{(1.0 / n)} - 1)$. Ensuite, il suffit de vérifier ça : \[ U = \sum_{i=1}^{n} {Ci \over Pi}  \le U_{BoundRM} \]
 			
 			\subsubsection{Condition nécessaire et suffisante EDF}
 				\textbf{Pré-condition :} $n$ représente le nombre de tâches périodiques et il n'y a pas de tâches apériodiques.
@@ -432,9 +436,7 @@ superioritePiDi = vrai
 U = 0		
 			
 Pour i de 0 a n Faire
-    // Verifie si tous les Pi sont bien egaux aux Di
 	egaliteDiPi &= (Pi == Di) 
-	// idem pour Pi > Di
 	superioritePiDi &= (Pi > Di) 
 Finpour
 
@@ -445,7 +447,7 @@ Si egaliteDiPi Alors
 	    U = U + Ci/Pi
     Finpour
 	
-	Si (U <= 1.0) Alors
+	Si (U <= 1) Alors
 		afficher "ordonnancable"
 	Sinon
 		afficher "non-ordonnancable"
@@ -458,7 +460,7 @@ Sinon Si superioritePiDi Alors
 	    U = U + Ci/Di
     Finpour
 	
-	Si (U <= 1.0) Alors
+	Si (U <= 1) Alors
 		afficher "ordonnancable"
 	Sinon
 		afficher "on ne peut rien conclure"
@@ -468,12 +470,19 @@ Sinon
 Finsi
 					\end{lstlisting}
 					
+					Dans un premier temps, cet algorithme vérifie en effectuant des "et binaires" (opérateur \&) si tous les Pi sont bien égaux aux Di ou si les Pi sont toujours strictement supérieurs aux Di. Dans le cas contraire, c'est-à-dire qu'il existe au moins un Pi inférieur à un Di, on indique la présence d'une erreur.
+					
+					S'il n'y a pas d'erreur, et qu'on a une égalité des Pi et Di, on vérifie juste pour la condition nécessaire et suffisante que \[ U = \sum_{i=1}^{n} {Ci \over Pi}  \le 1 \]
+ 
+ 					Dans le cas ou Di < Pi, on vérifie alors la condition suffisante avec la formule \[ U = \sum_{i=1}^{n} {Ci \over Di}  \le 1 \]
+					
+					
 			\subsubsection{Condition nécessaire et suffisante EDF-TBS}
-				\textbf{Pré-condition :} $n$ représente le nombre de tâches périodiques et Us est .
+				\textbf{Pré-condition :} $n$ représente le nombre de tâches périodiques et Us est la largeur de bande CPU allouée au serveur.
 				
 				\textbf{Post-condition :} On obtient une réponse binaire : le système est ordonnançable ou non.
 				
-				\textbf{Objectif :} Vérifier les conditions d'ordonnançabilité nécessaires et suffisantes pour l'algorithme EDF.
+				\textbf{Objectif :} Vérifier les conditions d'ordonnançabilité nécessaires et suffisantes pour l'algorithme EDF-TBS.
 				
 				\textbf{Algo :}
 					\begin{lstlisting}
@@ -787,8 +796,6 @@ fin tant que
 
 
 \chapter{Conclusion}
-%    Ce projet aura été l'occasion de mettre en application les savoirs acquis durant ce module (Fonctionnement des algorithmes, conditions d'ordonnançabilité, ...). De plus, cela nous a permis de réfléchir à des problématiques inhabituelles comme la génération pseudo-aléatoire de fractions ou plus simplement la gestion des tâches par l'ordonnanceur.
-%    En plus de tout ça, le projet nous a permis de nous exercer à écrire une spécification logicielle et à l'implémenter, à utiliser git et à utiliser le langage de programmation C++. 
 	\section{Problèmes rencontrés}
 		\subsection{Combiner l'aléatoire et le contrôle des valeurs générées}
 			\label{sec:pb_aleatoire}
@@ -819,5 +826,3 @@ fin tant que
 			
 		\subsection{Ajout d'algorithmes}
 			Lorsque nous étions à mi-chemin dans l'avancement du projet, nous avions l'ambition d'ajouter quelques autres algorithmes d'ordonnancement afin d'enrichir notre application. Malheureusement, nous n'avons pas eu le temps d'aller plus loin. Nous proposons donc l'ajout de ces nouveaux algorithmes à la liste des améliorations possibles.
-			
-
