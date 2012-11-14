@@ -38,13 +38,13 @@
 			\FloatBarrier
 		    
 			\subsection{Choix du mode}
-				Dans ce premier module, on choisit le mode d’utilisation du logiciel en fonction de ce que souhaite l’utilisateur. Pour cela, il peut soit renseigner sous forme d’arguments les différentes données, soit en sélectionnant dans le menu ses préférences. \\
+				Dans ce premier module, on choisit le mode d’utilisation du logiciel en fonction de ce que souhaite l’utilisateur. Pour cela, il peut soit renseigner les contraintes de génération (facteur d'utilisation, nombre de tâches, etc) sous forme d’arguments au lancement de l'exécutable, soit les saisir lors de l'exécution.\\
 
 				Parmi les choix qui lui sont offerts, on retrouve les cas présentés dans le sujet du projet (génération aléatoire ou contrôlée et tâches périodiques ou non) mais aussi la possibilité de renseigner un fichier contenant déjà toutes les informations sur les tâches. Dans le premier cas, l’utilisateur devra renseigner ensuite le nombre de tâches concernées tandis que dans l’autre cas, le fichier ne sera pas interprété et ce programme s’arrêtera.
 
 
 			\subsection{Génération aléatoire de tâches}
-				Le premier type de génération permet de générer automatiquement des tâches. L'utilisateur devra renseigner le nombre de tâches périodiques et apériodiques à générer ainsi que le pourcentage d'utilisation du CPU. Ceci permet de générer des fichiers de test aléatoire qui seront visualisable par la suite.\\
+				Le premier type de génération permet de générer automatiquement des tâches. L'utilisateur devra renseigner le nombre de tâches périodiques et apériodiques à générer ainsi que le pourcentage d'utilisation du CPU. Ceci permet de générer des fichiers de test aléatoires.\\
 				Lors de la génération, le système calcule les différentes valeurs caractéristiques des tâches périodiques ($C_i$, $P_i$, $D_i$) et des tâches apériodiques ($r_i$, $C_i$) en accord avec le pourcentage d'utilisation du CPU. 
 
 			\subsection{Génération contrôlée de tâches}
@@ -55,21 +55,20 @@
 				Ce module a pour fonction d’écrire dans un fichier les données contenues dans un flux (= stream)  et calculées à partir des deux modules précédents de génération. L’intérêt de séparer ces fonctions est double : il est plus pratique de factoriser le code à travers une seule fonction d’écriture appelée par les différentes générations et cela facilite la maintenance.
 	
 	\section{Ordonnanceur}
-		Cette application s'incrit à la suite du générateur de tâches. Elle offre, après récupération des informations du fichier issus du générateur, la possibilité de vérifier l'ordonnançabilité d'un jeu de tâches fournie. Ceci nous permet de savoir si les contraintes temporelles sont respectées. 
-
-		La deuxième fonctionnalité de ce programme est d'offrir un environnement de simulation selon plusieurs politiques d'ordonnancements :
-		\begin{itemize}
-			\item pour les tâches périodiques : \textbf{RM} et \textbf{EDF}
-			\item pour les tâches apériodiques non critiques :  \textbf{BG} et \textbf{TBS}
-		\end{itemize}
-		Cet environnement, après simulation, fourni à l'utilisateur des résultats de performances relatifs à l'ordonnancement : 
+		Cette application s'incrit à la suite du générateur de tâches. Elle offre, après récupération des informations du fichier issu du générateur, la possibilité de vérifier l'ordonnançabilité d'un jeu de tâches fournie et de simuler leur ordonnancement. Ceci nous permet de savoir si les contraintes temporelles sont respectées, et nous donne également quelques informations sur les performances de l'ordonnancement :
 		\begin{itemize}
 			\item le nombre de commutations de contexte,
 			\item le nombre de préemptions
 			\item les temps de réponse des tâches apériodiques.
 		\end{itemize}
+
+		Voici les quelques algorithmes d'ordonnancement qui doivent être pris en compte :
+		\begin{itemize}
+			\item pour les tâches périodiques : \textbf{RM} et \textbf{EDF}
+			\item pour les tâches apériodiques non critiques :  \textbf{BG} et \textbf{TBS}
+		\end{itemize}
 	
-		A la suite de la simulation, le programme doit fournir un fichier de trace de la séquence d'ordonnancement. Ce fichier est au format \og ktr \fg et est exploitable par l'outil Kiwi. 
+		A la suite de la simulation, le programme doit également fournir, en plus des informations affichées à l'écran, un fichier de trace de la séquence d'ordonnancement. Ce fichier est au format \og ktr \fg et est exploitable par l'outil Kiwi. 
 		Kiwi est un outil graphique développé à l'Université polytechnique de Valence en Espagne. Il permet, à partir d'un fichier texte normé, d'afficher un graphe d'ordonnancement. Nous détaillerons par la suite le contenu du fichier de trace mais il est important pour la suite de savoir que le fichier doit être remplit de manière chronologique.
 		
 		Le programme final devra pouvoir être exécutable en ligne de commande.\\
@@ -136,9 +135,9 @@
 		Après que les tâches aient été crées, un autre problème se pose : comment peut-on ordonnancer les tâches de manière automatique afin de simuler un véritable ordonnanceur ? Pour cela, on identifie deux types d'algorithmes possibles : ceux qui prennent en compte uniquement les tâches périodiques et ceux qui premettent de gérer aussi les tâches apériodiques. Ici, nous allons nous intéresser uniquement aux alogorithmes RM, EDF, BG et TBS.
 		
 		Pour unifier le fonctionnement de tous les algorithmes, il convient alors de fédérer les manières de représenter les tâches en mémoire afin de ne pas reparser le fichier à chaque ordonnancement. Pour pouvoir appeler à la suite les algorithmes, nous avons opté pour la solution de créer un objet conteneur qui sauvegardera des objets tâche apériodique et périodique dans des vecteurs afin d'y accéder facilement.
-		Les objets tâches comportent les attributs spécifiques Ci, Pi et Di ou ri et Ci en fonction de leur type. De cette manière, en utilisant des accesseurs, il sera facile de récupérer les diverses informations sur les tâches pour construire la politique d'ordonancement et effectuer les tests de conditions d'ordonnançabilité.
+		Les objets tâches comportent les attributs spécifiques Ci, Pi et Di ou ri et Ci en fonction de leur type. De cette manière, en utilisant des accesseurs, il sera facile de récupérer les diverses informations sur les tâches pour construire la politique d'ordonancement et effectuer les tests de conditions d'ordonnançabilité.\\
 
-		Avant même de commencer à réfléchir sur les algorithmes d'ordonnancement, nous avons réfléchi à la structure de ces algorithmes. Nous verrons dans la conclusion que ça n'était pas forcément la bonne solution, et qu'il aurait mieux valu extraire cette structure de l'algorithme d'ordonnancement.\\
+		Avant même de commencer à réfléchir sur les algorithmes d'ordonnancement, nous avons réfléchi à la structure de ces algorithmes. Nous verrons dans la conclusion que ça n'était pas forcément la bonne solution, et qu'il aurait mieux valu extraire cette structure de l'algorithme d'ordonnancement.
 		
 		Premièrement, un ordonnanceur a besoin d'avoir plusieurs informations à propos des tâches qui lui demandent du temps d'exécution. Par exemple, l'algorithme EDF, qui élit une tâche selon son $D_i$, doit bien entendu connaître le $D_i$ des différentes tâches qui attendent leur exécution. Toutes ces informations dont ont besoin les algorithmes, et qui seront stockées dans différentes structures, devront être initialisées en tout début de fonction afin que l'ordonnanceur puisse s'en servir à sa guise plus tard. Nous appelerons toutes ces informations le \og contexte d'exécution \fg.
 		
@@ -820,7 +819,7 @@ fin tant que
 			Comme nous l'avons vu dans la partie \ref{sec:pb_aleatoire}, nous avons rencontré un problème pour développer une fonction de génération aléatoire qui soit optimale. Une amélioration possible pour la suite serait de trouver une solution algorithmique permettant de combiner les avantages des deux méthodes : un résultat vraiment aléatoire, et une hyperpériode \emph{contrôlée}, c'est-à-dire raisonnable. Nous pensons qu'une hyperpériode raisonnable se définit approximativement entre 0 et 1000 au vu de l'objectif de l'application.
 			
 		\subsection{Factoriser les éléments redondants des algorithmes d'ordonnancement}
-			Nos fonctions d'ordonnancement ont un défaut : elles contiennent bien plus que l'algorithme d'ordonnancement qui leur correspond. Par exemple, dans la fonction RM(), il y a tout un tas d'initialisation et de calculs avant d'arriver au coeur de l'algorithme. De plus, les éléments algorithmiques extérieurs à l'ordonnancement sont similaires pour chacune des deux fonctions. Il serait donc intéressant de factoriser ces éléments en créant par exemple une fonction \emph{init\_context()} qui s'occupe d'initialiser toutes les variables et structures représentant le contexte d'éxecution, une fonction \emph{maj\_context()} pour mettre à jour ce contexte, ainsi qu'une fonction \emph{need\_to\_poll()}.\\
+			Nos fonctions d'ordonnancement ont un défaut : elles contiennent bien plus que l'algorithme d'ordonnancement qui leur correspond. Par exemple, dans la fonction \emph{RM()}, il y a tout un tas d'initialisation et de calculs avant d'arriver au coeur de l'algorithme. De plus, les éléments algorithmiques extérieurs à l'ordonnancement sont similaires pour chacune des deux fonctions. Il serait donc intéressant de factoriser ces éléments en créant par exemple une fonction \emph{init\_context()} qui s'occupe d'initialiser toutes les variables et structures représentant le contexte d'éxecution, une fonction \emph{maj\_context()} pour mettre à jour ce contexte, ainsi qu'une fonction \emph{need\_to\_poll()}.\\
 			
 			Pour des raisons de lisibilité, nous avons d'ailleurs choisi de représenter ce découpage dans la description des algorithmes d'ordonnancement (partie \ref{sec:algo_poll}).
 			
