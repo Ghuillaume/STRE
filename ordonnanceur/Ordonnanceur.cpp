@@ -5,7 +5,6 @@ Ordonnanceur::Ordonnanceur(Conteneur* conteneur, Traceur* traceur) : conteneur(c
 }
 
 Ordonnanceur::~Ordonnanceur() {
-	// TODO : Faire un vrai destructeur parce que là, bonjour les fuites mémoires :D 
 }
 
 int Ordonnanceur::RM(int serveur) {

@@ -118,7 +118,6 @@ int main(int argc, char** argv) {
 				break;
 				
 			case '7':
-				// TODO pas de traitement si l'argument vaut TBS
 				traceur->creationFichier("Traces/ordoEDF_TBS");
 				cout << "Largeur de la bande Passante de TBS (pourcentage entier): ";
 				cin >> bandePassanteTBS;
